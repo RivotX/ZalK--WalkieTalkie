@@ -40,6 +40,11 @@ export default function AddContactsScreen() {
 
   // ==== Search for users to add friends ====
   const onSearchUser = () => {
+
+    if (username === undefined) {
+      console.log("No se ha podido obtener el nombre de usuario");
+      return;
+    }
     setUserFound(undefined);
     setLoading(true);
     axios

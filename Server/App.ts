@@ -513,6 +513,11 @@ app.post('/searchRoom', async (req, res) => {
 // =================================================================Search User=================================================================
 app.post('/searchUser', async (req, res) => {
   const { usernamesearch, username } = req.body;
+
+  if (!username) {
+    return res.status(400).send(' Username is required');
+  }
+
   console.log('server user: ' + usernamesearch);
 
   // Use the Op.like operator to search for usernames that contain the search string
