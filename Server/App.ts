@@ -466,6 +466,10 @@ app.post('/logout', (req, res) => {
 // =================================================================Search Room=================================================================
 app.post('/searchRoom', async (req, res) => {
   const { roomsearch, username } = req.body;
+
+  if (!username) {
+    return res.status(400).send(' Username is required');
+  }
   console.log('server room: ' + roomsearch);
 
   const user = await Users.findOne({
