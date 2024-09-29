@@ -31,6 +31,7 @@ const ProfileSettingsScreen = () => {
   const navigation = useNavigation();
   const [profilePicture, setProfilePicture] = useState(null);
   const animation = useRef(new Animated.Value(0)).current;
+  const [loading, setloading] = useState(false);
   const { SERVER_URL } = getEnvVars();
 
   // ===== Maximum length for the user info in the UI =====
@@ -79,6 +80,7 @@ const ProfileSettingsScreen = () => {
 
   // ===== Upload profile picture =====
   const uploadImage = async () => {
+    setloading(true);
     const image = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
@@ -101,9 +103,9 @@ const ProfileSettingsScreen = () => {
         let responseJson = await response.json();
         console.log("responseJson", responseJson);
 
-        if (responseJson.filePath) {
+        if (responseJson.fileUrl) {
           // Save the image URL to your database
-          const imageUrl = SERVER_URL + responseJson.filePath;
+          const imageUrl = responseJson.fileUrl;
           const userId = userID; // Replace with the actual user ID
           await axios
             .post(SERVER_URL + "/save-image-url", { profilePicture: imageUrl, userId })
@@ -113,6 +115,8 @@ const ProfileSettingsScreen = () => {
             })
             .catch((error) => {
               console.error("Error saving image URL:", error);
+            }).finally(() => {
+              setloading(false);
             });
         }
       } catch (error) {
@@ -227,6 +231,7 @@ const ProfileSettingsScreen = () => {
   };
 
   return (
+    
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView style={tw`flex-1 bg-[${backgroundColor}]`}>
         <View style={tw`w-full h-1/3 flex items-center justify-center mt-2`}>

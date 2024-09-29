@@ -72,8 +72,7 @@ const ChangeProfileModal = ({ PropToChange, setModalVisibility, ModalIcon, isPas
     if (!validateForm()) return;
     setLoading(true);
     //if the form is valid, update the user
-    axios
-      .post(`${SERVER_URL}/update-user`, {
+    axios.post(`${SERVER_URL}/update-user`, {
         userID: userID,
         PropToChange: PropToChange,
         newProp: newProp,
