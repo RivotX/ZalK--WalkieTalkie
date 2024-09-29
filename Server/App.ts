@@ -8,7 +8,7 @@ import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 dotenv.config();
 import multer from 'multer';
-import {S3Client, PutObjectCommand} from '@aws-sdk/client-s3';
+import {S3Client, PutObjectCommand,ListBucketsCommand} from '@aws-sdk/client-s3';
 import multerS3 from 'multer-s3';
 import path from 'path';
 import fs from 'fs';
@@ -1083,6 +1083,15 @@ const s3 = new S3Client({
   },
 });
 
+async function checkS3Connection() {
+  try {
+    const result = await s3.send(new ListBucketsCommand({}));
+    console.log('Successfully connected to S3. Buckets:', result.Buckets);
+  } catch (error) {
+    console.error('Failed to connect to S3:', error);
+  }
+}
+
 const upload = multer().single('file');
 // Endpoint para manejar la carga de archivos
 app.post('/upload', (req, res) => {
@@ -1122,6 +1131,8 @@ app.post('/upload', (req, res) => {
     }
   });
 });
+
+checkS3Connection();
 
 // Endpoint para guardar la URL de la imagen en la base de datos
 app.post('/save-image-url', async (req, res) => {
