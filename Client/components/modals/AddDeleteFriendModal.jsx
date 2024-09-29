@@ -3,7 +3,7 @@ import { Modal, View, Text, TextInput, TouchableOpacity, Animated, Pressable, Al
 import tw from 'twrnc';
 import { useThemeColor } from '../../hooks/useThemeColor';
 
-const AddDeleteFriendModal = ({ setModalVisible, modalVisible, OnAccept, selectedUser, action }) => {
+const AddDeleteFriendModal = ({ setModalVisible, modalVisible, OnAccept, selectedUser, action, title, acceptButton, cancelButton }) => {
   const slideAnim = useRef(new Animated.Value(0)).current;
   const modal_bg_color = useThemeColor({}, 'modal_bg_color');
   const modal_text_color = useThemeColor({}, 'modal_text_color');
@@ -43,14 +43,6 @@ const AddDeleteFriendModal = ({ setModalVisible, modalVisible, OnAccept, selecte
     }
   }, [modalVisible]);
 
-  const getTitle = () => {
-    if (action === 'add') {
-      return 'Do you want to add';
-    } else if (action === 'delete') {
-      return 'Do you want to delete';
-    }
-    return '';
-  };
 
   const handleSendMessage = () => {
     if (message.length > maxLength) {
@@ -82,13 +74,13 @@ const AddDeleteFriendModal = ({ setModalVisible, modalVisible, OnAccept, selecte
           style={[tw`w-11/12 max-w-md bg-${modal_bg_color} rounded-lg shadow-lg p-6`, slideIn]}
           onStartShouldSetResponder={() => true}
         >
-          <Text style={tw`text-2xl font-semibold mb-4 text-${modal_title_color} text-center`}>{getTitle()}</Text>
-          <Text style={tw`text-lg font-semibold mb-4 text-${modal_text_color} text-center`}>@{selectedUser?.name}?</Text>
+          <Text style={tw`text-2xl font-semibold mb-4 text-${modal_title_color} text-center`}>{title}</Text>
+          <Text style={tw`text-lg font-semibold mb-4 text-${modal_text_color} text-center`}>@{selectedUser?.name}</Text>
           {action == 'add' && (
             <>
               <TextInput
                 style={tw`w-full bg-gray-200 p-2 rounded-lg mb-2`}
-                placeholder="Escribe tu mensaje..."
+                placeholder="Enter your message..."
                 value={message}
                 maxLength={maxLength}
                 onChangeText={handleChangeText}
@@ -101,13 +93,13 @@ const AddDeleteFriendModal = ({ setModalVisible, modalVisible, OnAccept, selecte
               style={tw`flex-1 bg-${Modal_cancel_button} p-2 rounded-full mx-1`}
               onPress={() => setModalVisible(false)}
             >
-              <Text style={tw`text-${modal_text_color} font-bold text-center`}>No</Text>
+              <Text style={tw`text-${modal_text_color} font-bold text-center`}>{cancelButton}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={tw`flex-1 bg-${Modal_accept_button} p-2 rounded-full mx-1`}
               onPress={handleSendMessage}
             >
-              <Text style={tw`text-white font-bold text-center`}>Yes</Text>
+              <Text style={tw`text-white font-bold text-center`}>{acceptButton}</Text>
             </TouchableOpacity>
           </View>
         </Animated.View>

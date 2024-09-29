@@ -95,7 +95,7 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
   return (
     <>
       {loading && (
-        <Modal animationType="fade" transparent={true} onRequestClose={() => {}}>
+        <Modal animationType="fade" transparent={true} onRequestClose={() => { }}>
           <View style={[tw`flex-1 justify-center items-center`, { backgroundColor: 'rgba(0, 0, 0, 0.5)' }]}>
             <Loading />
           </View>
@@ -147,7 +147,14 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
 
         {/* Delete contact */}
         {deleteModalVisible && (
-          <AddDeleteFriendModal setModalVisible={setDeleteModalVisible} modalVisible={deleteModalVisible} selectedUser={user} action="delete" />
+          <AddDeleteFriendModal setModalVisible={setDeleteModalVisible}
+            modalVisible={deleteModalVisible}
+            selectedUser={user}
+            action="delete"
+            title={"You are about to unfriend"}
+            acceptButton={"Confirm"}
+            cancelButton={"Cancel"}
+          />
         )}
       </View>
     </>

@@ -53,10 +53,11 @@ export default function ContactsScreen() {
       }));
       console.log("LAST CONTACTS", lastcontacts);
       setContacts(lastcontacts);
+    }).then(() => {
       setLoading(false);
     }).catch(() => {
       setLoading(false);
-    });
+    })
   }
 
   // ===== Refresh contacts =====
