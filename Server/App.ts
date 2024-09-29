@@ -8,8 +8,8 @@ import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 dotenv.config();
 import multer from 'multer';
-// import AWS from 'aws-sdk'; 
-// import multerS3 from 'multer-s3';
+import {S3Client, PutObjectCommand} from '@aws-sdk/client-s3';
+import multerS3 from 'multer-s3';
 import path from 'path';
 import fs from 'fs';
 
@@ -1051,51 +1051,42 @@ io.on('connection', (socket: Socket) => {
 // *Profile picture upload*
 // =================================================================
 
-// AWS.config.update({
-//   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-//   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-//   region: process.env.AWS_REGION,
+
+
+
+
+// // Crear la carpeta 'uploads' si no existe
+// const uploadDir = path.join(__dirname, 'uploads');
+// console.log('Upload directory:', uploadDir); // Log para verificar la ruta de la carpeta
+// if (!fs.existsSync(uploadDir)) {
+//   console.log('Creating upload directory...');
+//   fs.mkdirSync(uploadDir);
+// } else {
+//   console.log('Upload directory already exists');
+// }
+
+// // Configuración de multer
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, uploadDir); // Usar la ruta absoluta de la carpeta 'uploads'
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, `${Date.now()}-${file.originalname}`);
+//   },
 // });
 
-
-
-// Crear la carpeta 'uploads' si no existe
-const uploadDir = path.join(__dirname, 'uploads');
-console.log('Upload directory:', uploadDir); // Log para verificar la ruta de la carpeta
-if (!fs.existsSync(uploadDir)) {
-  console.log('Creating upload directory...');
-  fs.mkdirSync(uploadDir);
-} else {
-  console.log('Upload directory already exists');
-}
-
-// Configuración de multer
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir); // Usar la ruta absoluta de la carpeta 'uploads'
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
+const s3 = new S3Client({
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
   },
 });
 
-// const s3 = new AWS.S3();
-
-// const storage = multerS3({
-//   s3: s3,
-//   bucket: process.env.S3_BUCKET_NAME || '',
-//   acl: 'public-read',
-//   key: (req, file, cb) => {
-//     const fileName = `${Date.now()}-${file.originalname}`;
-//     cb(null, fileName);
-//   }
-// });
-
-const upload = multer({ storage: storage }).single('file');
-
+const upload = multer().single('file');
 // Endpoint para manejar la carga de archivos
 app.post('/upload', (req, res) => {
-  upload(req, res, (err) => {
+  upload(req, res, async (err) => {
     if (err) {
       console.log('Error uploading file:', err);
       return res.status(500).json({ error: err.message });
@@ -1105,14 +1096,30 @@ app.post('/upload', (req, res) => {
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
-    // Construir la URL manualmente
+    // Subir el archivo a S3
     const bucketName = process.env.S3_BUCKET_NAME;
-    const region = process.env.AWS_REGION;
-    const fileName = req.file.filename; // La clave del archivo en S3
-    const fileUrl = `https://${bucketName}.s3.${region}.amazonaws.com/${fileName}`;
+    const fileName = `${Date.now().toString()}-${req.file.originalname}`; // Nombre único para el archivo
 
-    console.log('File uploaded to:', fileUrl);
-    res.status(200).json({ fileUrl });
+    try {
+      const uploadCommand = new PutObjectCommand({
+        Bucket: bucketName,
+        Key: fileName, // Nombre del archivo en S3
+        Body: req.file.buffer, // El archivo en formato buffer
+        ContentType: req.file.mimetype, // Tipo de archivo
+      });
+
+      // Ejecutar la subida del archivo
+      await s3.send(uploadCommand);
+
+      // Construir la URL del archivo
+      const fileUrl = `https://${bucketName}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
+
+      console.log('File uploaded to:', fileUrl);
+      res.status(200).json({ fileUrl });
+    } catch (error) {
+      console.error('Error uploading file to S3:', error);
+      res.status(500).json({ error: 'Error uploading file to S3' });
+    }
   });
 });
 
@@ -1164,7 +1171,7 @@ app.get('/get-image-url/:userId', async (req, res) => {
 });
 
 // Servir archivos estáticos desde la carpeta 'uploads'
-app.use('/uploads', express.static(uploadDir));
+// app.use('/uploads', express.static(uploadDir));
 
 // ================= * END Profile picture upload* ===================================
 
@@ -1243,14 +1250,14 @@ const initialRooms = [
   { name: 'The Voice Vault', info: 'Vault your voice securely here.' },
 ];
 
-sequelize.sync({ force: true }).then(() => {
+sequelize.sync({ alter: true }).then(() => {
   server.listen(3000, async () => {
     console.log('Server running...');
 
-    //create groups
-    for (const room of initialRooms) {
-      await Rooms.upsert(room);
-      console.log("Room created:", room);
-    }
+    // //create groups
+    // for (const room of initialRooms) {
+    //   await Rooms.upsert(room);
+    //   console.log("Room created:", room);
+    // }
   });
 });
