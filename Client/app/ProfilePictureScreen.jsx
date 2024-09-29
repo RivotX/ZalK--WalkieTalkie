@@ -59,7 +59,7 @@ const ProfilePictureScreen = () => {
             ? <Loading />
             : (
               <>
-                <Text style={tw`text-[${textColor}] text-lg font-bold text-center my-4 border-b border-t border-gray-400 w-full`}>{userName}</Text>
+                <Text style={tw`text-[${textColor}] text-4xl font-bold text-center my-4 py-2 border-b  border-gray-400 w-full`}>{userName}</Text>
 
                 <Image source={profilePicture ? { uri: profilePicture } : ProfileIcon} style={tw`size-full`} resizeMode="cover" />
                 <Text style={tw`text-[${textColor}] text-lg font-bold text-center mt-4 mb-2 border-t border-gray-400 w-full`}>{info}</Text>
