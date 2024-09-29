@@ -146,7 +146,11 @@ export default function AddContactsScreen() {
                 showModalOnProfilePicturePress={true}
               />
             ))}
-          {userFound == false && <Text style={tw`text-[${textColor}]`}>No users found</Text>}
+          {userFound == false && (
+            <Text style={tw`text-[${textColor}] text-2xl  mt-10 font-medium text-center`}>
+              No users found
+            </Text>
+          )}
         </ScrollView>
       </View>
       {/* Add contact modal */}

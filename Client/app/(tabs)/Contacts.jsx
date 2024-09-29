@@ -11,7 +11,7 @@ import Loading from "../../components/shared/Loading";
 import ProfileIcon from "../../assets/images/ProfileIcon.png";
 import FloatingAddButton from "../../components/shared/FloatingAddButton";
 
-export default function ContactsScreen() {
+const ContactsScreen = ({ setLoadingLayout }) => {
   const backgroundColor = useThemeColor({}, "background");
   const navigation = useNavigation();
   const [socket, setSocket] = useState(useSocket()); // Estado para manejar la instancia del socket
@@ -20,14 +20,13 @@ export default function ContactsScreen() {
   const textColor = useThemeColor({}, "text");
   const [userID, setUserID] = useState(null);
   const { SERVER_URL } = getEnvVars();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   // ===== Get the user ID and username =====
   useEffect(() => {
     if (socket != null) {
       console.log(socket, "socket EN CONTACTS");
-      axios
-        .get(`${SERVER_URL}/getsession`, { withCredentials: true })
+      axios.get(`${SERVER_URL}/getsession`, { withCredentials: true })
         .then((res) => {
           setUsername(res.data.user.username);
           setUserID(res.data.user.id);
@@ -41,24 +40,28 @@ export default function ContactsScreen() {
 
   // ==== Get contacts ====
   const getContacts = () => {
-    axios.post(`${SERVER_URL}/getContacts`, { userId: userID }, { withCredentials: true }).then((res) => {
-      console.log("CONTACTS DEL ENDPOINT GETCONTACTS TABLE", res.data);
-      const lastcontacts = res.data.map((contact) => ({
-        // Parsea los contactos y los guarda en el estado SE DEBE HACER UN ENDPOINT PARA OBTENER LA FOTO DEL CONTACTO
-        name: contact.User.username,
-        room: contact.room,
-        profile: contact.User.profilePicture ? { uri: contact.User.profilePicture } : ProfileIcon,
-        info: contact.User.info,
-        isBusy: contact.User.isBusy,
-      }));
-      console.log("LAST CONTACTS", lastcontacts);
-      setContacts(lastcontacts);
-    }).then(() => {
-      setLoading(false);
-    }).catch(() => {
-      setLoading(false);
-    })
+    console.log("asd");
+    setLoadingLayout(true);
+    axios.post(`${SERVER_URL}/getContacts`, { userId: userID }, { withCredentials: true })
+      .then((res) => {
+        console.log("CONTACTS DEL ENDPOINT GETCONTACTS TABLE", res.data);
+        const lastcontacts = res.data.map((contact) => ({
+          // Parsea los contactos y los guarda en el estado SE DEBE HACER UN ENDPOINT PARA OBTENER LA FOTO DEL CONTACTO
+          name: contact.User.username,
+          room: contact.room,
+          profile: contact.User.profilePicture ? { uri: contact.User.profilePicture } : ProfileIcon,
+          info: contact.User.info,
+          isBusy: contact.User.isBusy,
+        }));
+        console.log("LAST CONTACTS", lastcontacts);
+        setContacts(lastcontacts);
+      }).catch(() => {
+        setLoadingLayout(false);
+      }).finally(() => {
+        setLoadingLayout(false);
+      });
   }
+
 
   // ===== Refresh contacts =====
   useEffect(() => {
@@ -88,7 +91,7 @@ export default function ContactsScreen() {
                 <ChatComponent
                   user={contact}
                   key={index}
-                  onGeneralPress={() => navigation.navigate("ChatScreen", { user: contact })}
+                  onGeneralPress={() => navigation.navigate("ChatScreen", { user: contact, isContact: true })}
                   iscontact={true}
                   iconDelete={true}
                   setLoading={setLoading}
@@ -110,3 +113,5 @@ export default function ContactsScreen() {
     </View>
   );
 }
+
+export default ContactsScreen;

@@ -48,8 +48,7 @@ export default function AddGroupsScreen() {
   const onSearchRoom = () => {
     setroomFound(undefined);
     setLoading(true);
-    axios
-      .post(`${SERVER_URL}/searchRoom`, { roomsearch: text, username: username })
+    axios.post(`${SERVER_URL}/searchRoom`, { roomsearch: text, username: username })
       .then((res) => {
         console.log(res.data);
         const roomsData = res.data.map((room) => ({
@@ -78,80 +77,74 @@ export default function AddGroupsScreen() {
     }
   }, []);
 
-// ===== Friend request =====
+  // ===== Friend request =====
   const joinRoom = (room) => {
     socket.emit("join", { room: room, username: username });
-    setLoadingOnAdd(true);
-
-    setTimeout(() => {
-      setLoadingOnAdd(false);
-    }, 500);
-
     setrooms(rooms.filter((roomadded) => roomadded.name !== room));
   };
 
   return (
     <>{loadingOnAdd &&
       <Modal animationType="fade" transparent={true} onRequestClose={() => { }}>
-            <View style={[tw`flex-1 justify-center items-center`, { backgroundColor: "rgba(0, 0, 0, 0.5)" }]}>
-              <Loading />
-            </View>
-          </Modal>
+        <View style={[tw`flex-1 justify-center items-center`, { backgroundColor: "rgba(0, 0, 0, 0.5)" }]}>
+          <Loading />
+        </View>
+      </Modal>
     }
-    <View style={tw`flex-1 bg-[${backgroundColor}]`}>
-      {/* Top Bar */}
-      <View style={tw`w-full h-16 bg-[${SoftbackgroundColor}] flex items-center`}>
-        <View style={tw`w-4/5 flex-row items-center`}>
-          <TextInput
-            style={tw`h-10 w-11/12 my-3 border-b border-gray-400 px-2 text-[${textColor}]`}
-            placeholderTextColor="#9ca3af"
-            placeholder="Buscar por grupo"
-            autoFocus={true}
-            value={text}
-            onChangeText={(e) => {
-              setText(e);
-              setroomFound(undefined);
-            }}
-            onSubmitEditing={onSearchRoom}
-          />
-          {/* Renderizado condicional para el boton "X" */}
-          {text.length > 0 && (
-            <TouchableOpacity
-              onPress={() => {
-                setText("");
+      <View style={tw`flex-1 bg-[${backgroundColor}]`}>
+        {/* Top Bar */}
+        <View style={tw`w-full h-16 bg-[${SoftbackgroundColor}] flex items-center`}>
+          <View style={tw`w-4/5 flex-row items-center`}>
+            <TextInput
+              style={tw`h-10 w-11/12 my-3 border-b border-gray-400 px-2 text-[${textColor}]`}
+              placeholderTextColor="#9ca3af"
+              placeholder="Buscar por grupo"
+              autoFocus={true}
+              value={text}
+              onChangeText={(e) => {
+                setText(e);
                 setroomFound(undefined);
               }}
-              style={tw`ml-2 p-2 w-1/12`}>
-              <Text style={tw`text-lg text-[${textColor}]`}>X</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-      </View>
-      {/* Main Content */}
-      <View style={tw`flex-1 items-center`}>
-        {loading && (
-          <View style={tw`flex w-full items-center h-1/3`}>
-            <Loading />
-          </View>
-        )}
-        {/* Display groups */}
-        <ScrollView style={tw` w-full`}>
-          {roomFound &&
-            rooms.map((room, index) => (
-              <ChatComponent
-                key={room.id || index}
-                user={room}
-                onAdd={() => {
-                  joinRoom(room.name);
+              onSubmitEditing={onSearchRoom}
+            />
+            {/* Renderizado condicional para el boton "X" */}
+            {text.length > 0 && (
+              <TouchableOpacity
+                onPress={() => {
+                  setText("");
+                  setroomFound(undefined);
                 }}
-                iconDelete={false}
-                showModalOnPress={true}
-                showModalOnProfilePicturePress={true}
-              />
-            ))}
-          {roomFound == false && <Text style={tw`text-[${textColor}]`}>No groups found</Text>}
-        </ScrollView>
-      </View>
-    </View></>
+                style={tw`ml-2 p-2 w-1/12`}>
+                <Text style={tw`text-lg text-[${textColor}]`}>X</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+        {/* Main Content */}
+        <View style={tw`flex-1 items-center`}>
+          {loading && (
+            <View style={tw`flex w-full items-center h-1/3`}>
+              <Loading />
+            </View>
+          )}
+          {/* Display groups */}
+          <ScrollView style={tw` w-full`}>
+            {roomFound &&
+              rooms.map((room, index) => (
+                <ChatComponent
+                  key={room.id || index}
+                  user={room}
+                  onAdd={() => {
+                    joinRoom(room.name);
+                  }}
+                  iconDelete={false}
+                  showModalOnPress={true}
+                  showModalOnProfilePicturePress={true}
+                />
+              ))}
+            {roomFound == false && <Text style={tw`text-[${textColor}]`}>No groups found</Text>}
+          </ScrollView>
+        </View>
+      </View></>
   );
 }

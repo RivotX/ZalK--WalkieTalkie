@@ -10,19 +10,20 @@ import { useSocket } from '../context/SocketContext';
 import AddDeleteFriendModal from '../modals/AddDeleteFriendModal';
 import Loading from './Loading';
 
-const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisible, user }) => {
+const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisible, user, isContact, setLoadingLayout }) => {
   const textColor = useThemeColor({}, 'text');
   const SoftbackgroundColor = useThemeColor({}, 'Softbackground');
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation(); // Use the useNavigation hook
   const [userID, setUserID] = useState(null);
+  const [userName, setUserName] = useState(null);
   const { SERVER_URL } = getEnvVars();
   const [socket, setSocket] = useState(useSocket()); // Estado para manejar la instancia del socket
   const [isBusy, setIsBusy] = useState(false);
   const heightAnim = useRef(new Animated.Value(0)).current;
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-  const [loading, setloading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Navigate to ProfileSettingsScreen
   const onPressSettings = () => {
@@ -36,6 +37,7 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
       .get(`${SERVER_URL}/getsession`, { withCredentials: true })
       .then((res) => {
         setUserID(res.data.user.id);
+        setUserName(res.data.user.username);
       })
       .catch((error) => {
         console.log(error);
@@ -52,11 +54,11 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
   // Toggle busy mode
   const toggleBusyMode = () => {
     setDropdownVisible(false);
-    setloading(true);
+    setLoading(true);
     // Implement toggleBusy
     axios.post(`${SERVER_URL}/toggleBusy`, { userId: userID }, { withCredentials: true }).then((res) => {
       console.log('Busy mode toggled', isBusy);
-      setloading(false);
+      setLoading(false);
     });
     setIsBusy(!isBusy);
     setIsBusyLayout(!isBusy);
@@ -91,6 +93,19 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
   };
 
   //delete contact
+  const deleteContact = async () => {
+    if (isContact) {
+      await socket.emit("deleteContact", { username: userName, contact: user });
+      navigation.navigate('Contacts');
+      setLoadingLayout(true);
+    } else if (!isContact) {
+      await socket.emit("deleteGroup", { username: userName, group: user });
+      navigation.navigate('Groups');
+      setLoadingLayout(true);
+      console.log("xxx");
+
+    }
+  }
 
   return (
     <>
@@ -134,10 +149,14 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
                       setDropdownVisible(false);
                     }}
                   >
-                    <Text style={tw`text-lg text-[${textColor}]`}>View Contact</Text>
+                    <Text style={tw`text-lg text-[${textColor}]`}>
+                      {isContact ? 'View Contact' : 'View Group'}
+                    </Text>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={handlePressDeleteContact}>
-                    <Text style={tw`text-lg text-[${textColor}]`}>Delete Contact</Text>
+                    <Text style={tw`text-lg text-[${textColor}]`}>
+                      {isContact ? 'Delete Contact' : 'Delete Group'}
+                    </Text>
                   </TouchableOpacity>
                 </>
               )}
@@ -147,13 +166,15 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
 
         {/* Delete contact */}
         {deleteModalVisible && (
-          <AddDeleteFriendModal setModalVisible={setDeleteModalVisible}
+          <AddDeleteFriendModal
+            setModalVisible={setDeleteModalVisible}
             modalVisible={deleteModalVisible}
             selectedUser={user}
             action="delete"
             title={"You are about to unfriend"}
             acceptButton={"Confirm"}
             cancelButton={"Cancel"}
+            OnAccept={deleteContact}
           />
         )}
       </View>

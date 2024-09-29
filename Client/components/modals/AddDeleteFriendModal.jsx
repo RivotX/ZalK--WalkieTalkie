@@ -44,12 +44,16 @@ const AddDeleteFriendModal = ({ setModalVisible, modalVisible, OnAccept, selecte
   }, [modalVisible]);
 
 
-  const handleSendMessage = () => {
-    if (message.length > maxLength) {
-      Alert.alert('Error', 'Message cannot exceed 40 characters.');
-      return;
+  const handleAccept = () => {
+    if (action == 'add') {
+      if (message.length > maxLength) {
+        Alert.alert('Error', 'Message cannot exceed 160 characters.');
+        return;
+      }
+      OnAccept(message);
+    } else if (action == 'delete') {
+      OnAccept();
     }
-    OnAccept(message);
   };
 
   const handleChangeText = (text) => {
@@ -66,16 +70,24 @@ const AddDeleteFriendModal = ({ setModalVisible, modalVisible, OnAccept, selecte
         setModalVisible(false);
       }}
     >
+
+      {/* Outside Modal*/}
       <Pressable
         style={tw`flex-1 justify-center items-center bg-black bg-opacity-50`}
         onPress={() => setModalVisible(false)}
       >
+        {/* Inside Modal*/}
         <Animated.View
           style={[tw`w-11/12 max-w-md bg-${modal_bg_color} rounded-lg shadow-lg p-6`, slideIn]}
           onStartShouldSetResponder={() => true}
         >
+          {/* Title */}
           <Text style={tw`text-2xl font-semibold mb-4 text-${modal_title_color} text-center`}>{title}</Text>
+
+          {/* Target */}
           <Text style={tw`text-lg font-semibold mb-4 text-${modal_text_color} text-center`}>@{selectedUser?.name}</Text>
+
+          {/* Message box */}
           {action == 'add' && (
             <>
               <TextInput
@@ -88,23 +100,29 @@ const AddDeleteFriendModal = ({ setModalVisible, modalVisible, OnAccept, selecte
               <Text style={tw`text-right text-${modal_text_color} mb-4`}>{charCount}/{maxLength}</Text>
             </>
           )}
-          <View style={tw`flex-row justify-between w-full mt-auto`}>
+
+          {/* Buttons */}
+          <View style={tw`flex-row justify-between w-full`}>
+
+            {/* Cancel button */}
             <TouchableOpacity
               style={tw`flex-1 bg-${Modal_cancel_button} p-2 rounded-full mx-1`}
               onPress={() => setModalVisible(false)}
             >
               <Text style={tw`text-${modal_text_color} font-bold text-center`}>{cancelButton}</Text>
             </TouchableOpacity>
+
+            {/* Accept button */}
             <TouchableOpacity
               style={tw`flex-1 bg-${Modal_accept_button} p-2 rounded-full mx-1`}
-              onPress={handleSendMessage}
+              onPress={handleAccept}
             >
               <Text style={tw`text-white font-bold text-center`}>{acceptButton}</Text>
             </TouchableOpacity>
           </View>
         </Animated.View>
       </Pressable>
-    </Modal>
+    </Modal >
   );
 };
 

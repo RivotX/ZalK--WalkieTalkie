@@ -42,17 +42,14 @@ export default function GroupsScreen() {
     if (userID != null) {
       socket.on('refreshgroups', () => {
         console.log('REFRESH groups');
-        axios
-          .post(`${SERVER_URL}/refreshSession`, { id: userID }, { withCredentials: true })
+        axios.post(`${SERVER_URL}/refreshSession`, { id: userID }, { withCredentials: true })
           .then((res) => {
             console.log('GRUPOS REFRESCADOOOOOOOOS', res.data.user.contacts);
             setRoomsAmIn(JSON.parse(res.data.user.groups));
           })
           .catch((error) => {
             console.log(error);
-          })
-          .finally(() => {
-            setLoading(false);
+          }).finally(() => {
           });
       });
     }
@@ -86,10 +83,9 @@ export default function GroupsScreen() {
               <ChatComponent
                 user={roomdata}
                 key={index}
-                onGeneralPress={() => navigation.navigate('ChatScreen', { user: roomdata })}
+                onGeneralPress={() => navigation.navigate('ChatScreen', { user: roomdata, isContact: false })}
                 iscontact={false}
                 iconDelete={true}
-                setLoading={setLoading}
                 showModalOnProfilePicturePress={true}
               />
             );

@@ -21,8 +21,7 @@ const ChatComponent = ({ user, iconDelete, onAdd, iscontact, isrequest, setLoadi
 
   useEffect(() => {
     if (!onAdd) {
-      axios
-        .get(`${SERVER_URL}/getsession`, { withCredentials: true })
+      axios.get(`${SERVER_URL}/getsession`, { withCredentials: true })
         .then((res) => {
           setusername(res.data.user.username);
           setUserInfo(res.data.user.info);
@@ -33,16 +32,8 @@ const ChatComponent = ({ user, iconDelete, onAdd, iscontact, isrequest, setLoadi
     }
   }, []);
 
-  const onClickButton = async () => {
-    setLoading(true);
-    if (iscontact) {
-      await socket.emit("deleteContact", { username: username, contact: user });
-    } else {
-      await socket.emit("deleteGroup", { username: username, group: user });
-    }
-  };
 
-  const onAccept = () => {
+  const handleAccept = () => {
     socket.emit("accept_request", { senderId: user.username, receiverId: username });
     setLoading(true);
   };
@@ -95,10 +86,10 @@ const ChatComponent = ({ user, iconDelete, onAdd, iscontact, isrequest, setLoadi
             </View>
 
             <View style={tw`${isrequest && "w-[40%]"}`}>
-              {/* Contacts */}
+              {/* Chat  */}
               {iconDelete && isrequest == undefined && (
-                <TouchableOpacity style={tw`px-5`} onPress={onClickButton}>
-                  <Ionicons name="close-sharp" size={22} color={"red"} />
+                <TouchableOpacity style={tw`px-5`} onPress={handleGeneralPress}>
+                  <Ionicons name="chatbubble-ellipses-outline" size={22} color={textColor} />
                 </TouchableOpacity>
               )}
 
@@ -115,7 +106,7 @@ const ChatComponent = ({ user, iconDelete, onAdd, iscontact, isrequest, setLoadi
                   <TouchableOpacity style={tw`px-1`} onPress={onDecline}>
                     <Ionicons name="close-sharp" size={32} color={"red"} />
                   </TouchableOpacity>
-                  <TouchableOpacity style={tw`px-1`} onPress={onAccept}>
+                  <TouchableOpacity style={tw`px-1`} onPress={handleAccept}>
                     <Ionicons name="checkbox" size={32} color={"green"} />
                   </TouchableOpacity>
                 </View>
