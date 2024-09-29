@@ -8,8 +8,8 @@ import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 dotenv.config();
 import multer from 'multer';
-import AWS from 'aws-sdk'; 
-import multerS3 from 'multer-s3';
+// import AWS from 'aws-sdk'; 
+// import multerS3 from 'multer-s3';
 import path from 'path';
 import fs from 'fs';
 
@@ -1243,14 +1243,14 @@ const initialRooms = [
   { name: 'The Voice Vault', info: 'Vault your voice securely here.' },
 ];
 
-sequelize.sync({ force: true }).then(() => {
+sequelize.sync({ alter: true }).then(() => {
   server.listen(3000, async () => {
     console.log('Server running...');
 
-    //create groups
-    for (const room of initialRooms) {
-      await Rooms.upsert(room);
-      console.log("Room created:", room);
-    }
+    // //create groups
+    // for (const room of initialRooms) {
+    //   await Rooms.upsert(room);
+    //   console.log("Room created:", room);
+    // }
   });
 });
