@@ -6,13 +6,17 @@ import AudioComponent from '../components/shared/AudioComponent';
 import { useSocket } from '../components/context/SocketContext';
 import { useNavigation } from '@react-navigation/native';
 import { useThemeColor } from '../hooks/useThemeColor';
+import { useRoute } from '@react-navigation/native';
+import { showAlert } from '../app/shared/ShowAlert';
 
 export default function RandomZalkScreen() {
+  const route = useRoute();
   const navigator = useNavigation();
   const socket = useSocket();
   const [isStarted, setIsStarted] = useState(false);
+  const [RandomUser,setRandomUser]= useState(route.params.randomUser);
   const [connectedUsers, setConnectedUsers] = useState(0);
-  const [RandomUser, setRandomUser] = useState({});
+  // const [RandomUser, setRandomUser] = useState({});
   const [isConectionClose, setIsConectionClose] = useState(false);
   const [timeLeft, setTimeLeft] = useState(3 * 60); // 3 minutos en segundos
   const RZ_Gradient_1 = useThemeColor({}, 'RZ_Gradient_1');
@@ -26,6 +30,7 @@ export default function RandomZalkScreen() {
   };
 
   useEffect(() => {
+    console.log('RandomUser PASADO POR PARAMETRO', RandomUser);
     if (socket != null) {
       socket.on('CloseConection', () => {
         console.log('Cerrando conexion');
@@ -33,17 +38,17 @@ export default function RandomZalkScreen() {
         setTimeLeft(3 * 60);
       });
 
-      socket.on('room_assigned', (room, username, userID) => {
-        console.log('Room assigned', room, username, userID);
-        setRandomUser({ room, username, userID });
-        setTimeout(() => {
-          if (!isConectionClose) {
-            setIsConectionClose(true);
-            setTimeLeft(3 * 60);
-            socket.emit('leave_room', RandomUser.room, RandomUser.userID);
-          }
-        }, timeLeft * 1000);
-      });
+      // socket.on('room_assigned', (room, username, userID) => {
+      //   console.log('Room assigned', room, username, userID);
+      //   setRandomUser({ room, username, userID });
+      //   setTimeout(() => {
+      //     if (!isConectionClose) {
+      //       setIsConectionClose(true);
+      //       setTimeLeft(3 * 60);
+      //       socket.emit('leave_room', RandomUser.room, RandomUser.userID);
+      //     }
+      //   }, timeLeft * 1000);
+      // });
     }
   }, [socket]);
 
@@ -61,6 +66,8 @@ export default function RandomZalkScreen() {
     if (isConectionClose) {
       setIsStarted(false);
       setRandomUser({});
+      navigator.navigate('RandomZalk');
+      showAlert('Connection closed', 'The other person closed the connection', 'OK');
     }
   }, [isConectionClose]);
 
@@ -68,7 +75,7 @@ export default function RandomZalkScreen() {
     setIsConectionClose(true);
     setTimeLeft(3 * 60);
     socket.emit('leave_room', RandomUser.room, RandomUser.userID);
-    navigator.navigate("Contacts");
+    navigator.navigate("RandomZalk");
   };
 
   return (

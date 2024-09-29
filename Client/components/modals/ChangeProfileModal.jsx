@@ -7,7 +7,7 @@ import axios from "axios";
 import getEnvVars from "../../config";
 import Loading from "../shared/Loading";
 const { SERVER_URL } = getEnvVars();
-import ShowAlert from "../shared/ShowAlert";
+import showAlert from "../../app/shared/ShowAlert";
 
 const ChangeProfileModal = ({ PropToChange, setModalVisibility, ModalIcon, isPassword, refreshSession, userID, currentProp }) => {
   const backgroundColor = useThemeColor({}, "background");
@@ -36,7 +36,7 @@ const ChangeProfileModal = ({ PropToChange, setModalVisibility, ModalIcon, isPas
   }, [isPassword, currentProp]);
 
   // Function to show alert based on platform
-  const ShowAlert = (title, message) => {
+  const showAlert = (title, message) => {
     if (Platform.OS === "web") {
       alert(`${title}: ${message}`);
     } else {
@@ -47,22 +47,22 @@ const ChangeProfileModal = ({ PropToChange, setModalVisibility, ModalIcon, isPas
   // validate form
   const validateForm = () => {
     if (newProp.trim().length === 0) {
-      ShowAlert("Invalid " + PropToChange, "The new " + PropToChange + " cannot be empty");
+      showAlert("Invalid " + PropToChange, "The new " + PropToChange + " cannot be empty");
       return false;
     }
     if (isPassword && newProp.trim().length < 8) {
-      ShowAlert("Invalid password", "Password must be at least 8 characters.");
+      showAlert("Invalid password", "Password must be at least 8 characters.");
       return false;
     }
     if (PropToChange === "email") {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(newProp)) {
-        ShowAlert("Invalid Email", "Please enter a valid email address.");
+        showAlert("Invalid Email", "Please enter a valid email address.");
         return false;
       }
     }
     if (PropToChange === "info" && newProp.length > 120) {
-      ShowAlert("Invalid info", "Info must be less than 120 characters.");
+      showAlert("Invalid info", "Info must be less than 120 characters.");
       return false;
     }
     return true;
@@ -88,10 +88,10 @@ const ChangeProfileModal = ({ PropToChange, setModalVisibility, ModalIcon, isPas
       .catch((err) => {
         console.error("Error updating user:", err);
         if (err.response && err.response.data) {
-          ShowAlert("Error", err.response.data.message);
+          showAlert("Error", err.response.data.message);
           setLoading(false);
         } else {
-          ShowAlert("Error", "unexpected error occurred.");
+          showAlert("Error", "unexpected error occurred.");
           setModalVisibility(false);
           setLoading(false);
         }

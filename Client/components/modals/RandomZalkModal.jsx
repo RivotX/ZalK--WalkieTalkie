@@ -17,6 +17,7 @@ const RandomZalkModal = ({ userID, onClose }) => {
   const RZ_connection_text_color = useThemeColor({}, 'RZ_connection_text_color');
   const navigation = useNavigation();
   const [shouldClose, setShouldClose] = useState(false);
+  const [randomUser, setRandomUser] = useState({});
 
   const startSearch = () => {
     setIsStarted(true);
@@ -32,6 +33,7 @@ const RandomZalkModal = ({ userID, onClose }) => {
   // ==== Close modal and navigates to RandomZalkScreen when connection is established ====
   useEffect(() => {
     socket.on('room_assigned', (room, username, userID) => {
+      setRandomUser({ room, username, userID });
       console.log('Room assigned', room, username, userID);
       setShouldClose(true);
     });
@@ -41,7 +43,7 @@ const RandomZalkModal = ({ userID, onClose }) => {
     if (shouldClose) {
       onClose();
       Vibration.vibrate(500);
-      navigation.navigate('RandomZalkScreen');
+      navigation.navigate('RandomZalkScreen', {randomUser:randomUser});
     }
   }, [shouldClose, onClose]);
 

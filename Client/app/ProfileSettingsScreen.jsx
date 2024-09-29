@@ -11,7 +11,7 @@ import getEnvVars from "../config";
 import { useNavigation } from "@react-navigation/native";
 import ProfileIcon from "../assets/images/images.png";
 import Loading from "../components/shared/Loading";
-import ShowAlert from "../components/shared/ShowAlert";
+import showAlert from "../app/shared/ShowAlert";
 
 const ProfileSettingsScreen = () => {
   const backgroundColor = useThemeColor({}, "background");
@@ -124,7 +124,7 @@ const ProfileSettingsScreen = () => {
       } catch (error) {
         console.error("Error uploading image: ", error);
         setLoading(false);
-        ShowAlert("Error", "Error uploading image");
+        showAlert("Error", "Error uploading image");
       }
     } else {
       console.log("No image selected");
