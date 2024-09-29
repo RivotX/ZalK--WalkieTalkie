@@ -93,6 +93,7 @@ export default function RootLayout() {
           setIsBusy(res.data.user.isBusy);
           setUserID(res.data.user.id);
           setInfo(res.data.user.info);
+          setProfilePicture(res.data.user.profilePicture);
           console.log('SE LOGUEO CORRECTAMENTE EL USUARIO', res.data.user);
         })
         .catch((error) => {
@@ -148,6 +149,9 @@ export default function RootLayout() {
           .post(`${SERVER_URL}/refreshSession`, { id: userID }, { withCredentials: true })
           .then((res) => {
             setUsername(res.data.user.username);
+            setInfo(res.data.user.info);
+            setProfilePicture(res.data.user.profilePicture);
+
           })
           .catch((error) => {
             console.log(error);
