@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+      "typeRoots": ["./node_modules/@types", "./@types"],
+      "target": "es6", // Compile to ES6
+      "module": "commonjs", // Use commonjs module system
+      "outDir": "./dist", // Output compiled files to the 'dist' directory
+      "strict": true, // Enable all strict type-checking options
+      "esModuleInterop": true, // Enables emit interoperability between CommonJS and ES Modules
+      "skipLibCheck": true, // Skip type checking of all declaration files (*.d.ts)
+      "forceConsistentCasingInFileNames": true // Disallow inconsistently-cased references to the same file.
+    },
+    "include": ["./**/*.ts", ".d.ts"], // Include all TypeScript files in the project
+    "exclude": ["node_modules"] // Exclude the node_modules directory
+  }

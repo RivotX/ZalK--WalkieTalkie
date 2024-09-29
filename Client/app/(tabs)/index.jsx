@@ -1,0 +1,89 @@
+//Client/app/(tabs)/index.jsx
+import { View, Text, TouchableOpacity, Vibration } from 'react-native';
+import React, { useState, useEffect, } from 'react';
+import tw from 'twrnc';
+import { useThemeColor } from '../../hooks/useThemeColor';
+import axios from 'axios';
+import getEnvVars from '../../config';
+import { useSocket } from '../../components/context/SocketContext';
+import FriendRequestModal from '../../components/modals/FriendRequestModal';
+import RandomZalkModal from '../../components/modals/RandomZalkModal';
+
+const RandomZalkScreen = () => {
+  const backgroundColor = useThemeColor({}, 'background');
+  const PrimaryPurple = useThemeColor({}, 'PrimaryPurple');
+
+  const [userID, setUserID] = useState();
+  const [username, setUsername] = useState();
+  const { SERVER_URL } = getEnvVars();
+  const [socket, setSocket] = useState(useSocket());
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisibleRandomZalk, setModalVisibleRandomZalk] = useState(false);
+
+  const [request, setRequest] = useState([{ senderId: null, receiverId: null, message: null }]);
+
+  useEffect(() => {
+    if (socket != null) {
+      console.log(socket, 'socket EN INDEX');
+      axios.get(`${SERVER_URL}/getsession`, { withCredentials: true })
+        .then((res) => { setUserID(res.data.user.id); setUsername(res.data.user.username) })
+        .catch((error) => { console.log(error) });
+
+      socket.on('receive_request', (data) => {
+        console.log('Solicitud recibida de:', data.senderId);
+        setRequest(data);
+        Vibration.vibrate(200);
+        setModalVisible(true);
+      });
+    }
+  }, [])
+
+  // ==== Accept friend request =======
+  const acceptRequest = (senderId) => {
+    console.log('Solicitud aceptada de:', senderId);
+    socket.emit('accept_request', { senderId: senderId, receiverId: username });
+    setModalVisible(!modalVisible);
+  }
+
+  // ==== Decline friend request =======
+  const declineRequest = (senderId) => {
+    console.log('Solicitud rechazada de:', senderId);
+    socket.emit('decline_request', { senderId: senderId, receiverId: username });
+    setModalVisible(!modalVisible);
+  }
+
+  // ==== Random Zalk =======
+  const RandomZalk = () => {
+    console.log('Random Zalk');
+    setModalVisibleRandomZalk(true);
+  }
+
+  return (
+    <View style={tw`flex-1 items-center justify-center bg-[${backgroundColor}]`}>
+
+      <TouchableOpacity style={tw`size-80 bg-${PrimaryPurple} flex justify-center items-center shadow-xl rounded-full`} onPress={RandomZalk}>
+        <View>
+          <Text style={tw`text-3xl text-white font-medium`}>Tap to Random Zalk</Text>
+        </View>
+      </TouchableOpacity>
+
+      {/* Friend Request Modal */}
+      {modalVisible &&
+        <FriendRequestModal
+          setModalVisible={setModalVisible}
+          modalVisible={modalVisible}
+          request={request}
+          acceptRequest={acceptRequest}
+          declineRequest={declineRequest}
+        />
+      }
+
+      {/* Random Zalk Modal */}
+      {modalVisibleRandomZalk &&
+        <RandomZalkModal userID={userID} onClose={() => { setModalVisibleRandomZalk(false) }} />
+      }
+    </View>
+  );
+}
+
+export default RandomZalkScreen;
