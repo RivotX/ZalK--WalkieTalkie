@@ -2,7 +2,7 @@ import { React, useState, useEffect } from "react";
 import { View, Text, ScrollView } from "react-native";
 import tw from "twrnc";
 import { useThemeColor } from "../../hooks/useThemeColor";
-import { useNavigation } from "@react-navigation/native"; 
+import { useNavigation } from "@react-navigation/native";
 import ChatComponent from "../../components/shared/ChatComponent";
 import { useSocket } from "../../components/context/SocketContext";
 import axios from "axios";
@@ -54,10 +54,12 @@ export default function ContactsScreen() {
       console.log("LAST CONTACTS", lastcontacts);
       setContacts(lastcontacts);
       setLoading(false);
-    })
+    }).catch(() => {
+      setLoading(false);
+    });
   }
 
-// ===== Refresh contacts =====
+  // ===== Refresh contacts =====
   useEffect(() => {
     if (userID != null) {
       getContacts();
