@@ -98,6 +98,8 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
       await socket.emit("deleteContact", { username: userName, contact: user });
       navigation.navigate('Contacts');
       setLoadingLayout(true);
+      console.log("zz");
+
     } else if (!isContact) {
       await socket.emit("deleteGroup", { username: userName, group: user });
       navigation.navigate('Groups');

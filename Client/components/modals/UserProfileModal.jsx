@@ -22,10 +22,10 @@ const UserProfileModal = ({ user, modalIconVisible, setModalIconVisible, iconSiz
           onPress={() => setModalIconVisible(false)}
         >
           <Image
-            style={{ width: 300, height: 300, resizeMode: 'contain' }}
+            style={{ width: 300, height: 300, resizeMode: 'cover' }}
             source={user.profile ? user.profile : ProfileIcon}
           />
-          <Text style={tw`text-[${textColor}] text-lg font-bold text-center mt-1 border-b border-t border-gray-400 w-full`}>{user.name}</Text>
+          <Text style={tw`text-[${textColor}] text-lg font-bold text-center mt-2 border-b border-t border-gray-400 w-full`}>{user.name}</Text>
           <Text style={tw`text-[${textColor}] text-center mt-1 w-2/3`}>{user.info}</Text>
         </TouchableOpacity>
       </Modal>

@@ -7,6 +7,7 @@ import axios from "axios";
 import getEnvVars from "../../config";
 import Loading from "../shared/Loading";
 const { SERVER_URL } = getEnvVars();
+import ShowAlert from "../shared/ShowAlert";
 
 const ChangeProfileModal = ({ PropToChange, setModalVisibility, ModalIcon, isPassword, refreshSession, userID, currentProp }) => {
   const backgroundColor = useThemeColor({}, "background");
@@ -35,7 +36,7 @@ const ChangeProfileModal = ({ PropToChange, setModalVisibility, ModalIcon, isPas
   }, [isPassword, currentProp]);
 
   // Function to show alert based on platform
-  const showAlert = (title, message) => {
+  const ShowAlert = (title, message) => {
     if (Platform.OS === "web") {
       alert(`${title}: ${message}`);
     } else {
@@ -46,22 +47,22 @@ const ChangeProfileModal = ({ PropToChange, setModalVisibility, ModalIcon, isPas
   // validate form
   const validateForm = () => {
     if (newProp.trim().length === 0) {
-      showAlert("Invalid " + PropToChange, "The new " + PropToChange + " cannot be empty");
+      ShowAlert("Invalid " + PropToChange, "The new " + PropToChange + " cannot be empty");
       return false;
     }
     if (isPassword && newProp.trim().length < 8) {
-      showAlert("Invalid password", "Password must be at least 8 characters.");
+      ShowAlert("Invalid password", "Password must be at least 8 characters.");
       return false;
     }
     if (PropToChange === "email") {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(newProp)) {
-        showAlert("Invalid Email", "Please enter a valid email address.");
+        ShowAlert("Invalid Email", "Please enter a valid email address.");
         return false;
       }
     }
     if (PropToChange === "info" && newProp.length > 120) {
-      showAlert("Invalid info", "Info must be less than 120 characters.");
+      ShowAlert("Invalid info", "Info must be less than 120 characters.");
       return false;
     }
     return true;
@@ -73,10 +74,10 @@ const ChangeProfileModal = ({ PropToChange, setModalVisibility, ModalIcon, isPas
     setLoading(true);
     //if the form is valid, update the user
     axios.post(`${SERVER_URL}/update-user`, {
-        userID: userID,
-        PropToChange: PropToChange,
-        newProp: newProp,
-      })
+      userID: userID,
+      PropToChange: PropToChange,
+      newProp: newProp,
+    })
       .then(() => {
         refreshSession();
       })
@@ -87,10 +88,10 @@ const ChangeProfileModal = ({ PropToChange, setModalVisibility, ModalIcon, isPas
       .catch((err) => {
         console.error("Error updating user:", err);
         if (err.response && err.response.data) {
-          showAlert("Error", err.response.data.message);
+          ShowAlert("Error", err.response.data.message);
           setLoading(false);
         } else {
-          showAlert("Error", "unexpected error occurred.");
+          ShowAlert("Error", "unexpected error occurred.");
           setModalVisibility(false);
           setLoading(false);
         }

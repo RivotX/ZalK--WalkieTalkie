@@ -10,6 +10,8 @@ import axios from "axios";
 import getEnvVars from "../config";
 import { useNavigation } from "@react-navigation/native";
 import ProfileIcon from "../assets/images/images.png";
+import Loading from "../components/shared/Loading";
+import ShowAlert from "../components/shared/ShowAlert";
 
 const ProfileSettingsScreen = () => {
   const backgroundColor = useThemeColor({}, "background");
@@ -31,7 +33,7 @@ const ProfileSettingsScreen = () => {
   const navigation = useNavigation();
   const [profilePicture, setProfilePicture] = useState(null);
   const animation = useRef(new Animated.Value(0)).current;
-  const [loading, setloading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { SERVER_URL } = getEnvVars();
 
   // ===== Maximum length for the user info in the UI =====
@@ -64,8 +66,7 @@ const ProfileSettingsScreen = () => {
 
   // Regresh session
   const refreshSession = () => {
-    axios
-      .post(`${SERVER_URL}/refreshSession`, { id: userID }, { withCredentials: true })
+    axios.post(`${SERVER_URL}/refreshSession`, { id: userID }, { withCredentials: true })
       .then((res) => {
         setUsername(res.data.user.username);
         setuserEmail(res.data.user.email);
@@ -75,12 +76,11 @@ const ProfileSettingsScreen = () => {
       })
       .catch((error) => {
         console.log(error);
-      });
+      })
   };
 
   // ===== Upload profile picture =====
   const uploadImage = async () => {
-    setloading(true);
     const image = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
@@ -96,6 +96,8 @@ const ProfileSettingsScreen = () => {
         name: image.assets[0].fileName,
       });
       try {
+        setLoading(true);
+
         const response = await fetch(SERVER_URL + "/upload", {
           method: "POST",
           body: formData,
@@ -107,20 +109,22 @@ const ProfileSettingsScreen = () => {
           // Save the image URL to your database
           const imageUrl = responseJson.fileUrl;
           const userId = userID; // Replace with the actual user ID
-          await axios
-            .post(SERVER_URL + "/save-image-url", { profilePicture: imageUrl, userId })
+          await axios.post(SERVER_URL + "/save-image-url", { profilePicture: imageUrl, userId })
             .then((res) => {
               console.log("Image uploaded successfully: ", res.data);
               setProfilePicture(imageUrl);
             })
             .catch((error) => {
               console.error("Error saving image URL:", error);
+              
             }).finally(() => {
-              setloading(false);
+              setLoading(false)
             });
         }
       } catch (error) {
         console.error("Error uploading image: ", error);
+        setLoading(false);
+        ShowAlert("Error", "Error uploading image");
       }
     } else {
       console.log("No image selected");
@@ -162,6 +166,7 @@ const ProfileSettingsScreen = () => {
       const response = await axios.get(`${SERVER_URL}/get-image-url/${userID}`);
       setProfilePicture(response.data.profilePicture);
       console.log("response.data.profilePicture", response.data.profilePicture);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching profile picture:", error);
     }
@@ -231,7 +236,7 @@ const ProfileSettingsScreen = () => {
   };
 
   return (
-    
+
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView style={tw`flex-1 bg-[${backgroundColor}]`}>
         <View style={tw`w-full h-1/3 flex items-center justify-center mt-2`}>
@@ -239,10 +244,14 @@ const ProfileSettingsScreen = () => {
             style={tw`bg-black h-42 w-42 rounded-full relative`}
             onPress={() => navigation.navigate("ProfilePictureScreen", { userID: userID })}
           >
-            {profilePicture ? (
-              <Image source={{ uri: profilePicture }} style={tw`size-full rounded-full`} />
+            {loading ? (
+              <Loading />
             ) : (
-              <Image source={ProfileIcon} style={tw`size-full rounded-full`} />
+              profilePicture ? (
+                <Image source={{ uri: profilePicture }} style={tw`size-full rounded-full`} />
+              ) : (
+                <Image source={ProfileIcon} style={tw`size-full rounded-full`} />
+              )
             )}
             <TouchableOpacity
               onPress={uploadImage}

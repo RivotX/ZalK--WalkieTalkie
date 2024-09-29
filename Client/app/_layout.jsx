@@ -222,7 +222,7 @@ export default function RootLayout() {
   if (!fontsLoaded) {
     return (
       <Modal animationType="fade" transparent={true} onRequestClose={() => { }}>
-        <View style={[tw`flex-1 justify-center items-center`, { backgroundColor: 'rgba(0, 0, 0, 0.5)' }]}>
+        <View style={[tw`flex-1 justify-center items-center`]}>
           <Loading />
         </View>
       </Modal>
@@ -318,7 +318,7 @@ export default function RootLayout() {
                       </TouchableOpacity>
                     ),
                     headerLeft: () => <View style={{ marginLeft: -50 }} />,
-                    headerRight: () => <ConfigIcon chatroom={true} setModalIconVisible={setModalIconVisible} user={user} isContact={isContact} setLoadingLayout={setLoading}/>,
+                    headerRight: () => <ConfigIcon chatroom={true} setModalIconVisible={setModalIconVisible} user={user} isContact={isContact} setLoadingLayout={setLoading} />,
                   };
                 }}
               />
