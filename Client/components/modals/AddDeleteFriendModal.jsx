@@ -77,7 +77,6 @@ const AddDeleteFriendModal = ({ setModalVisible, modalVisible, OnAccept, selecte
     >
       <Pressable
         style={tw`flex-1 justify-center items-center bg-black bg-opacity-50`}
-        onPress={() => setModalVisible(false)}
       >
         <Animated.View style={[tw`w-11/12 max-w-md bg-${modal_bg_color} rounded-lg shadow-lg p-6`, slideIn]}>
           <Text style={tw`text-2xl font-semibold mb-4 text-${modal_title_color} text-center`}>{getTitle()}</Text>
