@@ -22,6 +22,12 @@ import getEnvVars from '../config';
 import Loading from '../components/shared/Loading';
 const { SERVER_URL } = getEnvVars();
 const { SOCKET_URL } = getEnvVars();
+import * as Font from 'expo-font';
+const loadFonts = async () => {
+  await Font.loadAsync({
+    'Zalk': require('../assets/fonts/AppleTea-z8R1a.ttf'), // Asegúrate de que la ruta sea correcta
+  });
+};
 
 export default function RootLayout() {
   const [modalIconVisible, setModalIconVisible] = useState(false);
@@ -39,6 +45,11 @@ export default function RootLayout() {
   const [loading, setLoading] = useState(false);
   const [profilePicture, setProfilePicture] = useState(null);
   // const [socketCreated, setSocketCreated] = useState(false);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+    loadFonts().then(() => setFontsLoaded(true));
+  }, []);
 
   // ===== Creates socket connection for the user =====
   const createSocket = () => {
@@ -207,6 +218,10 @@ export default function RootLayout() {
       console.error('Error fetching profile picture:', error);
     }
   };
+
+  if (!fontsLoaded) {
+    return <Loading />;
+  }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

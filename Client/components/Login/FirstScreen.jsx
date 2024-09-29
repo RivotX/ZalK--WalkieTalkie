@@ -3,14 +3,11 @@ import { View, Text, Image, TouchableOpacity, Animated, Easing, Dimensions } fro
 import tw from 'twrnc';
 import img_cascos from '../../assets/images/auriculares.png';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useFonts } from 'expo-font';
 import { useThemeColor } from '../../hooks/useThemeColor';
 const { height, width } = Dimensions.get('window');
 
 const FirstScreen = ({ SetFirstScreen, SetLoginScreenState }) => {
-  const [fontsLoaded] = useFonts({
-    'Zalk': require('../../assets/AppleTea-z8R1a.ttf'),
-  });
+
   const [isPressed, setIsPressed] = useState(false);
 
   const GoLoginScreen = (Signup) => {
@@ -146,8 +143,6 @@ const FirstScreen = ({ SetFirstScreen, SetLoginScreenState }) => {
   return (
     <View style={tw`flex-1 size-full bg-${FirstScreenbg} `}>
 
-      {/* Background Image */}
-      {/* <Image source={DarkBG} style={tw`absolute top-0 left-0 w-full h-full -z-20`} /> */}
       {/* Particles Animation */}
       {particles.map((particle) => {
         const animatedStyle = {
@@ -173,7 +168,7 @@ const FirstScreen = ({ SetFirstScreen, SetLoginScreenState }) => {
       {/* Main content */}
       <View style={tw`flex-1 items-center justify-center h-full `} pointerEvents="box-none">
         {/* Title and subtitle */}
-        <Text style={[tw`text-[${textColor}] text-5xl mb-1`, { fontFamily: 'Zalk', textShadowOffset: { width: 0, height: 0 }, textShadowRadius: 7, textShadowColor: 'pink', }]}>Zal<Text style={tw`text-[#B233A1]`} >k</Text></Text>
+        <Text style={[tw`text-[${textColor}] text-5xl mb-1`, { fontFamily: 'Zalk', textShadowOffset: { width: 0, height: 0 }, textShadowRadius: 7, textShadowColor: 'pink', }]}>Zal<Text style={tw`text-[#B233A1]`} >K</Text></Text>
         <Text style={[tw`text-[${textColor}] text-lg font-medium mb-1 text-center p-3 mx-6`]}>
           Subtitulo, cambiar BOTONES, cambiar letras, cambiar color (igual en modo claro/oscuro)
         </Text>
