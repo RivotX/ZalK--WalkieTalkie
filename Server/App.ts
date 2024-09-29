@@ -8,6 +8,8 @@ import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 dotenv.config();
 import multer from 'multer';
+import {S3Client, PutObjectCommand,ListBucketsCommand} from '@aws-sdk/client-s3';
+import multerS3 from 'multer-s3';
 import path from 'path';
 import fs from 'fs';
 
@@ -1049,31 +1051,51 @@ io.on('connection', (socket: Socket) => {
 // *Profile picture upload*
 // =================================================================
 
-// Crear la carpeta 'uploads' si no existe
-const uploadDir = path.join(__dirname, 'uploads');
-console.log('Upload directory:', uploadDir); // Log para verificar la ruta de la carpeta
-if (!fs.existsSync(uploadDir)) {
-  console.log('Creating upload directory...');
-  fs.mkdirSync(uploadDir);
-} else {
-  console.log('Upload directory already exists');
-}
 
-// Configuración de multer
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir); // Usar la ruta absoluta de la carpeta 'uploads'
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
+
+
+
+// // Crear la carpeta 'uploads' si no existe
+// const uploadDir = path.join(__dirname, 'uploads');
+// console.log('Upload directory:', uploadDir); // Log para verificar la ruta de la carpeta
+// if (!fs.existsSync(uploadDir)) {
+//   console.log('Creating upload directory...');
+//   fs.mkdirSync(uploadDir);
+// } else {
+//   console.log('Upload directory already exists');
+// }
+
+// // Configuración de multer
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, uploadDir); // Usar la ruta absoluta de la carpeta 'uploads'
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, `${Date.now()}-${file.originalname}`);
+//   },
+// });
+
+const s3 = new S3Client({
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
   },
 });
 
-const upload = multer({ storage: storage }).single('file');
+async function checkS3Connection() {
+  try {
+    const result = await s3.send(new ListBucketsCommand({}));
+    console.log('Successfully connected to S3. Buckets:', result.Buckets);
+  } catch (error) {
+    console.error('Failed to connect to S3:', error);
+  }
+}
 
+const upload = multer().single('file');
 // Endpoint para manejar la carga de archivos
 app.post('/upload', (req, res) => {
-  upload(req, res, (err) => {
+  upload(req, res, async (err) => {
     if (err) {
       console.log('Error uploading file:', err);
       return res.status(500).json({ error: err.message });
@@ -1082,11 +1104,35 @@ app.post('/upload', (req, res) => {
       console.log('No file uploaded');
       return res.status(400).json({ error: 'No file uploaded' });
     }
-    const filePath = `/uploads/${req.file.filename}`;
-    console.log('File uploaded to:', filePath); // Log para verificar la ruta del archivo subido
-    res.status(200).json({ filePath });
+
+    // Subir el archivo a S3
+    const bucketName = process.env.S3_BUCKET_NAME;
+    const fileName = `${Date.now().toString()}-${req.file.originalname}`; // Nombre único para el archivo
+
+    try {
+      const uploadCommand = new PutObjectCommand({
+        Bucket: bucketName,
+        Key: fileName, // Nombre del archivo en S3
+        Body: req.file.buffer, // El archivo en formato buffer
+        ContentType: req.file.mimetype, // Tipo de archivo
+      });
+
+      // Ejecutar la subida del archivo
+      await s3.send(uploadCommand);
+
+      // Construir la URL del archivo
+      const fileUrl = `https://${bucketName}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
+
+      console.log('File uploaded to:', fileUrl);
+      res.status(200).json({ fileUrl });
+    } catch (error) {
+      console.error('Error uploading file to S3:', error);
+      res.status(500).json({ error: 'Error uploading file to S3' });
+    }
   });
 });
+
+checkS3Connection();
 
 // Endpoint para guardar la URL de la imagen en la base de datos
 app.post('/save-image-url', async (req, res) => {
@@ -1136,7 +1182,7 @@ app.get('/get-image-url/:userId', async (req, res) => {
 });
 
 // Servir archivos estáticos desde la carpeta 'uploads'
-app.use('/uploads', express.static(uploadDir));
+// app.use('/uploads', express.static(uploadDir));
 
 // ================= * END Profile picture upload* ===================================
 
