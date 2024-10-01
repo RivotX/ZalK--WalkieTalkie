@@ -8,6 +8,9 @@ import getEnvVars from '../../config';
 import { useSocket } from '../../components/context/SocketContext';
 import FriendRequestModal from '../../components/modals/FriendRequestModal';
 import RandomZalkModal from '../../components/modals/RandomZalkModal';
+import * as Notifications from 'expo-notifications';
+import * as Device  from 'expo-device';
+
 
 const RandomZalkScreen = () => {
   const backgroundColor = useThemeColor({}, 'background');
@@ -21,6 +24,21 @@ const RandomZalkScreen = () => {
   const [modalVisibleRandomZalk, setModalVisibleRandomZalk] = useState(false);
 
   const [request, setRequest] = useState([{ senderId: null, receiverId: null, message: null }]);
+  
+  const pushNotification = async(username,message)=> {
+    console.log('username', username);
+    if(true==true){
+        console.log('Device is a device');
+        await Notifications.scheduleNotificationAsync({
+        content: {
+          title: `@${username} has sent you a friend request.`,
+          body: `message: "${message}"`||'no message',
+          data: { data: 'goes here' },
+        },
+        trigger: { seconds: 1 },
+      });
+    }
+  }
 
   useEffect(() => {
     if (socket != null) {
@@ -31,7 +49,9 @@ const RandomZalkScreen = () => {
 
       socket.on('receive_request', (data) => {
         console.log('Solicitud recibida de:', data.senderId);
+
         setRequest(data);
+        pushNotification(data.senderId,data.message);
         Vibration.vibrate(200);
         setModalVisible(true);
       });

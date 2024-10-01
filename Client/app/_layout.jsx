@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Stack } from 'expo-router';
 import tw from 'twrnc';
+
 import { Image, View, Text, SafeAreaView, TouchableOpacity, Modal, Alert } from 'react-native';
 import ProfileIcon from '../assets/images/images.png';
 import LoginScreen from './LoginScreen';
@@ -12,6 +13,9 @@ import UserProfileModal from '../components/modals/UserProfileModal';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SocketProvider } from '../components/context/SocketContext';
+import * as Notifications from 'expo-notifications'
+import { Platform } from 'react-native';
+import Constants from 'expo-constants';
 // import createSocket from "../components/context/CreateSocket";
 import profilepicture from '../assets/images/emoGirlIcon.png';
 import { Audio } from 'expo-av';
@@ -22,6 +26,7 @@ import getEnvVars from '../config';
 import Loading from '../components/shared/Loading';
 const { SERVER_URL } = getEnvVars();
 const { SOCKET_URL } = getEnvVars();
+import * as Device from 'expo-device';
 import * as Font from 'expo-font';
 const loadFonts = async () => {
   await Font.loadAsync({
@@ -46,9 +51,79 @@ export default function RootLayout() {
   const [profilePicture, setProfilePicture] = useState(null);
   // const [socketCreated, setSocketCreated] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  const [expoPushToken, setExpoPushToken] = useState('');
 
-  useEffect(() => {
+  // ===== Notifications =====
+
+    
+    const registerForPushNotificationsAsync = async () => {
+      let token;
+      if (true===true) {
+        const { status: existingStatus } = await Notifications.getPermissionsAsync();
+        let finalStatus = existingStatus;
+        if (existingStatus !== 'granted') {
+          const { status } = await Notifications.requestPermissionsAsync();
+          finalStatus = status;
+        }
+        if (finalStatus !== 'granted') {
+          alert('Failed to get push token for push notification!');
+          return;
+        }
+        token = (await Notifications.getExpoPushTokenAsync({
+          projectId: Constants.expoConfig.extra.eas.projectId, // Replace with your own projectId MIGUEL
+        })).data;
+        console.log(token, 'token and projectId', Constants.expoConfig.extra.eas.projectId);
+      } else {
+        alert('Must use physical device for Push Notifications');
+      }
+    
+      if (Platform.OS === 'android') {
+        Notifications.setNotificationChannelAsync('default', {
+          name: 'default',
+          importance: Notifications.AndroidImportance.MAX,
+          vibrationPattern: [0, 250, 250, 250],
+          lightColor: '#FF231F7C',
+        });
+      }
+    
+      if (Platform.OS === 'web') {
+        const vapidPublicKey = 'YOUR_VAPID_PUBLIC_KEY'; // Replace with your VAPID public key
+        token = await Notifications.getDevicePushTokenAsync({ vapidPublicKey });
+        console.log(token);
+      }
+    
+      return token;
+    }
+
+    Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+    }),
+  });
+
+
+  const pushNotification = async(user)=> {
+    console.log('room', room);
+    if(Device.isDevice){
+        console.log('Device is a device');
+        await Notifications.scheduleNotificationAsync({
+        content: {
+          title: 'New Request',
+          body: `${user} wants to add you`,
+          data: { data: 'goes here' },
+        },
+        trigger: { seconds: 1 },
+      });
+    }
+  }
+  
+  // ===== Loads the custom font =====
+
+  useEffect(()=> {
     loadFonts().then(() => setFontsLoaded(true));
+    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
   }, []);
 
   // ===== Creates socket connection for the user =====
@@ -190,6 +265,7 @@ export default function RootLayout() {
           await sound.playAsync();
           console.log('Playing sound');
           Alert.alert('playing sound');
+          // Schedule a notification
         } catch (error) {
           Alert.alert('Error playing sound');
           console.error('Error playing sound:', error);
@@ -252,7 +328,7 @@ export default function RootLayout() {
                       <TouchableOpacity onPress={() => setModalIconVisible(true)}>
                         <Image source={profilePicture ? { uri: profilePicture } : ProfileIcon} style={tw`size-9 mr-2 rounded-full`} />
                         <UserProfileModal
-                          user={{ name: username, info: info }}
+                          user={{ name: username, info: info, profile: profilePicture }}
                           modalIconVisible={modalIconVisible}
                           setModalIconVisible={setModalIconVisible}
                           iconSize={12}

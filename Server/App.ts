@@ -12,6 +12,7 @@ import {S3Client, PutObjectCommand,ListBucketsCommand} from '@aws-sdk/client-s3'
 import multerS3 from 'multer-s3';
 import path from 'path';
 import fs from 'fs';
+import {sendPushNotification} from './sendPushNotification';
 
 const app = express();
 const connectedUsers: { [key: string]: string } = {};
@@ -83,6 +84,7 @@ class Users extends Model {
   declare profilePicture: string;
   declare requests: string;
   declare isBusy: boolean;
+  // declare token: string;
 
   // Method to set the password, hashes password and sets the password
   setPassword(password: string): void {
@@ -516,6 +518,17 @@ app.post('/searchRoom', async (req, res) => {
   }
 });
 // =================================================================
+
+app.post('/send-notification', async (req, res) => {
+  const { token, message } = req.body;
+  try {
+    await sendPushNotification(token, message);
+    res.status(200).send('Notification sent');
+  } catch (error) {
+    console.error('Error sending notification:', error);
+    res.status(500).send('Failed to send notification');
+  }
+});
 // =================================================================Search User=================================================================
 app.post('/searchUser', async (req, res) => {
   const { usernamesearch, username } = req.body;

@@ -6,6 +6,11 @@
     "orientation": "portrait",
     "icon": "./assets/images/adaptive-icon.png",
     "scheme": "myapp",
+    "extra": {
+      "eas": {
+        "projectId": "96a09fef-9794-44ab-ae0a-336b54a2ebfa"
+      }
+    },
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/adaptive-icon.png",
