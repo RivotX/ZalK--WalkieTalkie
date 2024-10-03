@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import RandomZalk from './index';
 import ContactsScreen from './Contacts'; // Asegúrate de que la ruta sea correcta
@@ -9,6 +9,13 @@ import { Text, View, Modal } from 'react-native'; // Importa Modal desde react-n
 import tw from 'twrnc';
 import { useThemeColor } from '../../hooks/useThemeColor';
 import Loading from '../../components/shared/Loading';
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
+import { Platform } from 'react-native';
+import axios from 'axios';
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+import getEnvVars from '../../config';
+import { useRoute } from '@react-navigation/native';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -20,11 +27,71 @@ function GroupTabIcon({ focused, color }) {
   return <GroupIcon fill={focused ? color : 'gray'} />;
 }
 
-export default function TabLayout() {
+const { SERVER_URL } = getEnvVars();
+
+ 
+export default function TabLayout({}) {
   const SoftbackgroundColor = useThemeColor({}, 'Softbackground');
   const textColor = useThemeColor({}, 'text');
   const primarypurpleHEX = useThemeColor({}, 'primarypurpleHEX');
   const [loading, setLoading] = useState(false);
+  const route = useRoute();
+  const { username } = route.params;
+  // ===== Notifications =====
+
+    
+  const registerForPushNotificationsAsync = async () => {
+    let token;
+    if (true===true) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        alert('Failed to get push token for push notification!');
+        return;
+      }
+      token = (await Notifications.getExpoPushTokenAsync({projectId: Constants.expoConfig.extra.eas.projectId,})).data;
+          axios.post(`${SERVER_URL}/saveToken`, { token: token, username: username }).then((res) => {
+            console.log(res.data);
+          });
+      console.log(token, 'token and projectId', Constants.expoConfig.extra.eas.projectId);
+    } else {
+      alert('Must use physical device for Push Notifications');
+    }
+  
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+  
+    if (Platform.OS === 'web') {
+      const vapidPublicKey = 'YOUR_VAPID_PUBLIC_KEY'; // Replace with your VAPID public key
+      token = await Notifications.getDevicePushTokenAsync({ vapidPublicKey });
+      console.log(token);
+    }
+  
+    return token;
+  }
+
+  Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then(token => console.log(token));
+  }, [username]);
+
 
   return (
     <>

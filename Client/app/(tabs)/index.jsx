@@ -32,7 +32,7 @@ const RandomZalkScreen = () => {
         await Notifications.scheduleNotificationAsync({
         content: {
           title: `@${username} has sent you a friend request.`,
-          body: `message: "${message}"`||'no message',
+          body: message!=null?`message: "${message}"`:'no message',
           data: { data: 'goes here' },
         },
         trigger: { seconds: 1 },

@@ -3,7 +3,7 @@ import { Expo, ExpoPushMessage } from 'expo-server-sdk';
 // Create a new Expo SDK client
 let expo = new Expo();
 
-export async function sendPushNotification(token: string, message: string): Promise<void> {
+export async function sendPushNotification(senderUsername: string , token: string, message: string): Promise<void> {
   // Create the messages that you want to send to clients
   let messages: ExpoPushMessage[] = [];
 
@@ -17,8 +17,9 @@ export async function sendPushNotification(token: string, message: string): Prom
   messages.push({
     to: token,
     sound: 'default',
+    title: `@${senderUsername} has sent you a friend request.`,
     body: message,
-    data: { withSome: 'data' },
+    data: { data: 'goes here' },
   });
 
   // The Expo push notification service accepts batches of notifications

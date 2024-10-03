@@ -12,7 +12,7 @@ import {S3Client, PutObjectCommand,ListBucketsCommand} from '@aws-sdk/client-s3'
 import multerS3 from 'multer-s3';
 import path from 'path';
 import fs from 'fs';
-import {sendPushNotification} from './sendPushNotification';
+import {sendPushNotification} from './PushNotifications/sendPushNotification';
 
 const app = express();
 const connectedUsers: { [key: string]: string } = {};
@@ -84,7 +84,7 @@ class Users extends Model {
   declare profilePicture: string;
   declare requests: string;
   declare isBusy: boolean;
-  // declare token: string;
+  declare token: string;
 
   // Method to set the password, hashes password and sets the password
   setPassword(password: string): void {
@@ -115,6 +115,10 @@ class Users extends Model {
 
   setisbusy(isBusy: boolean): void {
     this.isBusy = isBusy;
+  }
+
+  setToken(token: string): void {
+    this.token = token;
   }
 
   static async emailExists(email: string): Promise<boolean> {
@@ -173,6 +177,10 @@ Users.init(
       type: DataTypes.BOOLEAN,
       allowNull: true,
       defaultValue: false,
+    },
+    token: {
+      type: DataTypes.STRING(256),
+      allowNull: true,
     },
   },
   {
@@ -519,15 +527,24 @@ app.post('/searchRoom', async (req, res) => {
 });
 // =================================================================
 
-app.post('/send-notification', async (req, res) => {
-  const { token, message } = req.body;
-  try {
-    await sendPushNotification(token, message);
-    res.status(200).send('Notification sent');
-  } catch (error) {
-    console.error('Error sending notification:', error);
-    res.status(500).send('Failed to send notification');
+app.post('/saveToken', async (req, res) => {
+  const { token, username } = req.body;
+  const user = await Users.findOne({
+    where: {
+      username: username,
+    },
+  });
+  if (user) {
+    user.setToken(token);
+    user.save().then(() => {
+      console.log('Token saved successfully');
+      res.status(200).send('Token saved successfully');
+    });
+  } else {
+    res.status(404).send('User not found');
   }
+
+ 
 });
 // =================================================================Search User=================================================================
 app.post('/searchUser', async (req, res) => {
@@ -918,6 +935,11 @@ io.on('connection', (socket: Socket) => {
       },
     });
     if (userA && userA !== null && userA.requests !== null && userB && userB !== null && userB.requests !== null) {
+      
+      // se envia la notificacion al dispositivo del usuario
+      await sendPushNotification(senderId,userA.token, message);
+      console.log('Notification sent');
+      // ==============================================
       const receiverSocketId = connectedUsers[userA.id];
 
       let requestsA = JSON.parse(userA.requests);
