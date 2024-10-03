@@ -1,15 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { View, TouchableOpacity, Text } from "react-native";
+import { View, Text, TouchableOpacity, Vibration } from 'react-native';
 import tw from "twrnc";
 import { Audio } from "expo-av";
 import { FontAwesome5 } from "@expo/vector-icons"; // Assuming usage of Expo vector icons for simplicity
 import { useSocket } from "../context/SocketContext";
+import { useThemeColor } from "../../hooks/useThemeColor";
 
 const AudioComponent = ({ currentRoom, isConectionClose }) => {
   const [recording, setRecording] = useState();
   const [permissionStatus, setPermissionStatus] = useState(null);
   const [recordedAudio, setRecordedAudio] = useState(null);
   const [socket, setSocket] = useState(useSocket()); // Estado para manejar la instancia del socket
+  const [buttonColor, setButtonColor] = useState(useThemeColor({}, "Softbackground")); // Estado para manejar el color del botón
+  const [borderColor, setBorderColor] = useState(useThemeColor({}, "PrimaryPurple")); // Estado para manejar el color del borde
+  const [recordingTime, setRecordingTime] = useState(0); // Estado para manejar el tiempo de grabación
+  const Softbackground = useThemeColor({}, "Softbackground");
+  const primaryColor = useThemeColor({}, "PrimaryPurple");
+  const textcolor = useThemeColor({}, "text");
+
   // Cuando el componente se monta, pide permisos de audio
   useEffect(() => {
     (async () => {
@@ -30,6 +38,19 @@ const AudioComponent = ({ currentRoom, isConectionClose }) => {
     }
   }, [isConectionClose]);
 
+  // Actualiza el tiempo de grabación cada segundo
+  useEffect(() => {
+    let interval;
+    if (recording) {
+      interval = setInterval(() => {
+        setRecordingTime(prevTime => prevTime + 1);
+      }, 1000);
+    } else {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [recording]);
+
   // Funcion para iniciar la grabacion de audio
   const startRecording = async () => {
     if (!permissionStatus) {
@@ -48,6 +69,7 @@ const AudioComponent = ({ currentRoom, isConectionClose }) => {
         Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY // Establece la calidad de grabacion (alta calidad)
       );
       setRecording(recording); // Actualiza el estado de grabacion con el objeto recording de antes
+      setRecordingTime(0); // Reinicia el tiempo de grabación
     } catch (err) {
       console.error("Failed to start recording", err);
     }
@@ -83,32 +105,82 @@ const AudioComponent = ({ currentRoom, isConectionClose }) => {
     }
   };
 
+  // Funcion para cancelar la grabacion de audio
+  const cancelRecording = async () => {
+    try {
+      setRecording(undefined);
+      setButtonColor(Softbackground);
+      setBorderColor(primaryColor);
+      Vibration.vibrate(200);
+      await recording.stopAndUnloadAsync();
+      console.log("Recording cancelled");
+    } catch (error) {
+      console.error("Failed to cancel recording", error);
+    }
+  };
 
   //  Funcion para reproducir el audio grabado
   const playSound = async () => {
     const { sound } = await Audio.Sound.createAsync(
       { uri: recordedAudio.uri }, // Carga el audio grabado
-      { shouldPlay: true } // Empieza a reproducir el audio
+      { shouldPlay: true }
     );
-    await sound.playAsync(); // Reproduce el audio
+    await sound.playAsync();
   };
 
   // Presionar grabar / detener audio
   const onPressHandler = () => {
     if (recording) {
       stopRecording();
+      setButtonColor(Softbackground);
+      setBorderColor(primaryColor);
+      Vibration.vibrate(200);
     } else {
       startRecording();
+      setButtonColor("#7f1d1d");
+      setBorderColor("red-600");
+      Vibration.vibrate(400);
     }
   };
 
-  // renderiza UI del componente
   return (
-    <View style={tw`flex items-center justify-center`}>
-      <View style={tw`flex-row items-center justify-center`}>
-        <TouchableOpacity onPress={onPressHandler} style={tw`p-[7px] mx-2 ${recording ? "bg-red-500 h-20 w-20" : "bg-blue-500"} rounded-full`}>
-          <FontAwesome5 name={recording ? "stop-circle" : "microphone"} size={recording ? 64 : 40} color="white" />
+    <View style={tw`flex items-center justify-center h-full`}>
+      <View style={tw`flex items-center justify-center h-100`}>
+        {/* Record button */}
+        <TouchableOpacity
+          style={tw`size-84 bg-[${buttonColor}] rounded-full flex items-center justify-center`}
+          onPress={onPressHandler}
+        >
+          <View style={tw`size-74 bg-[${buttonColor}] rounded-full border-4 border-${borderColor} flex items-center justify-center`}>
+            <FontAwesome5
+              name="microphone"
+              size={128}
+              color="white"
+            />
+          </View>
         </TouchableOpacity>
+
+        {/* Audio duration */}
+        <View style={tw`h-10 mt-2`}>
+          {recording && (
+            <Text style={tw`text-[${textcolor}] text-2xl`}>
+              {Math.floor(recordingTime / 60)}:{("0" + (recordingTime % 60)).slice(-2)}
+            </Text>
+          )}
+        </View>
+
+        {/* Cancel button */}
+        <View style={tw`h-16 mt-2`}>
+
+          {recording && (
+            <TouchableOpacity
+              style={tw`mt-4 px-4 py-2 bg-red-600 rounded-full`}
+              onPress={cancelRecording}
+            >
+              <Text style={tw`text-white text-lg`}>Cancelar</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     </View>
   );
