@@ -277,7 +277,7 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
             secureTextEntry={hidePassword}
             autoCompleteType="off"
             textContentType="none"
-            
+
           />
           <PasswordToggle hidePassword={hidePassword} setHidePassword={setHidePassword} />
 
@@ -310,12 +310,14 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
 
       {/* Sumbit Button */}
       <TouchableOpacity
-        style={[tw`py-3 mt-4 rounded-lg w-1/2`, isPressed ? styles.buttonPressed : styles.buttonNotPressed]}
+        style={tw`py-3 mt-4 rounded-lg border-b-[${textColor}] border-b-2 bg-transparent w-2/5`}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
         onPress={handleSumbit}
       >
-        <Text style={isPressed ? styles.textPressed : styles.textNotPressed}>{LoginScreenState ? "Sign in" : "Sign up"}</Text>
+        <Text style={[isPressed ? styles.textPressed : styles.textNotPressed, { color: textColor }]}>
+          {LoginScreenState ? "Sign in" : "Sign up"}
+        </Text>
       </TouchableOpacity>
 
       {/* Forgot Password */}
@@ -346,7 +348,6 @@ const styles = StyleSheet.create({
   },
   buttonNotPressed: {
     borderBottomWidth: 2,
-    borderBottomColor: "white",
     backgroundColor: "transparent",
     width: "40%",
   },
@@ -364,14 +365,12 @@ const styles = StyleSheet.create({
     borderColor: "black",
   },
   textNotPressed: {
-    color: "white",
     textAlign: "center",
     textShadowColor: "#ffffff",
     textShadowOffset: { width: 0, height: 0 },
     textShadowRadius: 10,
   },
   textPressed: {
-    color: "white",
     textAlign: "center",
     textShadowColor: "#000000",
     textShadowOffset: { width: 0, height: 0 },
