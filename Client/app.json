@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "ReWalkieTalkie",
-    "slug": "ReWalkieTalkie",
+    "slug": "WalkieTalkieApp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/adaptive-icon.png",
@@ -11,6 +11,7 @@
         "projectId": "96a09fef-9794-44ab-ae0a-336b54a2ebfa"
       }
     },
+    "owner": "zalkk",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/adaptive-icon.png",
@@ -18,20 +19,30 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.rewalkietalkie.app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"]
+      "package": "com.rewalkietalkie.app",
+      "useNextNotificationsApi": true,
+      "permissions": [
+        "CAMERA",
+        "NOTIFICATIONS",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "bundler": "metro",
       "output": "static"
     },
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router"
+    ],
     "experiments": {
       "typedRoutes": true
     }

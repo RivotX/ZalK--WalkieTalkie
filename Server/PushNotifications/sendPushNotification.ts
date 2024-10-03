@@ -19,8 +19,9 @@ export async function sendPushNotification(senderUsername: string , token: strin
   messages.push({
     to: token,
     sound: 'default',
-    title: 'Test Notification',
-    body: 'This is a test notification',
+    title: `@${senderUsername} has sent you a friend request.`,
+    body: message,
+    data: { data: 'goes here' },
   });
 
   // The Expo push notification service accepts batches of notifications
