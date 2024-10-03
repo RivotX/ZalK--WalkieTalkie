@@ -34,6 +34,10 @@ export const Colors = {
     RZ_Gradient_2: '#9A4DFF',
     RZ_Gradient_3: '#D4A5FF',
     UserProfileModal_BG: '#f5f5f5',
+    AudioComponent_ButtonColor: '#7f1d1d',
+    AudioComponent_BorderColor: 'red-600',
+    AudioComponent_ActiveButtonColor: '#7f1d1d',
+    AudioComponent_ActiveBorderColor: 'red-600',
   },
 
   dark: {
@@ -64,5 +68,9 @@ export const Colors = {
     RZ_Gradient_2: '#4B0082',
     RZ_Gradient_3: '#6A0DAD',
     UserProfileModal_BG: 'black',
+    AudioComponent_ButtonColor: '#151718',
+    AudioComponent_BorderColor: 'purple-600',
+    AudioComponent_ActiveButtonColor: '#7f1d1d',
+    AudioComponent_ActiveBorderColor: 'red-600',
   },
 };

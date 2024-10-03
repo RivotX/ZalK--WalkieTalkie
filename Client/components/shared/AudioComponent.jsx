@@ -11,11 +11,15 @@ const AudioComponent = ({ currentRoom, isConectionClose }) => {
   const [permissionStatus, setPermissionStatus] = useState(null);
   const [recordedAudio, setRecordedAudio] = useState(null);
   const [socket, setSocket] = useState(useSocket()); // Estado para manejar la instancia del socket
-  const [buttonColor, setButtonColor] = useState(useThemeColor({}, "Softbackground")); // Estado para manejar el color del botón
-  const [borderColor, setBorderColor] = useState(useThemeColor({}, "PrimaryPurple")); // Estado para manejar el color del borde
   const [recordingTime, setRecordingTime] = useState(0); // Estado para manejar el tiempo de grabación
   const Softbackground = useThemeColor({}, "Softbackground");
   const primaryColor = useThemeColor({}, "PrimaryPurple");
+  const [buttonColorState, setButtonColorState] = useState(useThemeColor({}, "AudioComponent_ButtonColor"));
+  const [borderColorState, setBorderColorState] = useState(useThemeColor({}, "AudioComponent_BorderColor")); 
+  const buttonColor = useThemeColor({}, "AudioComponent_ButtonColor");
+  const borderColor = useThemeColor({}, "AudioComponent_BorderColor");
+  const ActiveButtonColor = useThemeColor({}, "AudioComponent_ActiveButtonColor");
+  const ActiveBorderColor = useThemeColor({}, "AudioComponent_ActiveBorderColor");
   const textcolor = useThemeColor({}, "text");
 
   // Cuando el componente se monta, pide permisos de audio
@@ -109,8 +113,8 @@ const AudioComponent = ({ currentRoom, isConectionClose }) => {
   const cancelRecording = async () => {
     try {
       setRecording(undefined);
-      setButtonColor(Softbackground);
-      setBorderColor(primaryColor);
+      setButtonColorState(buttonColor);
+      setBorderColorState(borderColor);
       Vibration.vibrate(200);
       await recording.stopAndUnloadAsync();
       console.log("Recording cancelled");
@@ -132,13 +136,13 @@ const AudioComponent = ({ currentRoom, isConectionClose }) => {
   const onPressHandler = () => {
     if (recording) {
       stopRecording();
-      setButtonColor(Softbackground);
-      setBorderColor(primaryColor);
+      setButtonColorState(buttonColor);
+      setBorderColorState(borderColor);
       Vibration.vibrate(200);
     } else {
       startRecording();
-      setButtonColor("#7f1d1d");
-      setBorderColor("red-600");
+      setButtonColorState(ActiveButtonColor);
+      setBorderColorState(ActiveBorderColor);
       Vibration.vibrate(400);
     }
   };
@@ -148,14 +152,14 @@ const AudioComponent = ({ currentRoom, isConectionClose }) => {
       <View style={tw`flex items-center justify-center h-100`}>
         {/* Record button */}
         <TouchableOpacity
-          style={tw`size-84 bg-[${buttonColor}] rounded-full flex items-center justify-center`}
+          style={tw`size-84 bg-[${buttonColorState}] rounded-full flex items-center justify-center`}
           onPress={onPressHandler}
         >
-          <View style={tw`size-74 bg-[${buttonColor}] rounded-full border-4 border-${borderColor} flex items-center justify-center`}>
+          <View style={tw`size-74 bg-[${buttonColorState}] rounded-full border-4 border-${borderColorState} flex items-center justify-center`}>
             <FontAwesome5
               name="microphone"
               size={128}
-              color="white"
+              color={textcolor}
             />
           </View>
         </TouchableOpacity>
@@ -177,7 +181,7 @@ const AudioComponent = ({ currentRoom, isConectionClose }) => {
               style={tw`mt-4 px-4 py-2 bg-red-600 rounded-full`}
               onPress={cancelRecording}
             >
-              <Text style={tw`text-white text-lg`}>Cancelar</Text>
+              <Text style={tw`text-[${textcolor}] text-lg`}>Cancelar</Text>
             </TouchableOpacity>
           )}
         </View>
