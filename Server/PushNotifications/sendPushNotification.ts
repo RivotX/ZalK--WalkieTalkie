@@ -32,7 +32,7 @@ export async function sendPushNotification(senderUsername: string , token: strin
   for (let chunk of chunks) {
     try {
       let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
-      console.log(ticketChunk);
+      console.log(ticketChunk, 'ticketChunk FUE ENVIADO');
       tickets.push(...ticketChunk);
     } catch (error) {
       console.error(error);
