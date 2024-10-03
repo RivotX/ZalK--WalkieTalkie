@@ -9,13 +9,14 @@ import { Text, View, Modal } from 'react-native'; // Importa Modal desde react-n
 import tw from 'twrnc';
 import { useThemeColor } from '../../hooks/useThemeColor';
 import Loading from '../../components/shared/Loading';
+import { Platform } from 'react-native';
+import { useRoute } from '@react-navigation/native';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
-import { Platform } from 'react-native';
 import axios from 'axios';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 import getEnvVars from '../../config';
-import { useRoute } from '@react-navigation/native';
+
+const {SERVER_URL} = getEnvVars();
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -27,9 +28,6 @@ function GroupTabIcon({ focused, color }) {
   return <GroupIcon fill={focused ? color : 'gray'} />;
 }
 
-const { SERVER_URL } = getEnvVars();
-
- 
 export default function TabLayout({}) {
   const SoftbackgroundColor = useThemeColor({}, 'Softbackground');
   const textColor = useThemeColor({}, 'text');
@@ -37,7 +35,8 @@ export default function TabLayout({}) {
   const [loading, setLoading] = useState(false);
   const route = useRoute();
   const { username } = route.params;
-  // ===== Notifications =====
+
+   // ===== Notifications =====
 
     
   const registerForPushNotificationsAsync = async () => {
@@ -92,10 +91,9 @@ export default function TabLayout({}) {
     registerForPushNotificationsAsync().then(token => console.log(token));
   }, [username]);
 
-
   return (
     <>
-       {loading && (
+      {loading && (
         <Modal animationType="fade" transparent={true} onRequestClose={() => { }}>
           <View style={[tw`flex-1 justify-center items-center`, { backgroundColor: 'rgba(0, 0, 0, 0.5)' }]}>
             <Loading />
