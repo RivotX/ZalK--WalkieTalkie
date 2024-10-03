@@ -11,7 +11,9 @@ export async function sendPushNotification(senderUsername: string , token: strin
   if (!Expo.isExpoPushToken(token)) {
     console.error(`Push token ${token} is not a valid Expo push token`);
     return;
-  }
+  }else{
+    console.log(`${token} is a valid Expo push token,istoken?`,Expo.isExpoPushToken(token));
+    }
 
   // Construct a message
   messages.push({

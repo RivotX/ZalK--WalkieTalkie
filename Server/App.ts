@@ -535,6 +535,7 @@ app.post('/saveToken', async (req, res) => {
     },
   });
   if (user) {
+    console.log('token', token);
     user.setToken(token);
     user.save().then(() => {
       console.log('Token saved successfully');

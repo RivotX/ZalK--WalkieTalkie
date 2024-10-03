@@ -51,7 +51,7 @@ const RandomZalkScreen = () => {
         console.log('Solicitud recibida de:', data.senderId);
 
         setRequest(data);
-        pushNotification(data.senderId,data.message);
+        // pushNotification(data.senderId,data.message);
         Vibration.vibrate(200);
         setModalVisible(true);
       });
