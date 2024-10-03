@@ -7,7 +7,7 @@ import axios from "axios";
 import getEnvVars from "../../config";
 import Loading from "../shared/Loading";
 const { SERVER_URL } = getEnvVars();
-import showAlert from "../../app/shared/ShowAlert";
+import showAlert from "../../components/shared/ShowAlert";
 
 const ChangeProfileModal = ({ PropToChange, setModalVisibility, ModalIcon, isPassword, refreshSession, userID, currentProp }) => {
   const backgroundColor = useThemeColor({}, "background");

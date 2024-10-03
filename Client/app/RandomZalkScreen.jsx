@@ -7,7 +7,7 @@ import { useSocket } from '../components/context/SocketContext';
 import { useNavigation } from '@react-navigation/native';
 import { useThemeColor } from '../hooks/useThemeColor';
 import { useRoute } from '@react-navigation/native';
-import { showAlert } from '../app/shared/ShowAlert';
+import { showAlert } from '../components/shared/ShowAlert';
 
 export default function RandomZalkScreen() {
   const route = useRoute();

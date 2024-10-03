@@ -11,7 +11,7 @@ import getEnvVars from "../config";
 import { useNavigation } from "@react-navigation/native";
 import ProfileIcon from "../assets/images/images.png";
 import Loading from "../components/shared/Loading";
-import showAlert from "../app/shared/ShowAlert";
+import showAlert from "../components/shared/ShowAlert";
 
 const ProfileSettingsScreen = () => {
   const backgroundColor = useThemeColor({}, "background");
