@@ -15,7 +15,7 @@ const AudioComponent = ({ currentRoom, isConectionClose }) => {
   const Softbackground = useThemeColor({}, "Softbackground");
   const primaryColor = useThemeColor({}, "PrimaryPurple");
   const [buttonColorState, setButtonColorState] = useState(useThemeColor({}, "AudioComponent_ButtonColor"));
-  const [borderColorState, setBorderColorState] = useState(useThemeColor({}, "AudioComponent_BorderColor")); 
+  const [borderColorState, setBorderColorState] = useState(useThemeColor({}, "AudioComponent_BorderColor"));
   const buttonColor = useThemeColor({}, "AudioComponent_ButtonColor");
   const borderColor = useThemeColor({}, "AudioComponent_BorderColor");
   const ActiveButtonColor = useThemeColor({}, "AudioComponent_ActiveButtonColor");
@@ -30,9 +30,6 @@ const AudioComponent = ({ currentRoom, isConectionClose }) => {
     })();
   }, [currentRoom]);
 
-  useEffect(() => {
-    console.log(socket, "socket EN AUDIOCOMPONENT");
-  }, []);
 
   useEffect(() => {
     console.log("Cerrando conexion y audio parado ANTES");
@@ -55,6 +52,12 @@ const AudioComponent = ({ currentRoom, isConectionClose }) => {
     return () => clearInterval(interval);
   }, [recording]);
 
+  // Actualiza los colores cuando el tema cambia
+  useEffect(() => {
+    setButtonColorState(buttonColor);
+    setBorderColorState(borderColor);
+  }, [buttonColor, borderColor]);
+
   // Funcion para iniciar la grabacion de audio
   const startRecording = async () => {
     if (!permissionStatus) {
@@ -66,7 +69,7 @@ const AudioComponent = ({ currentRoom, isConectionClose }) => {
       await Audio.setAudioModeAsync({
         // Set audio mode for recording
         allowsRecordingIOS: true,
-        playsInSilentModeIOS: true, // permite reproducirlo en modo silencio? XD (pruebalo geyson en iphone)
+        playsInSilentModeIOS: true, 
       });
       const { recording } = await Audio.Recording.createAsync(
         // recording(variable, NO state) = result.recording
@@ -159,7 +162,7 @@ const AudioComponent = ({ currentRoom, isConectionClose }) => {
             <FontAwesome5
               name="microphone"
               size={128}
-              color={textcolor}
+              color='#ECEDEE'
             />
           </View>
         </TouchableOpacity>
@@ -181,7 +184,7 @@ const AudioComponent = ({ currentRoom, isConectionClose }) => {
               style={tw`mt-4 px-4 py-2 bg-red-600 rounded-full`}
               onPress={cancelRecording}
             >
-              <Text style={tw`text-[${textcolor}] text-lg`}>Cancelar</Text>
+              <Text style={tw`text-[#ECEDEE] text-lg`}>Cancelar</Text>
             </TouchableOpacity>
           )}
         </View>
