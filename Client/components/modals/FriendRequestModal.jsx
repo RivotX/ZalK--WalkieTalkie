@@ -1,5 +1,5 @@
-import React from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { React, useEffect, useRef } from 'react';
+import { Modal, View, Text, TouchableOpacity, StyleSheet, Pressable, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import tw from 'twrnc';
 import { useThemeColor } from '../../hooks/useThemeColor';
@@ -11,17 +11,37 @@ const FriendRequestModal = ({ setModalVisible, modalVisible, request, acceptRequ
   const accept_button_color = useThemeColor({}, 'Modal_accept_button');
   const decline_button_color = useThemeColor({}, 'Modal_cancel_button');
 
+  const slideAnim = useRef(new Animated.Value(300)).current;
+
+  useEffect(() => {
+    if (modalVisible) {
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        useNativeDriver: true,
+        duration: 400,
+      }).start();
+    } else {
+      slideAnim.setValue(300);
+    }
+  }, [modalVisible]);
+
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={modalVisible}
       onRequestClose={() => {
         setModalVisible(false);
       }}
     >
-      <View style={tw`flex-1 justify-center items-center bg-black bg-opacity-50`}>
-        <View style={[tw`w-4/5 bg-${modal_bg_color} rounded-lg p-5 items-center shadow-lg`, styles.modalContainer]}>
+      <Pressable
+        style={tw`flex-1 justify-center items-center bg-black bg-opacity-50`}
+        onPress={() => setModalVisible(false)}
+      >
+        <Animated.View
+          style={[tw`w-4/5 bg-${modal_bg_color} rounded-lg p-5 items-center shadow-lg`, { transform: [{ translateY: slideAnim }] }]}
+          onStartShouldSetResponder={() => true}
+        >
           <TouchableOpacity style={tw`absolute top-[-2] right-[-2] p-4`} onPress={() => setModalVisible(false)}>
             <Ionicons name="close" size={24} color={modal_text_color} />
           </TouchableOpacity>
@@ -47,8 +67,8 @@ const FriendRequestModal = ({ setModalVisible, modalVisible, request, acceptRequ
               </TouchableOpacity>
             </View>
           </View>
-        </View>
-      </View>
+        </Animated.View>
+      </Pressable>
     </Modal>
   );
 };
