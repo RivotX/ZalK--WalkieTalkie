@@ -1047,10 +1047,11 @@ io.on('connection', (socket: Socket) => {
     console.log('Audio data sent to all clients in room:', room);
     const roomSockets = io.sockets.adapter.rooms.get(room);
     if (roomSockets) {
-        console.log('roomSockets:', roomSockets);
+      const roomSocketsArray = Array.from(roomSockets);
+        console.log('roomSocketsArray:', roomSocketsArray);
 
         //si es array de sockets se recorre y se envia la notificacion a cada uno
-        
+
         // for(const socketId of roomSockets){
         //   console.log('socketId:', socketId );
         //   const userId = Object.keys(connectedUsers).find(key => connectedUsers[key] === socketId);
