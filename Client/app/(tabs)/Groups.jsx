@@ -4,7 +4,7 @@ import { View, Image, Text, Modal, ScrollView } from 'react-native';
 import tw from 'twrnc';
 import { useThemeColor } from '../../hooks/useThemeColor';
 import { useNavigation } from '@react-navigation/native';
-import { useSocket } from '../../components/context/SocketContext';
+import { useSocket } from '../../context/SocketContext';
 import axios from 'axios';
 import getEnvVars from '../../config';
 import ChatComponent from '../../components/shared/ChatComponent';

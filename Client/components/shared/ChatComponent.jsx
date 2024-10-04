@@ -5,7 +5,7 @@ import { useThemeColor } from '../../hooks/useThemeColor';
 import { Ionicons } from '@expo/vector-icons';
 import UserProfileModal from '../modals/UserProfileModal';
 import axios from 'axios';
-import { useSocket } from '../context/SocketContext';
+import { useSocket } from '../../context/SocketContext';
 import getEnvVars from '../../config';
 const { SERVER_URL } = getEnvVars();
 import ProfileIcon from '../../assets/images/images.png';

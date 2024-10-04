@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Modal, View, Text, TouchableOpacity, Vibration, Pressable } from 'react-native';
 import tw from 'twrnc';
-import { useSocket } from '../context/SocketContext';
+import { useSocket } from '../../context/SocketContext';
 import Loading from '../shared/Loading';
 import { useThemeColor } from '../../hooks/useThemeColor';
 import { useNavigation } from '@react-navigation/native';

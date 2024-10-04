@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import tw from 'twrnc';
 import AudioComponent from '../components/shared/AudioComponent';
-import { useSocket } from '../components/context/SocketContext';
+import { useSocket } from '../context/SocketContext';
 import { useNavigation } from '@react-navigation/native';
 import { useThemeColor } from '../hooks/useThemeColor';
 import { useRoute } from '@react-navigation/native';

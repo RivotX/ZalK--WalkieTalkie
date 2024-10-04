@@ -5,12 +5,10 @@ import tw from 'twrnc';
 import { useThemeColor } from '../../hooks/useThemeColor';
 import axios from 'axios';
 import getEnvVars from '../../config';
-import { useSocket } from '../../components/context/SocketContext';
+import { useSocket } from '../../context/SocketContext';
 import FriendRequestModal from '../../components/modals/FriendRequestModal';
 import RandomZalkModal from '../../components/modals/RandomZalkModal';
 import * as Notifications from 'expo-notifications';
-import * as Device  from 'expo-device';
-
 
 const RandomZalkScreen = () => {
   const backgroundColor = useThemeColor({}, 'background');

@@ -5,7 +5,7 @@ import { useThemeColor } from "../../hooks/useThemeColor";
 import tw from "twrnc";
 import { useNavigation } from "@react-navigation/native"; // Import useNavigation
 import axios from "axios";
-import { useSocket } from "../context/SocketContext";
+import { useSocket } from "../../context/SocketContext";
 import getEnvVars from "../../config";
 
 const NotificationsIcon = () => {

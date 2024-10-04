@@ -11,7 +11,7 @@ import { useThemeColor } from '../hooks/useThemeColor';
 import UserProfileModal from '../components/modals/UserProfileModal';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { SocketProvider } from '../components/context/SocketContext';
+import { SocketProvider } from '../context/SocketContext';
 import profilepicture from '../assets/images/images.png';
 import groupicon from '../assets/images/groupicon.png';
 import { Audio } from 'expo-av';

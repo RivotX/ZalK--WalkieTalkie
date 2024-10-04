@@ -4,7 +4,7 @@ import tw from "twrnc";
 import { useThemeColor } from "../hooks/useThemeColor";
 import axios from "axios";
 import ChatComponent from "../components/shared/ChatComponent";
-import { useSocket } from "../components/context/SocketContext";
+import { useSocket } from "../context/SocketContext";
 import Loading from "../components/shared/Loading";
 import AddDeleteFriendModal from "../components/modals/AddDeleteFriendModal";
 import getEnvVars from "../config";

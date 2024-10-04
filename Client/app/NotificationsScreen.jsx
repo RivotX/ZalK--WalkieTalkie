@@ -5,7 +5,7 @@ import tw from 'twrnc';
 import { useThemeColor } from '../hooks/useThemeColor';
 import axios from 'axios';
 import ChatComponent from '../components/shared/ChatComponent';
-import { useSocket } from '../components/context/SocketContext';
+import { useSocket } from '../context/SocketContext';
 import getEnvVars from '../config';
 import Loading from '../components/shared/Loading';
 

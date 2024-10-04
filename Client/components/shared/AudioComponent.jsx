@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, Vibration } from 'react-native';
 import tw from "twrnc";
 import { Audio } from "expo-av";
 import { FontAwesome5 } from "@expo/vector-icons"; // Assuming usage of Expo vector icons for simplicity
-import { useSocket } from "../context/SocketContext";
+import { useSocket } from "../../context/SocketContext";
 import { useThemeColor } from "../../hooks/useThemeColor";
 
 const AudioComponent = ({ currentRoom, isConectionClose }) => {

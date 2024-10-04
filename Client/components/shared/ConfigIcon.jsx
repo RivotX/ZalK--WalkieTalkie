@@ -6,7 +6,7 @@ import tw from 'twrnc';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation
 import axios from 'axios';
 import getEnvVars from '../../config';
-import { useSocket } from '../context/SocketContext';
+import { useSocket } from '../../context/SocketContext';
 import AddDeleteFriendModal from '../modals/AddDeleteFriendModal';
 import Loading from './Loading';
 import CountryFlag from "react-native-country-flag";

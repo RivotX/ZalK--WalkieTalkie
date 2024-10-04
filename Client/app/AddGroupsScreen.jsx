@@ -7,7 +7,7 @@ import axios from 'axios';
 import ChatComponent from '../components/shared/ChatComponent';
 import GroupIcon from '../assets/images/groupicon.png';
 import getEnvVars from '../config';
-import { useSocket } from '../components/context/SocketContext';
+import { useSocket } from '../context/SocketContext';
 import Loading from '../components/shared/Loading';
 
 export default function AddGroupsScreen() {
