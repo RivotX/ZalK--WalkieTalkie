@@ -1249,10 +1249,10 @@ app.get('/get-image-url/:userId', async (req, res) => {
 const initialRooms = [
   // se crean las salas iniciales
   { name: 'ChatterBox Central', info: 'A lively place for all your chat needs.' },
-  { name: 'Whispering Pines', info: 'A serene spot for quiet conversations.' },
-  { name: 'Echo Chamber', info: 'Where your voice echoes through the room.' },
-  { name: 'La Sala Rugiente', info: 'Un lugar para discusiones enérgicas y ruidosas.' },
   { name: 'Tribu de Vibraciones', info: 'Únete a la tribu y comparte las vibraciones.' },
+  { name: 'Whispering Pines', info: 'A serene spot for quiet conversations.' },
+  { name: 'La Sala Rugiente', info: 'Un lugar para discusiones enérgicas y ruidosas.' },
+  { name: 'Echo Chamber', info: 'Where your voice echoes through the room.' },
   { name: 'La Onda Sonora', info: 'Surfea la onda del sonido y la comunicación.' },
   { name: 'Talk & Roll', info: 'Roll into conversations with ease.' },
   { name: 'El Lugar de Encuentro', info: 'El lugar perfecto para pasar el rato y charlar.' },
@@ -1325,10 +1325,10 @@ sequelize.sync({ alter: true }).then(() => {
   server.listen(3000, async () => {
     console.log('Server running...');
 
-    // //create groups
-    // for (const room of initialRooms) {
-    //   await Rooms.upsert(room);
-    //   console.log("Room created:", room);
-    // }
+    //create groups
+    for (const room of initialRooms) {
+      await Rooms.upsert(room);
+      console.log("Room created:", room);
+    }
   });
 });
