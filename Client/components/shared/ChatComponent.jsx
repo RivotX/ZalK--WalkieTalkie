@@ -18,7 +18,7 @@ const ChatComponent = ({ user, iconDelete, onAdd, iscontact, isrequest, setLoadi
   const [userInfo, setUserInfo] = useState();
   const [selectedUser, setSelectedUser] = useState(user);
   const [userProfileModalVisible, setuserProfileModalVisible] = useState(false);
-
+  const ChatComponent_BorderColor = useThemeColor({}, 'ChatComponent_BorderColor');
   useEffect(() => {
     if (!onAdd) {
       axios
@@ -63,7 +63,7 @@ const ChatComponent = ({ user, iconDelete, onAdd, iscontact, isrequest, setLoadi
     <>
       <TouchableOpacity
         onPress={handleGeneralPress}
-        style={tw`${isrequest ? 'px-3 py-2' : 'p-2'} border-b border-zinc-800 flex flex-row w-full max-w-[700px] justify-center items-center`}
+        style={tw`${isrequest ? 'px-3 py-2' : 'px-2 py-0.5'}  flex flex-row w-full max-w-[700px] justify-center items-center`}
       >
         {/* Profile Picture */}
         <TouchableOpacity onPress={handleProfilePicturePress}>
@@ -74,8 +74,8 @@ const ChatComponent = ({ user, iconDelete, onAdd, iscontact, isrequest, setLoadi
 
         {/* Main content */}
         <View style={tw`flex-1 flex-row items-center`}>
-          <View style={tw`flex-1 flex-row items-center justify-between`}>
-            <View style={tw`ml-3 ${isrequest && 'w-[60%]'}`}>
+          <View style={tw`flex-1 flex-row items-center justify-between border-b border-${ChatComponent_BorderColor} h-full py-4 ml-3`}>
+            <View style={tw`${isrequest && 'w-[60%]'} `}>
               <Text style={[{ fontSize: 16 }, tw`font-bold text-[${textColor}]`]}>
                 {isrequest ? user.username : user.name} {user.isBusy && <Ionicons name="notifications-off" size={18} color="red" />}
               </Text>
