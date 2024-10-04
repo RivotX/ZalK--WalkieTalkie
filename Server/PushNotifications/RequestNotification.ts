@@ -21,7 +21,7 @@ export async function requestNotification(senderUsername: string , token: string
     sound: 'default',
     title: `@${senderUsername} has sent you a friend request.`,
     body: message,
-    data: { data: 'goes here',_displayInForeground: true  },
+    data: { data: 'goes here',_displayInForeground: false  },
   });
 
   // The Expo push notification service accepts batches of notifications
