@@ -146,6 +146,7 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
           AsyncStorage.setItem("isLoggedIn", "true")
             .then(() => {
               SetLayoutLogged(true);
+              
             })
             .catch((error) => {
               console.error("Failed to save isLoggedIn status", error);
@@ -167,6 +168,7 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
 
   // ===== Sign up ======= 
   const handleRegister = () => {
+    setLoading(true);
     if (username.trim().length === 0) {
       setFormError("Username cannot be empty.");
       return;
@@ -185,10 +187,13 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
         .post(`${SERVER_URL}/create-user`, { username, password, email })
         .then((res) => {
           setLoginScreenState(true);
+          setLoading(false);
         })
         .catch((err) => {
           console.log(err);
           handleRegisterError(err);
+          setLoading(false);
+
         });
     }
   };

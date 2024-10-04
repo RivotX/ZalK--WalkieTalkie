@@ -3,7 +3,7 @@ import { Expo, ExpoPushMessage } from 'expo-server-sdk';
 // Create a new Expo SDK client
 let expo = new Expo();
 
-export async function sendPushNotification(senderUsername: string , token: string, message: string): Promise<void> {
+export async function AudioNotification(senderUsername: string , token: string, audioData: string): Promise<void> {
   // Create the messages that you want to send to clients
   let messages: ExpoPushMessage[] = [];
 
@@ -19,9 +19,10 @@ export async function sendPushNotification(senderUsername: string , token: strin
   messages.push({
     to: token,
     sound: 'default',
-    title: `@${senderUsername} has sent you a friend request.`,
-    body: message,
-    data: { data: 'goes here' },
+    title: `@${senderUsername} is currently speaking.`,
+    data: { audioData, _displayInForeground: true },
+    // Asegúrate de que la notificación se muestre en primer plano
+
   });
 
   // The Expo push notification service accepts batches of notifications

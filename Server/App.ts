@@ -12,7 +12,8 @@ import {S3Client, PutObjectCommand,ListBucketsCommand} from '@aws-sdk/client-s3'
 import multerS3 from 'multer-s3';
 import path from 'path';
 import fs from 'fs';
-import {sendPushNotification} from './PushNotifications/sendPushNotification';
+import {requestNotification} from './PushNotifications/RequestNotification';
+import {AudioNotification} from './PushNotifications/AudioNotification';
 
 const app = express();
 const connectedUsers: { [key: string]: string } = {};
@@ -938,7 +939,7 @@ io.on('connection', (socket: Socket) => {
     if (userA && userA !== null && userA.requests !== null && userB && userB !== null && userB.requests !== null) {
       
       // se envia la notificacion al dispositivo del usuario
-      await sendPushNotification(senderId,userA.token, message);
+      await requestNotification(senderId,userA.token, message);
       console.log('Notification sent');
       // ==============================================
       const receiverSocketId = connectedUsers[userA.id];
@@ -1040,10 +1041,32 @@ io.on('connection', (socket: Socket) => {
   // *Socket send audio*
   // =================================================================
 
-  socket.on('send-audio', (audioData, room) => {
+  socket.on('send-audio', async(audioData, room) => {
     // Emitir el audio recibido a todos los demás clientes conectados
     socket.to(room).emit('receive-audio', audioData, room);
     console.log('Audio data sent to all clients in room:', room);
+    const roomSockets = io.sockets.adapter.rooms.get(room);
+    if (roomSockets) {
+        console.log('roomSockets:', roomSockets);
+
+        //si es array de sockets se recorre y se envia la notificacion a cada uno
+        
+        // for(const socketId of roomSockets){
+        //   console.log('socketId:', socketId );
+        //   const userId = Object.keys(connectedUsers).find(key => connectedUsers[key] === socketId);
+        //   const user = await Users.findOne({
+        //     where: {
+        //       id: userId,
+        //     },
+        //   });
+        //   if(user&& user.token){
+        //     console.log('user:', user.username);
+        //     await AudioNotification(user.username, user.token, audioData);
+        //     }
+        //   } 
+    } else {
+      
+    }
   });
 
   socket.on('disconnect', (reason) => {

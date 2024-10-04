@@ -80,15 +80,36 @@ export default function TabLayout({}) {
   }
 
   Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: true,
-  }),
-});
+
+    //CONFIGURACION DE NOTIFICACIONES AL RECIBIR UNA NOTIFICACION CON AUDIO
+    handleNotification: async (notification) => {
+      const audioData = notification.request.content.data.audioData;
+      if (audioData) {
+        const { sound } = await Audio.Sound.createAsync({ uri: audioData });
+        await sound.playAsync();
+      }
+      return {
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: false,
+      };
+    },
+  });
 
   useEffect(() => {
     registerForPushNotificationsAsync().then(token => console.log(token));
+    
+//COPIADO POR EL COPILOT NO SE COMO FUNCIONA PERO NO LO BORRO POR SI ACASO
+
+    // const subscription = Notifications.addNotificationReceivedListener(async notification => {
+    //   const audioData = notification.request.content.data.audioData;
+    //   if (audioData) {
+    //     const { sound } = await Audio.Sound.createAsync({ uri: audioData });
+    //     await sound.playAsync();
+    //   }
+    // });
+
+    // return () => subscription.remove();
   }, [username]);
 
   return (
