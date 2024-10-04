@@ -1321,14 +1321,14 @@ const initialRooms = [
   { name: 'La Bóveda de Voz', info: 'Guarda tu voz de manera segura aquí.' },
 ];
 
-sequelize.sync({ force: true }).then(() => {
+sequelize.sync({ alter: true }).then(() => {
   server.listen(3000, async () => {
     console.log('Server running...');
 
-    //create groups
-    for (const room of initialRooms) {
-      await Rooms.upsert(room);
-      console.log("Room created:", room);
-    }
+    // //create groups
+    // for (const room of initialRooms) {
+    //   await Rooms.upsert(room);
+    //   console.log("Room created:", room);
+    // }
   });
 });
