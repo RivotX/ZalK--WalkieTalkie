@@ -99,6 +99,7 @@ export default function GroupsScreen() {
           navigation.navigate('AddGroupsScreen');
         }}
         icon={'add-outline'}
+        iconColor={textColor}
       />
     </View>
   );

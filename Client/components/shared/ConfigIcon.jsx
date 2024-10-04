@@ -9,6 +9,7 @@ import getEnvVars from '../../config';
 import { useSocket } from '../context/SocketContext';
 import AddDeleteFriendModal from '../modals/AddDeleteFriendModal';
 import Loading from './Loading';
+import CountryFlag from "react-native-country-flag";
 
 const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisible, user, isContact, setLoadingLayout }) => {
   const textColor = useThemeColor({}, 'text');
@@ -22,6 +23,7 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
   const [socket, setSocket] = useState(useSocket()); // Estado para manejar la instancia del socket
   const [isBusy, setIsBusy] = useState(false);
   const heightAnim = useRef(new Animated.Value(0)).current;
+  const opacityAnim = useRef(new Animated.Value(0)).current; // Nueva animación de opacidad
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -66,22 +68,38 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
 
   // Animation for the dropdown menu
   useEffect(() => {
-    const expandedHeight = chatroom ? 120 : 170; // Adjust height based on chatroom prop
+    const expandedHeight = chatroom ? 120 : 260; // altura del modal
     if (dropdownVisible) {
       setModalVisible(true);
-      Animated.timing(heightAnim, {
-        toValue: expandedHeight,
-        duration: 100,
-        easing: Easing.out(Easing.ease),
-        useNativeDriver: false,
-      }).start();
+      Animated.parallel([
+        Animated.timing(heightAnim, {
+          toValue: expandedHeight,
+          duration: 200,
+          easing: Easing.out(Easing.ease),
+          useNativeDriver: false,
+        }),
+        Animated.timing(opacityAnim, {
+          toValue: 1,
+          duration: 200,
+          easing: Easing.out(Easing.ease),
+          useNativeDriver: false,
+        })
+      ]).start();
     } else {
-      Animated.timing(heightAnim, {
-        toValue: 0,
-        duration: 120,
-        easing: Easing.in(Easing.ease),
-        useNativeDriver: false,
-      }).start(() => setModalVisible(false));
+      Animated.parallel([
+        Animated.timing(heightAnim, {
+          toValue: 0,
+          duration: 150,
+          easing: Easing.in(Easing.ease),
+          useNativeDriver: false,
+        }),
+        Animated.timing(opacityAnim, {
+          toValue: 0,
+          duration: 80,
+          easing: Easing.in(Easing.ease),
+          useNativeDriver: false,
+        })
+      ]).start(() => setModalVisible(false));
     }
   }, [dropdownVisible, chatroom]);
 
@@ -127,41 +145,47 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
 
         {/* Modal */}
         <Modal visible={modalVisible} transparent={true} onRequestClose={() => setDropdownVisible(false)}>
-          <Pressable style={tw`flex-1 justify-start items-end pt-14 `} onPress={() => setDropdownVisible(false)}>
-            <Animated.View style={[tw`w-2/5 px-2 py-5 bg-[${SoftbackgroundColor}] rounded-lg shadow-md justify-between`, { height: heightAnim }]}>
-              {!chatroom ? (
-                <>
-                  {/* App settings */}
-                  <TouchableOpacity onPress={toggleBusyMode}>
-                    <Text style={tw`text-lg text-[${textColor}]`}>Busy mode</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={onPressSettings}>
-                    <Text style={tw`text-lg text-[${textColor}]`}>Profile settings</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={handleLogout}>
-                    <Text style={tw`text-lg text-[${textColor}]`}>Log out</Text>
-                  </TouchableOpacity>
-                </>
-              ) : (
-                <>
-                  {/* Chatroom settings */}
-                  <TouchableOpacity
-                    onPress={() => {
-                      setModalIconVisible(true);
-                      setDropdownVisible(false);
-                    }}
-                  >
-                    <Text style={tw`text-lg text-[${textColor}]`}>
-                      {isContact ? 'View Contact' : 'View Group'}
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={handlePressDeleteContact}>
-                    <Text style={tw`text-lg text-[${textColor}]`}>
-                      {isContact ? 'Delete Contact' : 'Delete Group'}
-                    </Text>
-                  </TouchableOpacity>
-                </>
-              )}
+          <Pressable style={tw`flex-1 justify-start items-end pt-14`} onPress={() => setDropdownVisible(false)}>
+            <Animated.View style={[tw`w-1/2 bg-[${SoftbackgroundColor}] rounded-lg shadow-md justify-center`, { height: heightAnim }]}>
+              <Animated.View style={[tw`px-2 py-2`, { opacity: opacityAnim }]}>
+                {!chatroom ? (
+                  <>
+                    {/* App settings */}
+                    <TouchableOpacity onPress={toggleBusyMode} style={tw`h-1/4 flex-row items-center`}>
+                      <Text style={tw`text-lg text-[${textColor}]`} >Busy mode</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={onPressSettings} style={tw`h-1/4 flex-row items-center`}>
+                      <Text style={tw`text-lg text-[${textColor}]`} >Profile settings</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={tw`h-1/4 flex-row items-center`}>
+                      <Text style={tw`text-lg text-[${textColor}] mr-2`}>Language</Text>
+                      <CountryFlag isoCode="es" size={20} style={{ marginLeft: 8 }} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={handleLogout} style={tw`h-1/4 flex-row items-center`}>
+                      <Text style={tw`text-lg text-[${textColor}]`}>Log out</Text>
+                    </TouchableOpacity>
+                  </>
+                ) : (
+                  <>
+                    {/* Chatroom settings */}
+                    <TouchableOpacity
+                      onPress={() => {
+                        setModalIconVisible(true);
+                        setDropdownVisible(false);
+                      }}
+                    >
+                      <Text style={tw`text-lg text-[${textColor}]`}>
+                        {isContact ? 'View Contact' : 'View Group'}
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={handlePressDeleteContact}>
+                      <Text style={tw`text-lg text-[${textColor}]`}>
+                        {isContact ? 'Delete Contact' : 'Delete Group'}
+                      </Text>
+                    </TouchableOpacity>
+                  </>
+                )}
+              </Animated.View>
             </Animated.View>
           </Pressable>
         </Modal>
