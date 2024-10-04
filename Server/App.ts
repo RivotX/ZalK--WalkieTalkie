@@ -1052,19 +1052,19 @@ io.on('connection', (socket: Socket) => {
 
         //si es array de sockets se recorre y se envia la notificacion a cada uno
 
-        // for(const socketId of roomSockets){
-        //   console.log('socketId:', socketId );
-        //   const userId = Object.keys(connectedUsers).find(key => connectedUsers[key] === socketId);
-        //   const user = await Users.findOne({
-        //     where: {
-        //       id: userId,
-        //     },
-        //   });
-        //   if(user&& user.token){
-        //     console.log('user:', user.username);
-        //     await AudioNotification(user.username, user.token, audioData);
-        //     }
-        //   } 
+        for(const socketId of roomSockets){
+          console.log('socketId:', socketId );
+          const userId = Object.keys(connectedUsers).find(key => connectedUsers[key] === socketId);
+          const user = await Users.findOne({
+            where: {
+              id: userId,
+            },
+          });
+          if(user&& user.token){
+            console.log('user:', user.username);
+            await AudioNotification(user.username, user.token, audioData);
+            }
+          } 
     } else {
       
     }
