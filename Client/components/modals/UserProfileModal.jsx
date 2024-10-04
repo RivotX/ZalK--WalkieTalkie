@@ -9,7 +9,7 @@ import { useThemeColor } from '../../hooks/useThemeColor';
 const UserProfileModal = ({ user, modalIconVisible, setModalIconVisible, iconSize, isContact }) => {
   const textColor = useThemeColor({}, "text");
   const UserProfileModal_BG = useThemeColor({}, "UserProfileModal_BG");
-  console.log("userprofile" ,user.profile);
+  console.log("userprofileModal: " ,user);
   return (
     <>
       <Modal

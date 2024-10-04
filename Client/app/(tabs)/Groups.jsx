@@ -29,7 +29,7 @@ export default function GroupsScreen() {
         .then((res) => {
           setUserID(res.data.user.id);
           setRoomsAmIn(JSON.parse(res.data.user.groups));
-          console.log('Session', res.data);
+          console.log('Grupos res:', res.data.user.groups);
         })
         .catch((error) => {
           console.log(error);
@@ -43,7 +43,7 @@ export default function GroupsScreen() {
         console.log('REFRESH groups');
         axios.post(`${SERVER_URL}/refreshSession`, { id: userID }, { withCredentials: true })
           .then((res) => {
-            console.log('GRUPOS REFRESCADOOOOOOOOS', res.data.user.contacts);
+            console.log('Grupos res:', res.data.user.groups);
             setRoomsAmIn(JSON.parse(res.data.user.groups));
           })
           .catch((error) => {
@@ -72,6 +72,7 @@ export default function GroupsScreen() {
           </Text>
         ) : (
           roomsAmIn.map((room, index) => {
+            console.log('ROOM', room);
             const roomdata = {
               name: room.name,
               profile: null,

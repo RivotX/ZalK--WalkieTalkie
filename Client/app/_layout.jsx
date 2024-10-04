@@ -2,7 +2,6 @@
 import { useEffect, useState } from 'react';
 import { Stack } from 'expo-router';
 import tw from 'twrnc';
-
 import { Image, View, Text, SafeAreaView, TouchableOpacity, Modal, Alert } from 'react-native';
 import ProfileIcon from '../assets/images/images.png';
 import LoginScreen from './LoginScreen';
@@ -13,11 +12,8 @@ import UserProfileModal from '../components/modals/UserProfileModal';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SocketProvider } from '../components/context/SocketContext';
-import * as Notifications from 'expo-notifications'
-import { Platform } from 'react-native';
-import Constants from 'expo-constants';
-// import createSocket from "../components/context/CreateSocket";
-import profilepicture from '../assets/images/emoGirlIcon.png';
+import profilepicture from '../assets/images/images.png';
+import groupicon from '../assets/images/groupicon.png';
 import { Audio } from 'expo-av';
 import NotificationsIcon from '../components/shared/NotificationsIcon';
 import { Ionicons } from '@expo/vector-icons';
@@ -26,7 +22,6 @@ import getEnvVars from '../config';
 import Loading from '../components/shared/Loading';
 const { SERVER_URL } = getEnvVars();
 const { SOCKET_URL } = getEnvVars();
-import * as Device from 'expo-device';
 import * as Font from 'expo-font';
 const loadFonts = async () => {
   await Font.loadAsync({
@@ -321,6 +316,7 @@ export default function RootLayout() {
                           modalIconVisible={modalIconVisible}
                           setModalIconVisible={setModalIconVisible}
                           iconSize={12}
+                          isContact={true}
                         />
                       </TouchableOpacity>
                       <Text style={tw`text-base font-semibold text-[${textColor}]`}>{username} </Text>
@@ -367,6 +363,7 @@ export default function RootLayout() {
                 options={({ route }) => {
                   const user = route.params.user;
                   const isContact = route.params.isContact;
+                  console.log('user xxx' , user);
                   return {
                     headerStyle: {
                       backgroundColor: SoftbackgroundColor,
@@ -375,9 +372,9 @@ export default function RootLayout() {
                     headerTitle: () => (
                       <TouchableOpacity onPress={() => setModalIconVisible(true)} style={tw`flex-1 w-full`}>
                         <View style={tw`flex-1 flex-row justify-start items-center w-full`}>
-                          <UserProfileModal user={user} modalIconVisible={modalIconVisible} setModalIconVisible={setModalIconVisible} iconSize={12} />
+                          <UserProfileModal user={user} modalIconVisible={modalIconVisible} setModalIconVisible={setModalIconVisible} iconSize={12}  isContact={isContact}/>
                           <TouchableOpacity onPress={() => setModalIconVisible(true)} style={tw`ml-6`}>
-                            <Image source={user.profile ?? profilepicture} style={tw`size-11 rounded-full`} />
+                            <Image source={user.profile ?? isContact? {uri: user.profile} : groupicon} style={tw`size-11 rounded-full`} />
                           </TouchableOpacity>
                           <Text style={tw`text-[${textColor}] font-bold text-lg ml-2`}>{user.name ?? 'Chat Room'}</Text>
                         </View>
