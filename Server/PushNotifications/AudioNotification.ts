@@ -33,7 +33,7 @@ export async function AudioNotification(senderUsername: string , token: string, 
   for (let chunk of chunks) {
     try {
       let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
-      console.log(ticketChunk, 'ticketChunk FUE ENVIADO');
+      console.log(ticketChunk, 'ticketChunk FUE ENVIADO AUDIO');
       tickets.push(...ticketChunk);
     } catch (error) {
       console.error(error);
