@@ -49,7 +49,7 @@ const ContactsScreen = ({ setLoadingLayout }) => {
           // Parsea los contactos y los guarda en el estado SE DEBE HACER UN ENDPOINT PARA OBTENER LA FOTO DEL CONTACTO
           name: contact.User.username,
           room: contact.room,
-          profile: contact.User.profilePicture ? { uri: contact.User.profilePicture } : ProfileIcon,
+          profile: contact.User.profilePicture ?? null,
           info: contact.User.info,
           isBusy: contact.User.isBusy,
         }));

@@ -1,17 +1,17 @@
-import { React, useEffect, useState } from "react";
-import { SafeAreaView, View, Text, Modal } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import tw from "twrnc";
-import { useThemeColor } from "../hooks/useThemeColor";
-import axios from "axios";
-import ChatComponent from "../components/shared/ChatComponent";
-import { useSocket } from "../components/context/SocketContext";
-import getEnvVars from "../config";
-import Loading from "../components/shared/Loading";
+import { React, useEffect, useState } from 'react';
+import { SafeAreaView, View, Text, Modal } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import tw from 'twrnc';
+import { useThemeColor } from '../hooks/useThemeColor';
+import axios from 'axios';
+import ChatComponent from '../components/shared/ChatComponent';
+import { useSocket } from '../components/context/SocketContext';
+import getEnvVars from '../config';
+import Loading from '../components/shared/Loading';
 
 const NotificationsScreen = () => {
-  const backgroundColor = useThemeColor({}, "background");
-  const textColor = useThemeColor({}, "text");
+  const backgroundColor = useThemeColor({}, 'background');
+  const textColor = useThemeColor({}, 'text');
   const [requests, setRequests] = useState([{}]);
   const [socket, setSocket] = useState(useSocket()); // Estado para manejar la instancia del socket
   const [userID, setUserID] = useState(null);
@@ -21,8 +21,7 @@ const NotificationsScreen = () => {
   // ===== Get session =====
   useEffect(() => {
     setLoading(true);
-    axios
-      .get(`${SERVER_URL}/getsession`, { withCredentials: true })
+    axios.get(`${SERVER_URL}/getsession`, { withCredentials: true })
       .then((res) => {
         setUserID(res.data.user.id);
         setRequests(JSON.parse(res.data.user.requests));
@@ -39,11 +38,10 @@ const NotificationsScreen = () => {
   useEffect(() => {
     // ===== Skips the login if the user is already logged in ========
     if (userID != null) {
-      socket.on("refreshcontacts", () => {
-        axios
-          .post(`${SERVER_URL}/refreshSession`, { id: userID }, { withCredentials: true })
+      socket.on('refreshcontacts', () => {
+        axios.post(`${SERVER_URL}/refreshSession`, { id: userID }, { withCredentials: true })
           .then((res) => {
-            console.log("SESIONES REFRESCADOOOOOOOOS", res.data.user);
+            console.log('SESIONES REFRESCADOOOOOOOOS', res.data.user);
             setRequests(JSON.parse(res.data.user.requests).length > 0 ? JSON.parse(res.data.user.requests) : []);
           })
           .catch((error) => {
@@ -56,13 +54,17 @@ const NotificationsScreen = () => {
     }
   }, [userID]);
 
+  useEffect(() => {
+    console.log('Requests xx', requests);
+  }, [requests]);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView style={tw`flex-1 bg-[${backgroundColor}]`}>
         {/* Loading */}
         {loading ? (
-          <Modal animationType="fade" transparent={true} onRequestClose={() => { }}>
-            <View style={[tw`flex-1 justify-center items-center`, { backgroundColor: "rgba(0, 0, 0, 0.5)" }]}>
+          <Modal animationType="fade" transparent={true} onRequestClose={() => {}}>
+            <View style={[tw`flex-1 justify-center items-center`, { backgroundColor: 'rgba(0, 0, 0, 0.5)' }]}>
               <Loading />
             </View>
           </Modal>

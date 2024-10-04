@@ -3,11 +3,13 @@ import React from 'react';
 import { TouchableOpacity, Modal, Image, Text } from 'react-native';
 import tw from 'twrnc';
 import ProfileIcon from "../../assets/images/images.png";
+import groupicon from "../../assets/images/groupicon.png";
 import { useThemeColor } from '../../hooks/useThemeColor';
 
-const UserProfileModal = ({ user, modalIconVisible, setModalIconVisible, iconSize }) => {
+const UserProfileModal = ({ user, modalIconVisible, setModalIconVisible, iconSize, isContact }) => {
   const textColor = useThemeColor({}, "text");
   const UserProfileModal_BG = useThemeColor({}, "UserProfileModal_BG");
+  console.log("userprofile" ,user.profile);
   return (
     <>
       <Modal
@@ -22,8 +24,8 @@ const UserProfileModal = ({ user, modalIconVisible, setModalIconVisible, iconSiz
           onPress={() => setModalIconVisible(false)}
         >
           <Image
-            style={{ width: 300, height: 300, resizeMode: 'cover' }}
-            source={user.profile ? user.profile : ProfileIcon}
+            style={{ width: '100%', height: 300, resizeMode: 'cover' }}
+            source={user.profile ? { uri: user.profile }  : isContact? ProfileIcon : groupicon}
           />
           <Text style={tw`text-[${textColor}] text-lg font-bold text-center mt-2 border-b border-t border-gray-400 w-full`}>{user.name}</Text>
           <Text style={tw`text-[${textColor}] text-center mt-1 w-2/3`}>{user.info}</Text>

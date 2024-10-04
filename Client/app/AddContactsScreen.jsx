@@ -53,7 +53,7 @@ export default function AddContactsScreen() {
         console.log('RES DATA MUYYYYYYYYYYYYYYYY IMPORTANTE', res.data);
         const usersData = res.data.map((user) => ({
           name: user.username,
-          profile: user.profilePicture ? { uri: user.profilePicture } : ProfileIcon,
+          profile: user.profilePicture ?? null,
           info: user.info,
         }));
         setUsers(usersData);
@@ -144,6 +144,7 @@ export default function AddContactsScreen() {
                 iconDelete={false}
                 showModalOnPress={true}
                 showModalOnProfilePicturePress={true}
+                iscontact={true}
               />
             ))}
           {userFound == false && (

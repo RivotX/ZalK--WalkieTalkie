@@ -8,7 +8,6 @@ import { useSocket } from '../../components/context/SocketContext';
 import axios from 'axios';
 import getEnvVars from '../../config';
 import ChatComponent from '../../components/shared/ChatComponent';
-import GroupIcon from '../../assets/images/groupicon.png';
 import Loading from '../../components/shared/Loading';
 import FloatingAddButton from '../../components/shared/FloatingAddButton';
 
@@ -75,7 +74,7 @@ export default function GroupsScreen() {
           roomsAmIn.map((room, index) => {
             const roomdata = {
               name: room.name,
-              profile: GroupIcon,
+              profile: null,
               room: room.name,
               info: room.info,
             };

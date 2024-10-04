@@ -1,21 +1,21 @@
 //Client/app/(tabs)/AddGroupsScreen.jsx
-import React, { useEffect, useRef, useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Modal } from "react-native";
-import tw from "twrnc";
-import { useThemeColor } from "../hooks/useThemeColor";
-import axios from "axios";
-import ChatComponent from "../components/shared/ChatComponent";
-import GroupIcon from "../assets/images/groupicon.png";
-import getEnvVars from "../config";
-import { useSocket } from "../components/context/SocketContext";
-import Loading from "../components/shared/Loading";
+import React, { useEffect, useRef, useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Modal } from 'react-native';
+import tw from 'twrnc';
+import { useThemeColor } from '../hooks/useThemeColor';
+import axios from 'axios';
+import ChatComponent from '../components/shared/ChatComponent';
+import GroupIcon from '../assets/images/groupicon.png';
+import getEnvVars from '../config';
+import { useSocket } from '../components/context/SocketContext';
+import Loading from '../components/shared/Loading';
 
 export default function AddGroupsScreen() {
-  const backgroundColor = useThemeColor({}, "background");
-  const SoftbackgroundColor = useThemeColor({}, "Softbackground");
-  const textColor = useThemeColor({}, "text");
+  const backgroundColor = useThemeColor({}, 'background');
+  const SoftbackgroundColor = useThemeColor({}, 'Softbackground');
+  const textColor = useThemeColor({}, 'text');
   const inputRef = useRef(null);
-  const [text, setText] = useState("");
+  const [text, setText] = useState('');
   const [roomFound, setroomFound] = useState(undefined);
   const [username, setUsername] = useState();
   const [userID, setUserID] = useState(null);
@@ -25,9 +25,8 @@ export default function AddGroupsScreen() {
 
   const [rooms, setrooms] = useState([
     {
-      name: "",
-      profile: GroupIcon,
-      info: "",
+      name: '',
+      info: '',
     },
   ]);
   const { SERVER_URL } = getEnvVars();
@@ -48,12 +47,12 @@ export default function AddGroupsScreen() {
   const onSearchRoom = () => {
     setroomFound(undefined);
     setLoading(true);
-    axios.post(`${SERVER_URL}/searchRoom`, { roomsearch: text, username: username })
+    axios
+      .post(`${SERVER_URL}/searchRoom`, { roomsearch: text, username: username })
       .then((res) => {
         console.log(res.data);
         const roomsData = res.data.map((room) => ({
           name: room.name,
-          profile: room.image ? { uri: room.image } : GroupIcon,
           info: room.info,
         }));
         setrooms(roomsData);
@@ -73,24 +72,25 @@ export default function AddGroupsScreen() {
     // Automatically focus the TextInput when the screen is loaded
     inputRef.current?.focus();
     if (socket != null) {
-      console.log(socket, "socket EN AddRoomsScreen");
+      console.log(socket, 'socket EN AddRoomsScreen');
     }
   }, []);
 
   // ===== Friend request =====
   const joinRoom = (room) => {
-    socket.emit("join", { room: room, username: username });
+    socket.emit('join', { room: room, username: username });
     setrooms(rooms.filter((roomadded) => roomadded.name !== room));
   };
 
   return (
-    <>{loadingOnAdd &&
-      <Modal animationType="fade" transparent={true} onRequestClose={() => { }}>
-        <View style={[tw`flex-1 justify-center items-center`, { backgroundColor: "rgba(0, 0, 0, 0.5)" }]}>
-          <Loading />
-        </View>
-      </Modal>
-    }
+    <>
+      {loadingOnAdd && (
+        <Modal animationType="fade" transparent={true} onRequestClose={() => {}}>
+          <View style={[tw`flex-1 justify-center items-center`, { backgroundColor: 'rgba(0, 0, 0, 0.5)' }]}>
+            <Loading />
+          </View>
+        </Modal>
+      )}
       <View style={tw`flex-1 bg-[${backgroundColor}]`}>
         {/* Top Bar */}
         <View style={tw`w-full h-16 bg-[${SoftbackgroundColor}] flex items-center`}>
@@ -111,10 +111,11 @@ export default function AddGroupsScreen() {
             {text.length > 0 && (
               <TouchableOpacity
                 onPress={() => {
-                  setText("");
+                  setText('');
                   setroomFound(undefined);
                 }}
-                style={tw`ml-2 p-2 w-1/12`}>
+                style={tw`ml-2 p-2 w-1/12`}
+              >
                 <Text style={tw`text-lg text-[${textColor}]`}>X</Text>
               </TouchableOpacity>
             )}
@@ -140,11 +141,13 @@ export default function AddGroupsScreen() {
                   iconDelete={false}
                   showModalOnPress={true}
                   showModalOnProfilePicturePress={true}
+                  iscontact={false}
                 />
               ))}
             {roomFound == false && <Text style={tw`text-[${textColor}]`}>No groups found</Text>}
           </ScrollView>
         </View>
-      </View></>
+      </View>
+    </>
   );
 }

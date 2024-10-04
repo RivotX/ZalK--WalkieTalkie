@@ -274,11 +274,15 @@ export default function RootLayout() {
       console.log('userID: ', userID);
       const response = await axios.get(`${SERVER_URL}/get-image-url/${userID}`);
       setProfilePicture(response.data.profilePicture);
-      console.log('response.data.profilePicture', response.data.profilePicture);
+      console.log('response.data.profilePicture xx', response.data.profilePicture);
     } catch (error) {
       console.error('Error fetching profile picture:', error);
     }
   };
+
+  useEffect(() => {
+    console.log('Profile picture: xx', profilePicture);
+  }, [profilePicture]);
 
   if (!fontsLoaded) {
     return (
@@ -313,7 +317,7 @@ export default function RootLayout() {
                       <TouchableOpacity onPress={() => setModalIconVisible(true)}>
                         <Image source={profilePicture ? { uri: profilePicture } : ProfileIcon} style={tw`size-9 mr-2 rounded-full`} />
                         <UserProfileModal
-                          user={{ name: username, info: info, profile: profilePicture }}
+                          user={{ name: username, info: info, profile: profilePicture ?? null }}
                           modalIconVisible={modalIconVisible}
                           setModalIconVisible={setModalIconVisible}
                           iconSize={12}
