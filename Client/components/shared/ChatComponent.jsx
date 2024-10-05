@@ -11,6 +11,7 @@ const { SERVER_URL } = getEnvVars();
 import ProfileIcon from '../../assets/images/images.png';
 import groupIcon from '../../assets/images/groupicon.png';
 import { useLanguage } from '../../context/LanguageContext';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const ChatComponent = ({ user, iconChat, onAdd, iscontact, isrequest, setLoading, showModalOnPress, showModalOnProfilePicturePress, onGeneralPress, isFriend }) => {
   const textColor = useThemeColor({}, 'text');
@@ -102,14 +103,17 @@ const ChatComponent = ({ user, iconChat, onAdd, iscontact, isrequest, setLoading
 
               {/* Notifications */}
               {isrequest && (
-                <View style={tw`flex-row`}>
-                  <TouchableOpacity style={tw`px-1`} onPress={onDecline}>
-                    <Ionicons name="close-sharp" size={32} color={'red'} />
+                <View style={tw`flex-row items-center justify-center`}>
+                <View style={tw`flex-row items-center p-2 rounded-lg`}>
+                  <TouchableOpacity style={tw`px-2`} onPress={onDecline}>
+                    <FontAwesome name="times-circle" size={32} color={'red'} />
                   </TouchableOpacity>
-                  <TouchableOpacity style={tw`px-1`} onPress={handleAccept}>
-                    <Ionicons name="checkbox" size={32} color={'green'} />
+                  <View style={tw`w-0.5 h-8 bg-${ChatComponent_BorderColor} mx-2`} />
+                  <TouchableOpacity style={tw`px-2`} onPress={handleAccept}>
+                    <Ionicons name="person-add" size={32} color={'green'} />
                   </TouchableOpacity>
                 </View>
+              </View>
               )}
             </View>
           </View>
