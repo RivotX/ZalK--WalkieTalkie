@@ -12,7 +12,7 @@ import Loading from './Loading';
 import { useLanguage } from '../../context/LanguageContext';
 import LanguagesButton from './LanguagesButton';
 
-const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisible, user, isContact, setLoadingLayout }) => {
+const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisible, user, isContact, setLoadingLayout, isBusyLayout }) => {
   const textColor = useThemeColor({}, 'text');
   const SoftbackgroundColor = useThemeColor({}, 'Softbackground');
   const [dropdownVisible, setDropdownVisible] = useState(false);
@@ -22,7 +22,7 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
   const [userName, setUserName] = useState(null);
   const { SERVER_URL } = getEnvVars();
   const [socket, setSocket] = useState(useSocket()); // Estado para manejar la instancia del socket
-  const [isBusy, setIsBusy] = useState(false);
+  const [isBusy, setIsBusy] = useState(isBusyLayout);
   const heightAnim = useRef(new Animated.Value(0)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current; // Nueva animación de opacidad
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
@@ -36,7 +36,7 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
     navigation.navigate('ProfileSettingsScreen');
   };
 
-  // Get the user ID
+  // Get the user
   useEffect(() => {
     axios
       .get(`${SERVER_URL}/getsession`, { withCredentials: true })

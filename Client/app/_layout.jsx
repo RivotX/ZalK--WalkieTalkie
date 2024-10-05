@@ -330,7 +330,7 @@ function RootLayout() {
                   headerRight: () => (
                     <View style={tw`flex-row`}>
                       <NotificationsIcon />
-                      <ConfigIcon setIsBusyLayout={setIsBusy} handleLogout={handleLogout} />
+                      <ConfigIcon setIsBusyLayout={setIsBusy} handleLogout={handleLogout} isBusyLayout={isBusy}/>
                     </View>
                   ),
                   headerTitle: '',
