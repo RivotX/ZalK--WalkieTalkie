@@ -27,6 +27,7 @@ const NotificationsScreen = () => {
       .then((res) => {
         setUserID(res.data.user.id);
         setRequests(JSON.parse(res.data.user.requests));
+        console.log('userReq xx', res.data.user.requests);
       })
       .catch((error) => {
         console.log(error);
@@ -38,12 +39,12 @@ const NotificationsScreen = () => {
   }, []);
 
   useEffect(() => {
-    // ===== Skips the login if the user is already logged in ========
+
     if (userID != null) {
       socket.on('refreshcontacts', () => {
         axios.post(`${SERVER_URL}/refreshSession`, { id: userID }, { withCredentials: true })
           .then((res) => {
-            console.log('SESIONES REFRESCADOOOOOOOOS', res.data.user);
+            console.log('user xx', res.data.user);
             setRequests(JSON.parse(res.data.user.requests).length > 0 ? JSON.parse(res.data.user.requests) : []);
           })
           .catch((error) => {
