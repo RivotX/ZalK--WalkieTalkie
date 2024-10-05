@@ -24,7 +24,7 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
   const [hidePassword2, setHidePassword2] = useState(true);
   const { Texts } = useLanguage();
 
-  const [formError, setFormError] = useState("");
+  const [formError, setFormError] = useState("default");
   const [LoginScreenState, setLoginScreenState] = useState(LoginScreen);
 
   // === Animaciones para los placeholders ====
@@ -104,7 +104,7 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
 
     // Password validation
     if (password !== Confpassword) {
-      setFormError(Texts.PasswordsDoNotMatch);
+      setFormError(Texts.PasswordsDontMatch);
       setLoading(false);
       return;
     }
@@ -177,16 +177,19 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
     if (username.trim().length === 0) {
       setFormError(Texts.EmptyUsername);
       setLoading(false);
+      showAlert(Texts.RegistrationFailed, Texts.EmptyUsername);
       return;
     }
     if (password.trim().length === 0 || Confpassword.trim().length === 0) {
       setFormError(Texts.EmptyPassword);
       setLoading(false);
+      showAlert(Texts.RegistrationFailed, Texts.EmptyPassword);
       return;
     }
     if (email.trim().length === 0) {
       setFormError(Texts.EmptyEmail);
       setLoading(false);
+      showAlert(Texts.RegistrationFailed, Texts.EmptyEmail);
       return;
     }
 
@@ -203,7 +206,10 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
           setLoading(false);
         }).finally(() => {
           setLoading(false);
+          return
         });
+    } else {
+      setLoading(false);
     }
   };
 
