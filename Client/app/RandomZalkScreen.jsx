@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import tw from 'twrnc';
 import AudioComponent from '../components/shared/AudioComponent';
@@ -8,13 +8,14 @@ import { useNavigation } from '@react-navigation/native';
 import { useThemeColor } from '../hooks/useThemeColor';
 import { useRoute } from '@react-navigation/native';
 import { showAlert } from '../components/shared/ShowAlert';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function RandomZalkScreen() {
   const route = useRoute();
   const navigator = useNavigation();
   const socket = useSocket();
   const [isStarted, setIsStarted] = useState(false);
-  const [RandomUser,setRandomUser]= useState(route.params.randomUser);
+  const [RandomUser, setRandomUser] = useState(route.params.randomUser);
   const [connectedUsers, setConnectedUsers] = useState(0);
   // const [RandomUser, setRandomUser] = useState({});
   const [isConectionClose, setIsConectionClose] = useState(false);
@@ -22,6 +23,18 @@ export default function RandomZalkScreen() {
   const RZ_Gradient_1 = useThemeColor({}, 'RZ_Gradient_1');
   const RZ_Gradient_2 = useThemeColor({}, 'RZ_Gradient_2');
   const RZ_Gradient_3 = useThemeColor({}, 'RZ_Gradient_3');
+  const ActiveButtonColor = useThemeColor({}, "AudioComponent_ActiveButtonColor");
+  const { Texts } = useLanguage();
+  const { height, width } = useWindowDimensions();
+  // Define responsive sizes
+  const sizeInside = height < 800 ? 32 : 52;
+  const sizeOutside = height < 800 ? 44 : 64;
+  const iconSize = height < 800 ? 72 : 128;
+  const TitleSize = width < 400 ? "2xl" : "3xl";
+  const ConnPaddingSize = height < 800 ? 3 : 6;
+  const mb = height < 800 ? 3 : 6;
+  const AudioCancelButtonMT = height < 800 ? "3" : "6";
+  const EndConButtonBottom = height < 800 ? "5" : "10";
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -80,49 +93,49 @@ export default function RandomZalkScreen() {
 
   return (
     <LinearGradient
-    // Gradiente radial en tonos lila
-    colors={[RZ_Gradient_1, RZ_Gradient_2, RZ_Gradient_3]}
-    style={tw`flex-1 justify-between items-center`}
-    start={{ x: 0.5, y: 0.5 }}  // Radial desde el centro
-    end={{ x: 0.9, y: 0.9 }}
-    locations={[0, 0.5, 1]}
-  >
-    <View style={tw`flex-1 justify-center items-center p-6 w-full`}>
-      {/* Título principal */}
-      <Text style={tw`text-4xl font-bold text-white mb-4 tracking-wide`}>
-        You're Connected!
-      </Text>
+      // Gradiente radial en tonos lila
+      colors={[RZ_Gradient_1, RZ_Gradient_2, RZ_Gradient_3]}
+      style={tw`flex-1 justify-between items-center`}
+      start={{ x: 0.5, y: 0.5 }}  // Radial desde el centro
+      end={{ x: 0.9, y: 0.9 }}
+      locations={[0, 0.5, 1]}
+    >
+      <View style={tw`flex-1 items-center p-6 w-full`}>
+        {/* Título principal */}
+        <Text style={tw`text-${TitleSize} font-bold text-white mb-4 tracking-wide`}>
+          {Texts.RZConnected}
+        </Text>
 
-      {/* Bloque de usuario */}
-      <View style={tw`bg-white bg-opacity-10 rounded-lg p-6 mb-8 w-full max-w-sm shadow-md`}>
-        <Text style={tw`text-xl text-gray-100 mb-1 text-center`}>
-          Connected with:
+        {/* Bloque de usuario */}
+        <View style={tw`bg-white bg-opacity-10 rounded-lg p-${ConnPaddingSize} mb-${mb} w-full max-w-sm shadow-md`}>
+          <Text style={tw`text-xl text-gray-100 mb-1 text-center`}>
+            {Texts.RZConnectedWith}
+          </Text>
+          <Text style={tw`text-2xl text-blue-300 font-semibold text-center`}>
+            {RandomUser.username?.substring(0, 1)}*******
+          </Text>
+        </View>
+
+        {/* Temporizador */}
+        <Text style={tw`text-4xl text-white font-semibold mb-${mb} tracking-widest`}>
+          {formatTime(timeLeft)}
         </Text>
-        <Text style={tw`text-3xl text-blue-300 font-semibold text-center`}>
-          {RandomUser.username?.substring(0, 2)}********
-        </Text>
+
+        {/* Componente de audio */}
+        <View style={tw`w-full max-w-md`}>
+          <AudioComponent currentRoom={RandomUser.room} isConectionClose={isConectionClose} sizeInside={sizeInside} sizeOutside={sizeOutside} iconSize={iconSize} cancelButtonMT={AudioCancelButtonMT} />
+        </View>
+
+        {/* Botón para cerrar conexión */}
+        <TouchableOpacity
+          style={tw`bg-[${ActiveButtonColor}] rounded-full py-3 px-10 shadow-lg w-full max-w-xs absolute bottom-${EndConButtonBottom}`}
+          onPress={closeConnection}
+        >
+          <Text style={tw`text-white text-lg text-center`}>
+            {Texts.RZEndButton}
+          </Text>
+        </TouchableOpacity>
       </View>
-
-      {/* Temporizador */}
-      <Text style={tw`text-5xl text-white font-semibold mb-8 tracking-widest`}>
-        {formatTime(timeLeft)}
-      </Text>
-
-      {/* Componente de audio */}
-      <View style={tw`w-full max-w-md mb-8`}>
-        <AudioComponent currentRoom={RandomUser.room} isConectionClose={isConectionClose} />
-      </View>
-
-      {/* Botón para cerrar conexión */}
-      <TouchableOpacity
-        style={tw`bg-red-500 rounded-full py-3 px-10 shadow-lg w-full max-w-xs`}
-        onPress={closeConnection}
-      >
-        <Text style={tw`text-white text-lg text-center`}>
-          End Conversation
-        </Text>
-      </TouchableOpacity>
-    </View>
-  </LinearGradient>
+    </LinearGradient>
   );
 }

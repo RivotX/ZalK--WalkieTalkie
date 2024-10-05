@@ -6,7 +6,7 @@ import { FontAwesome5 } from "@expo/vector-icons"; // Assuming usage of Expo vec
 import { useSocket } from "../../context/SocketContext";
 import { useThemeColor } from "../../hooks/useThemeColor";
 
-const AudioComponent = ({ currentRoom, isConectionClose }) => {
+const AudioComponent = ({ currentRoom, isConectionClose, sizeInside, sizeOutside, iconSize, cancelButtonMT }) => {
   const [recording, setRecording] = useState();
   const [permissionStatus, setPermissionStatus] = useState(null);
   const [recordedAudio, setRecordedAudio] = useState(null);
@@ -67,7 +67,7 @@ const AudioComponent = ({ currentRoom, isConectionClose }) => {
       await Audio.setAudioModeAsync({
         // Set audio mode for recording
         allowsRecordingIOS: true,
-        playsInSilentModeIOS: true, 
+        playsInSilentModeIOS: true,
       });
       const { recording } = await Audio.Recording.createAsync(
         // recording(variable, NO state) = result.recording
@@ -149,43 +149,41 @@ const AudioComponent = ({ currentRoom, isConectionClose }) => {
   };
 
   return (
-    <View style={tw`flex items-center justify-center h-full`}>
-      <View style={tw`flex items-center justify-center h-100`}>
-        {/* Record button */}
-        <TouchableOpacity
-          style={tw`size-84 bg-[${buttonColorState}] rounded-full flex items-center justify-center`}
-          onPress={onPressHandler}
-        >
-          <View style={tw`size-74 bg-[${buttonColorState}] rounded-full border-4 border-${borderColorState} flex items-center justify-center`}>
-            <FontAwesome5
-              name="microphone"
-              size={128}
-              color='#ECEDEE'
-            />
-          </View>
-        </TouchableOpacity>
-
-        {/* Audio duration */}
-        <View style={tw`h-10 mt-2`}>
-          {recording && (
-            <Text style={tw`text-[${textcolor}] text-2xl`}>
-              {Math.floor(recordingTime / 60)}:{("0" + (recordingTime % 60)).slice(-2)}
-            </Text>
-          )}
+    <View style={tw`flex items-center justify-center`}>
+      {/* Record button */}
+      <TouchableOpacity
+        style={tw`size-[${sizeOutside}] bg-[${buttonColorState}] rounded-full flex items-center justify-center`}
+        onPress={onPressHandler}
+      >
+        <View style={tw`size-[${sizeInside}] bg-[${buttonColorState}] rounded-full border-4 border-${borderColorState} flex items-center justify-center`}>
+          <FontAwesome5
+            name="microphone"
+            size={iconSize}
+            color='#ECEDEE'
+          />
         </View>
+      </TouchableOpacity>
 
-        {/* Cancel button */}
-        <View style={tw`h-16 mt-2`}>
+      {/* Audio duration */}
+      <View style={tw`h-10 mt-2`}>
+        {recording && (
+          <Text style={tw`text-[${textcolor}] text-2xl`}>
+            {Math.floor(recordingTime / 60)}:{("0" + (recordingTime % 60)).slice(-2)}
+          </Text>
+        )}
+      </View>
 
-          {recording && (
-            <TouchableOpacity
-              style={tw`mt-4 px-4 py-2 bg-red-600 rounded-full`}
-              onPress={cancelRecording}
-            >
-              <Text style={tw`text-[#ECEDEE] text-lg`}>Cancelar</Text>
-            </TouchableOpacity>
-          )}
-        </View>
+      {/* Cancel button */}
+      <View style={tw`h-16 mt-${cancelButtonMT}`}>
+
+        {recording && (
+          <TouchableOpacity
+            style={tw`px-4 py-2 bg-[${ActiveButtonColor}] rounded-full`}
+            onPress={cancelRecording}
+          >
+            <Text style={tw`text-[#ECEDEE] text-lg`}>Cancelar</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );

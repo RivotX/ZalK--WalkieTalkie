@@ -74,6 +74,9 @@ export const Texts = {
     TapToChat: "Tap to chat",
     TapForDetails: "Tap for details",
     SentRequest: "Sent you a request",
+    RZEndButton: "End connection",
+    RZConnectedWith: "Connected with:",
+    RZConnected: "Connection established!",
   },
   es: {
     Language: "Idioma",
@@ -127,7 +130,7 @@ export const Texts = {
     EnterNewa: "Introduce tu nueva",
     EnterNewo: "Introduce tu nuevo",
     Change: "Cambiar",
-    TapRandomZalk: "Entra a Zalk Aleatorio",
+    TapRandomZalk: "Zalk Aleatorio",
     Anonymous: "Anónimo",
     and: "y",
     temporary: "temporal",
@@ -148,5 +151,8 @@ export const Texts = {
     TapToChat: "Toca para entrar al chat",
     TapForDetails: "Toca para ver detalles",
     SentRequest: "Te ha enviado una solicitud",
+    RZEndButton: "Terminar conexión",
+    RZConnectedWith: "Conectado con:",
+    RZConnected: "Conexión establecida!",
   },
 };
