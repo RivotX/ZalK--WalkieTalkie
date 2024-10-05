@@ -330,7 +330,7 @@ function RootLayout() {
                   headerRight: () => (
                     <View style={tw`flex-row`}>
                       <NotificationsIcon />
-                      <ConfigIcon setIsBusyLayout={setIsBusy} handleLogout={handleLogout} isBusyLayout={isBusy}/>
+                      <ConfigIcon setIsBusyLayout={setIsBusy} handleLogout={handleLogout} isBusyLayout={isBusy} />
                     </View>
                   ),
                   headerTitle: '',
@@ -378,7 +378,10 @@ function RootLayout() {
                         <View style={tw`flex-1 flex-row justify-start items-center w-full`}>
                           <UserProfileModal user={user} modalIconVisible={modalIconVisible} setModalIconVisible={setModalIconVisible} iconSize={12} isContact={isContact} />
                           <TouchableOpacity onPress={() => setModalIconVisible(true)} style={tw`ml-6`}>
-                            <Image source={user.profile ?? isContact ? { uri: user.profile } : groupicon} style={tw`size-11 rounded-full`} />
+                            <Image
+                              source={user.profile ? { uri: user.profile } : (isContact ? ProfileIcon : groupicon)}
+                              style={tw`size-11 rounded-full`}
+                            />
                           </TouchableOpacity>
                           <Text style={tw`text-[${textColor}] font-bold text-lg ml-2`}>{user.name ?? 'Chat Room'}</Text>
                         </View>
