@@ -78,10 +78,11 @@ const NotificationsScreen = () => {
                 user={request}
                 key={index}
                 isrequest={true}
-                iconDelete={true}
+                iconChat={true}
                 setLoading={setLoading}
                 showModalOnPress={true}
                 showModalOnProfilePicturePress={true}
+                iscontact={true}
               />
             ))}
           </>

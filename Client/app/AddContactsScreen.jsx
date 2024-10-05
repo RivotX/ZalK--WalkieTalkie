@@ -142,7 +142,7 @@ export default function AddContactsScreen() {
                 key={user.id || index}
                 user={user}
                 onAdd={() => onAdd(user)}
-                iconDelete={false}
+                iconChat={false}
                 showModalOnPress={true}
                 showModalOnProfilePicturePress={true}
                 iscontact={true}

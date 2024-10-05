@@ -1,3 +1,5 @@
+import { View } from "react-native";
+
 // Client/constants/Texts.js
 export const Texts = {
   en: {
@@ -65,6 +67,13 @@ export const Texts = {
     RZCancelButton: "Not yet",
     RZSearchingCon: "Searching for a connection...",
     ProfilePhoto: "Profile Photo",
+    DeleteGroup: "Delete Group",
+    ViewGroup: "View Group",
+    DeleteContact: "Delete Contact",
+    ViewContact: "View Contact",
+    TapToChat: "Tap to chat",
+    TapForDetails: "Tap for details",
+    SentRequest: "Sent you a request",
   },
   es: {
     Language: "Idioma",
@@ -132,5 +141,12 @@ export const Texts = {
     RZCancelButton: "Aún no",
     RZSearchingCon: "Buscando una conexión...",
     ProfilePhoto: "Foto de perfil",
+    DeleteGroup: "Salir del Grupo",
+    ViewGroup: "Ver Grupo",
+    DeleteContact: "Eliminar Contacto",
+    ViewContact: "Ver Contacto",
+    TapToChat: "Toca para entrar al chat",
+    TapForDetails: "Toca para ver detalles",
+    SentRequest: "Te ha enviado una solicitud",
   },
 };

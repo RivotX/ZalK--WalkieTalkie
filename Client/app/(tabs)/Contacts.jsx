@@ -95,9 +95,10 @@ const ContactsScreen = ({ setLoadingLayout }) => {
                   key={index}
                   onGeneralPress={() => navigation.navigate("ChatScreen", { user: contact, isContact: true })}
                   iscontact={true}
-                  iconDelete={true}
+                  iconChat={true}
                   setLoading={setLoading}
                   showModalOnProfilePicturePress={true}
+                  isFriend={true}
                 />
               ))
             )}

@@ -81,8 +81,11 @@ const RandomZalkScreen = () => {
   return (
     <View style={tw`flex-1 items-center justify-center bg-[${backgroundColor}]`}>
 
-      <TouchableOpacity style={tw`size-80 bg-${PrimaryPurple} flex justify-center items-center shadow-xl rounded-full`} onPress={RandomZalk}>
-        <View>
+         <TouchableOpacity
+        style={tw`size-84 bg-${PrimaryPurple} rounded-full flex items-center justify-center shadow-xl`}
+        onPress={RandomZalk}
+      >
+        <View style={tw`size-78 bg-${PrimaryPurple} rounded-full border-4 border-white flex items-center justify-center`}>
           <Text style={tw`text-3xl text-white font-medium`}>{Texts.TapRandomZalk}</Text>
         </View>
       </TouchableOpacity>

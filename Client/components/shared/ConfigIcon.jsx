@@ -156,7 +156,7 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
                     {/* App settings */}
                     <TouchableOpacity onPress={toggleBusyMode} style={tw`h-1/4 flex-row items-center`}>
                       <Text style={tw`text-lg ${isBusy ? 'text-[red]' : `text-[${textColor}]`}`}>
-                        { isBusy ? Texts.EndBusyMode : Texts.BusyMode}
+                        {isBusy ? Texts.EndBusyMode : Texts.BusyMode}
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={onPressSettings} style={tw`h-1/4 flex-row items-center`}>
@@ -175,14 +175,16 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
                         setModalIconVisible(true);
                         setDropdownVisible(false);
                       }}
-                    >
+                      style={tw`flex justify-center h-1/2`}>
                       <Text style={tw`text-lg text-[${textColor}]`}>
-                        {isContact ? 'View Contact' : 'View Group'}
+                        {isContact ? Texts.ViewContact : Texts.ViewGroup}
                       </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={handlePressDeleteContact}>
+                    <TouchableOpacity
+                      onPress={handlePressDeleteContact}
+                      style={tw`flex justify-center h-1/2`}>
                       <Text style={tw`text-lg text-[${textColor}]`}>
-                        {isContact ? 'Delete Contact' : 'Delete Group'}
+                      {isContact ? Texts.DeleteContact : Texts.ViewGroup}
                       </Text>
                     </TouchableOpacity>
                   </>

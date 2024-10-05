@@ -1,4 +1,4 @@
-//Client/app/(tabs)/AddContactsScreen.jsx
+//Client/app/ChatScreen.jsx
 import { React, useState, useEffect } from "react";
 import { View } from "react-native";
 import tw from "twrnc";
@@ -12,7 +12,7 @@ export default function ChatScreen() {
   const backgroundColor = useThemeColor({}, "background");
   const route = useRoute();
   const { user } = route.params;
-  console.log(route.params);
+  console.log("CS params" , route.params);
   const [currentRoom, setCurrentRoom] = useState(user.room);
   const [userID, setUserID] = useState();
   const { SERVER_URL } = getEnvVars();

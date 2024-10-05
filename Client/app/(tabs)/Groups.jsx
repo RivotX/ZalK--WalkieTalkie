@@ -87,8 +87,9 @@ export default function GroupsScreen() {
                 key={index}
                 onGeneralPress={() => navigation.navigate('ChatScreen', { user: roomdata, isContact: false })}
                 iscontact={false}
-                iconDelete={true}
+                iconChat={true}
                 showModalOnProfilePicturePress={true}
+                isFriend={true}
               />
             );
           })

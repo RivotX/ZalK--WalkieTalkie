@@ -139,7 +139,7 @@ export default function AddGroupsScreen() {
                   onAdd={() => {
                     joinRoom(room.name);
                   }}
-                  iconDelete={false}
+                  iconChat={false}
                   showModalOnPress={true}
                   showModalOnProfilePicturePress={true}
                   iscontact={false}

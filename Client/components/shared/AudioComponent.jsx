@@ -12,8 +12,6 @@ const AudioComponent = ({ currentRoom, isConectionClose }) => {
   const [recordedAudio, setRecordedAudio] = useState(null);
   const [socket, setSocket] = useState(useSocket()); // Estado para manejar la instancia del socket
   const [recordingTime, setRecordingTime] = useState(0); // Estado para manejar el tiempo de grabación
-  const Softbackground = useThemeColor({}, "Softbackground");
-  const primaryColor = useThemeColor({}, "PrimaryPurple");
   const [buttonColorState, setButtonColorState] = useState(useThemeColor({}, "AudioComponent_ButtonColor"));
   const [borderColorState, setBorderColorState] = useState(useThemeColor({}, "AudioComponent_BorderColor"));
   const buttonColor = useThemeColor({}, "AudioComponent_ButtonColor");

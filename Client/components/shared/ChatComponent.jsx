@@ -10,8 +10,9 @@ import getEnvVars from '../../config';
 const { SERVER_URL } = getEnvVars();
 import ProfileIcon from '../../assets/images/images.png';
 import groupIcon from '../../assets/images/groupicon.png';
+import { useLanguage } from '../../context/LanguageContext';
 
-const ChatComponent = ({ user, iconDelete, onAdd, iscontact, isrequest, setLoading, showModalOnPress, showModalOnProfilePicturePress, onGeneralPress }) => {
+const ChatComponent = ({ user, iconChat, onAdd, iscontact, isrequest, setLoading, showModalOnPress, showModalOnProfilePicturePress, onGeneralPress, isFriend }) => {
   const textColor = useThemeColor({}, 'text');
   const [username, setusername] = useState();
   const [socket, setSocket] = useState(useSocket());
@@ -19,6 +20,7 @@ const ChatComponent = ({ user, iconDelete, onAdd, iscontact, isrequest, setLoadi
   const [selectedUser, setSelectedUser] = useState(user);
   const [userProfileModalVisible, setuserProfileModalVisible] = useState(false);
   const ChatComponent_BorderColor = useThemeColor({}, 'ChatComponent_BorderColor');
+  const { Texts } = useLanguage();
 
   useEffect(() => {
     if (!onAdd) {
@@ -69,7 +71,7 @@ const ChatComponent = ({ user, iconDelete, onAdd, iscontact, isrequest, setLoadi
         {/* Profile Picture */}
         <TouchableOpacity onPress={handleProfilePicturePress}>
           <View style={tw`size-[14] rounded-full`}>
-            <Image style={[tw`rounded-full w-full h-full`]} source={ user.profile ? { uri: user.profile } : iscontact? ProfileIcon : groupIcon } />
+            <Image style={[tw`rounded-full w-full h-full`]} source={user.profile ? { uri: user.profile } : iscontact ? ProfileIcon : groupIcon} />
           </View>
         </TouchableOpacity>
 
@@ -80,19 +82,19 @@ const ChatComponent = ({ user, iconDelete, onAdd, iscontact, isrequest, setLoadi
               <Text style={[{ fontSize: 16 }, tw`font-bold text-[${textColor}]`]}>
                 {isrequest ? user.username : user.name} {user.isBusy && <Ionicons name="notifications-off" size={18} color="red" />}
               </Text>
-              {isrequest ? <Text style={tw`text-gray-400`}>sent you a request</Text> : <Text style={tw`text-gray-400`}>Tap for more details</Text>}
+              {isrequest ? <Text style={tw`text-gray-400`}>{Texts.SentRequest}</Text> : <Text style={tw`text-gray-400`}>{isFriend ? Texts.TapToChat : Texts.TapForDetails}</Text>}
             </View>
 
             <View style={tw`${isrequest && 'w-[40%]'}`}>
               {/* Chat  */}
-              {iconDelete && isrequest == undefined && (
+              {iconChat && isrequest == undefined && (
                 <TouchableOpacity style={tw`px-5`} onPress={handleGeneralPress}>
                   <Ionicons name="chatbubble-ellipses-outline" size={22} color={textColor} />
                 </TouchableOpacity>
               )}
 
               {/* Add Friends */}
-              {!iconDelete && isrequest == undefined && (
+              {!iconChat && isrequest == undefined && (
                 <TouchableOpacity style={tw`px-5`} onPress={onAdd}>
                   <Ionicons name="person-add" size={22} color={textColor} />
                 </TouchableOpacity>
