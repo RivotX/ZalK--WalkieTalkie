@@ -192,7 +192,9 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
       showAlert(Texts.RegistrationFailed, Texts.EmptyEmail);
       return;
     }
-
+    if (formError == Texts.PasswordsDontMatch){
+      showAlert(Texts.RegistrationFailed, Texts.PasswordsDontMatch);
+    }
     if (formError === "") {
       axios
         .post(`${SERVER_URL}/create-user`, { username, password, email })
