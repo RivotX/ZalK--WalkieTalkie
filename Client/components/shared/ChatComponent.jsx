@@ -19,6 +19,7 @@ const ChatComponent = ({ user, iconDelete, onAdd, iscontact, isrequest, setLoadi
   const [selectedUser, setSelectedUser] = useState(user);
   const [userProfileModalVisible, setuserProfileModalVisible] = useState(false);
   const ChatComponent_BorderColor = useThemeColor({}, 'ChatComponent_BorderColor');
+
   useEffect(() => {
     if (!onAdd) {
       axios
@@ -116,7 +117,7 @@ const ChatComponent = ({ user, iconDelete, onAdd, iscontact, isrequest, setLoadi
       {/* UserProfileModal */}
       {userProfileModalVisible && (
         <View style={tw`absolute inset-0 flex-1 justify-center items-center bg-black bg-opacity-50`}>
-          <UserProfileModal user={selectedUser} modalIconVisible={userProfileModalVisible} setModalIconVisible={setuserProfileModalVisible} iconSize={14} />
+          <UserProfileModal user={selectedUser} isContact={iscontact} modalIconVisible={userProfileModalVisible} setModalIconVisible={setuserProfileModalVisible} iconSize={14} />
         </View>
       )}
     </>
