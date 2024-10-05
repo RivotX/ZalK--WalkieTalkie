@@ -8,6 +8,7 @@ import ChatComponent from '../components/shared/ChatComponent';
 import { useSocket } from '../context/SocketContext';
 import getEnvVars from '../config';
 import Loading from '../components/shared/Loading';
+import { useLanguage } from '../context/LanguageContext';
 
 const NotificationsScreen = () => {
   const backgroundColor = useThemeColor({}, 'background');
@@ -17,6 +18,7 @@ const NotificationsScreen = () => {
   const [userID, setUserID] = useState(null);
   const { SERVER_URL } = getEnvVars();
   const [loading, setLoading] = useState(true);
+  const { Texts } = useLanguage();
 
   // ===== Get session =====
   useEffect(() => {
@@ -87,7 +89,7 @@ const NotificationsScreen = () => {
           <>
             {/* No requests */}
             <View style={tw`flex w-full items-center mt-10 h-1/3`}>
-              <Text style={tw`text-[${textColor}] text-2xl font-medium`}>You don't have any notifications</Text>
+              <Text style={tw`text-[${textColor}] text-2xl font-medium`}>{Texts.NoNotifications}</Text>
             </View>
           </>
         )}

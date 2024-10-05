@@ -9,6 +9,7 @@ import { useSocket } from '../../context/SocketContext';
 import FriendRequestModal from '../../components/modals/FriendRequestModal';
 import RandomZalkModal from '../../components/modals/RandomZalkModal';
 import * as Notifications from 'expo-notifications';
+import { useLanguage } from '../../context/LanguageContext';
 
 const RandomZalkScreen = () => {
   const backgroundColor = useThemeColor({}, 'background');
@@ -20,6 +21,7 @@ const RandomZalkScreen = () => {
   const [socket, setSocket] = useState(useSocket());
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisibleRandomZalk, setModalVisibleRandomZalk] = useState(false);
+  const { Texts } = useLanguage();
 
   const [request, setRequest] = useState([{ senderId: null, receiverId: null, message: null }]);
   
@@ -81,7 +83,7 @@ const RandomZalkScreen = () => {
 
       <TouchableOpacity style={tw`size-80 bg-${PrimaryPurple} flex justify-center items-center shadow-xl rounded-full`} onPress={RandomZalk}>
         <View>
-          <Text style={tw`text-3xl text-white font-medium`}>Tap to Random Zalk</Text>
+          <Text style={tw`text-3xl text-white font-medium`}>{Texts.TapRandomZalk}</Text>
         </View>
       </TouchableOpacity>
 

@@ -12,6 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import ProfileIcon from "../assets/images/images.png";
 import Loading from "../components/shared/Loading";
 import showAlert from "../components/shared/ShowAlert";
+import { useLanguage } from '../context/LanguageContext';
 
 const ProfileSettingsScreen = () => {
   const backgroundColor = useThemeColor({}, "background");
@@ -35,6 +36,7 @@ const ProfileSettingsScreen = () => {
   const animation = useRef(new Animated.Value(0)).current;
   const [loading, setLoading] = useState(true);
   const { SERVER_URL } = getEnvVars();
+  const { Texts } = useLanguage();
 
   // ===== Maximum length for the user info in the UI =====
   const MAX_LENGTH = 30;
@@ -277,8 +279,8 @@ const ProfileSettingsScreen = () => {
               <View style={tw`w-5/6 flex flex-col border-b border-gray-400 py-3 ml-2`}>
                 <View style={tw`flex-row w-full justify-between items-center`}>
                   <View>
-                    <Text style={tw`text-[${disabledText}] mb-1`}>Username</Text>
-                    <Text style={tw`text-[${textColor}]`}>{username}</Text>
+                    <Text style={tw`text-[${textColor}] mb-1`}>{Texts.Username}</Text>
+                    <Text style={tw`text-[${disabledText}]`}>{username}</Text>
                   </View>
                   <Ionicons name="build-outline" size={20} color={textColor} />
                 </View>
@@ -300,8 +302,8 @@ const ProfileSettingsScreen = () => {
               <View style={tw`w-5/6 flex flex-col border-b border-gray-400 py-3 ml-2`}>
                 <View style={tw`flex-row w-full justify-between items-center`}>
                   <View>
-                    <Text style={tw`text-[${disabledText}] mb-1`}>Info</Text>
-                    <Text style={tw`text-[${textColor}]`}>{userInfo}</Text>
+                    <Text style={tw`text-[${textColor}] mb-1`}>{Texts.Info}</Text>
+                    <Text style={tw`text-[${disabledText}]`}>{userInfo}</Text>
                   </View>
                   <Ionicons name="build-outline" size={20} color={textColor} />
                 </View>
@@ -323,8 +325,8 @@ const ProfileSettingsScreen = () => {
               <View style={tw`w-5/6 flex flex-col border-b border-gray-400 py-3 ml-2`}>
                 <View style={tw`flex-row w-full justify-between items-center`}>
                   <View>
-                    <Text style={tw`text-[${disabledText}] mb-1`}>Email</Text>
-                    <Text style={tw`text-[${textColor}]`}>{userEmail}</Text>
+                    <Text style={tw`text-[${textColor}] mb-1`}>{Texts.Email}</Text>
+                    <Text style={tw`text-[${disabledText}]`}>{userEmail}</Text>
                   </View>
                   <Ionicons name="build-outline" size={20} color={textColor} />
                 </View>
@@ -346,8 +348,8 @@ const ProfileSettingsScreen = () => {
               <View style={tw`w-5/6 flex flex-col border-b border-gray-400 py-3 ml-2`}>
                 <View style={tw`flex-row w-full justify-between items-center`}>
                   <View>
-                    <Text style={tw`text-[${disabledText}] mb-1`}>Password</Text>
-                    <Text style={tw`text-[${textColor}]`}>***</Text>
+                    <Text style={tw`text-[${textColor}] mb-1`}>{Texts.Password}</Text>
+                    <Text style={tw`text-[${disabledText}]`}>***</Text>
                   </View>
                   <Ionicons name="build-outline" size={20} color={textColor} />
                 </View>

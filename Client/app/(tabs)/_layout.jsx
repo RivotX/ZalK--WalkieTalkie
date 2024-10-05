@@ -15,20 +15,18 @@ import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import axios from 'axios';
 import getEnvVars from '../../config';
+import { useLanguage } from '../../context/LanguageContext';
 
-const {SERVER_URL} = getEnvVars();
-
+const { SERVER_URL } = getEnvVars();
 const Tab = createMaterialTopTabNavigator();
-
 function TabIcon({ name, focused, color }) {
   return <Ionicons name={name} size={24} color={focused ? color : 'gray'} />;
 }
-
 function GroupTabIcon({ focused, color }) {
   return <GroupIcon fill={focused ? color : 'gray'} />;
 }
 
-export default function TabLayout({}) {
+export default function TabLayout({ }) {
   const SoftbackgroundColor = useThemeColor({}, 'Softbackground');
   const textColor = useThemeColor({}, 'text');
   const primarypurpleHEX = useThemeColor({}, 'primarypurpleHEX');
@@ -36,12 +34,12 @@ export default function TabLayout({}) {
   const route = useRoute();
   const { username } = route.params;
 
-   // ===== Notifications =====
+  const { Texts } = useLanguage();
 
-    
+  // ===== Notifications =====
   const registerForPushNotificationsAsync = async () => {
     let token;
-    if (true===true) {
+    if (true === true) {
       const { status: existingStatus } = await Notifications.getPermissionsAsync();
       let finalStatus = existingStatus;
       if (existingStatus !== 'granted') {
@@ -52,15 +50,15 @@ export default function TabLayout({}) {
         alert('Failed to get push token for push notification!');
         return;
       }
-      token = (await Notifications.getExpoPushTokenAsync({projectId: Constants.expoConfig.extra.eas.projectId,})).data;
-          axios.post(`${SERVER_URL}/saveToken`, { token: token, username: username }).then((res) => {
-            console.log(res.data);
-          });
+      token = (await Notifications.getExpoPushTokenAsync({ projectId: Constants.expoConfig.extra.eas.projectId, })).data;
+      axios.post(`${SERVER_URL}/saveToken`, { token: token, username: username }).then((res) => {
+        console.log(res.data);
+      });
       console.log(token, 'token and projectId', Constants.expoConfig.extra.eas.projectId);
     } else {
       alert('Must use physical device for Push Notifications');
     }
-  
+
     if (Platform.OS === 'android') {
       Notifications.setNotificationChannelAsync('default', {
         name: 'default',
@@ -69,13 +67,13 @@ export default function TabLayout({}) {
         lightColor: '#FF231F7C',
       });
     }
-  
+
     if (Platform.OS === 'web') {
       const vapidPublicKey = 'YOUR_VAPID_PUBLIC_KEY'; // Replace with your VAPID public key
       token = await Notifications.getDevicePushTokenAsync({ vapidPublicKey });
       console.log(token);
     }
-  
+
     return token;
   }
 
@@ -98,8 +96,8 @@ export default function TabLayout({}) {
 
   useEffect(() => {
     registerForPushNotificationsAsync().then(token => console.log(token));
-    
-//COPIADO POR EL COPILOT NO SE COMO FUNCIONA PERO NO LO BORRO POR SI ACASO
+
+    //COPIADO POR EL COPILOT NO SE COMO FUNCIONA PERO NO LO BORRO POR SI ACASO
 
     // const subscription = Notifications.addNotificationReceivedListener(async notification => {
     //   const audioData = notification.request.content.data.audioData;
@@ -137,7 +135,7 @@ export default function TabLayout({}) {
             tabBarLabel: ({ focused }) => (
               <View style={tw`flex-1 items-center justify-center`}>
                 <TabIcon name="person" focused={focused} color={primarypurpleHEX} />
-                <Text style={{ color: focused ? primarypurpleHEX : textColor }}>Contacts</Text>
+                <Text style={{ color: focused ? primarypurpleHEX : textColor }}>{Texts.Contacts}</Text>
               </View>
             ),
           }}
@@ -151,7 +149,7 @@ export default function TabLayout({}) {
             tabBarLabel: ({ focused }) => (
               <View style={tw`flex-1 items-center justify-center`}>
                 <GroupTabIcon focused={focused} color={primarypurpleHEX} />
-                <Text style={{ color: focused ? primarypurpleHEX : textColor }}>Groups</Text>
+                <Text style={{ color: focused ? primarypurpleHEX : textColor }}>{Texts.Groups}</Text>
               </View>
             ),
           }}
@@ -163,7 +161,7 @@ export default function TabLayout({}) {
             tabBarLabel: ({ focused }) => (
               <View style={tw`flex-1 items-center justify-center`}>
                 <TabIcon name="telescope-outline" focused={focused} color={primarypurpleHEX} />
-                <Text style={{ color: focused ? primarypurpleHEX : textColor }}>Random Zalk</Text>
+                <Text style={{ color: focused ? primarypurpleHEX : textColor }}>{Texts.RandomZalk}</Text>
               </View>
             ),
           }}

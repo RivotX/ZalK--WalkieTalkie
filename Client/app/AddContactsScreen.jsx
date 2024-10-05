@@ -9,7 +9,7 @@ import Loading from "../components/shared/Loading";
 import AddDeleteFriendModal from "../components/modals/AddDeleteFriendModal";
 import getEnvVars from "../config";
 const { SERVER_URL } = getEnvVars();
-import ProfileIcon from "../assets/images/ProfileIcon.png";
+import { useLanguage } from '../context/LanguageContext';
 
 export default function AddContactsScreen() {
   const backgroundColor = useThemeColor({}, "background");
@@ -25,6 +25,7 @@ export default function AddContactsScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null); // Estado para el usuario seleccionado
   const [users, setUsers] = useState([]);
+  const { Texts } = useLanguage();
 
   useEffect(() => {
     axios
@@ -102,7 +103,7 @@ export default function AddContactsScreen() {
           <TextInput
             style={tw`h-10 w-11/12 my-3 border-b border-gray-400 px-2 text-[${textColor}]`}
             placeholderTextColor="#9ca3af"
-            placeholder="Busca por nombre de usuario o teléfono"
+            placeholder= {Texts.AddContactsInput}
             autoFocus={true}
             value={text}
             onChangeText={(e) => {

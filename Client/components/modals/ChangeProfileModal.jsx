@@ -7,7 +7,7 @@ import axios from "axios";
 import getEnvVars from "../../config";
 import Loading from "../shared/Loading";
 const { SERVER_URL } = getEnvVars();
-import showAlert from "../../components/shared/ShowAlert";
+import { useLanguage } from "../../context/LanguageContext";
 
 const ChangeProfileModal = ({ PropToChange, setModalVisibility, ModalIcon, isPassword, refreshSession, userID, currentProp }) => {
   const backgroundColor = useThemeColor({}, "background");
@@ -16,6 +16,8 @@ const ChangeProfileModal = ({ PropToChange, setModalVisibility, ModalIcon, isPas
   const [hidePassword, setHidePassword] = useState(true);
   const [loading, setLoading] = useState(false);
   const textInputRef = useRef(null);
+  const { Texts } = useLanguage();
+  const [propToChange, setPropToChange] = useState(PropToChange);
 
   useEffect(() => {
     if (textInputRef.current) {
@@ -98,6 +100,28 @@ const ChangeProfileModal = ({ PropToChange, setModalVisibility, ModalIcon, isPas
       });
   };
 
+  const getTextForProp = (prop) => {
+    switch (prop) {
+      case 'password':
+        return Texts.password;
+      case 'info':
+        return Texts.info;
+      case 'email':
+        return Texts.email;
+      case 'username':
+        return Texts.username;
+      default:
+        return '';
+    }
+  };
+
+  const getEnterNewText = (prop) => {
+    if (prop === 'password' || prop === 'info') {
+      return Texts.EnterNewa;
+    } else {
+      return Texts.EnterNewo;
+    }
+  };
 
   return (
     <>
@@ -111,14 +135,14 @@ const ChangeProfileModal = ({ PropToChange, setModalVisibility, ModalIcon, isPas
         <TouchableOpacity style={tw`flex-1 justify-end bg-black bg-opacity-50`} activeOpacity={1} onPressOut={() => setModalVisibility(false)}>
           <View style={tw`bg-[${backgroundColor}] rounded-t-lg p-4`} onStartShouldSetResponder={() => true}>
             {/* Title */}
-            <Text style={tw`text-lg font-bold mb-4 text-[${textColor}]`}>Change your {PropToChange}</Text>
+            <Text style={tw`text-lg font-bold mb-4 text-[${textColor}]`}>{Texts.ChangeYour} {getTextForProp(propToChange)}</Text>
             <View style={tw`flex-row items-center border border-gray-300 rounded p-2`}>
               <Ionicons name={ModalIcon} size={20} color="gray" style={tw`mr-2`} />
               {/* Input */}
               <TextInput
                 ref={textInputRef}
-                placeholder={`Enter new ${PropToChange}`}
-                placeholderTextColor={textColor}
+                placeholder={getEnterNewText(PropToChange) + " " + getTextForProp(propToChange) + "..."}
+                placeholderTextColor={"gray"}
                 value={newProp}
                 secureTextEntry={isPassword ? hidePassword : false}
                 style={tw`flex-1 text-[${textColor}]`}
@@ -140,7 +164,7 @@ const ChangeProfileModal = ({ PropToChange, setModalVisibility, ModalIcon, isPas
               onPress={() => {
                 updateUser();
               }}>
-              <Text style={tw`text-white`}>Change {PropToChange}</Text>
+              <Text style={tw`text-white`}>{Texts.Change} </Text>
             </TouchableOpacity>
           </View>
         </TouchableOpacity>

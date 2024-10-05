@@ -5,6 +5,7 @@ import { useSocket } from '../../context/SocketContext';
 import Loading from '../shared/Loading';
 import { useThemeColor } from '../../hooks/useThemeColor';
 import { useNavigation } from '@react-navigation/native';
+import { useLanguage } from '../../context/LanguageContext';
 
 const RandomZalkModal = ({ userID, onClose }) => {
   const socket = useSocket();
@@ -18,6 +19,7 @@ const RandomZalkModal = ({ userID, onClose }) => {
   const navigation = useNavigation();
   const [shouldClose, setShouldClose] = useState(false);
   const [randomUser, setRandomUser] = useState({});
+  const { Texts } = useLanguage();
 
   const startSearch = () => {
     setIsStarted(true);
@@ -53,39 +55,39 @@ const RandomZalkModal = ({ userID, onClose }) => {
         <View style={tw`bg-${modal_bg_color} rounded-lg shadow-lg p-6 w-11/12 max-w-md`}>
           {!isStarted ? (
             <>
-              <Text style={tw`text-2xl font-semibold mb-4 text-${modal_title_color}`}>Random Zalk</Text>
+              <Text style={tw`text-2xl font-semibold mb-4 text-${modal_title_color}`}>{Texts.RandomZalk}</Text>
               <View style={tw`mb-6 flex gap-5`}>
                 <View style={tw`flex-row items-start`}>
                   <Text style={tw`text-${modal_text_color}`}>• </Text>
                   <Text style={tw`flex-1 text-${modal_text_color} text-[15px]`}>
-                    <Text style={tw`text-green-500 font-semibold text-[15px]`}>Anonymous</Text> and{' '}
-                    <Text style={tw`text-green-500 font-semibold text-[15px]`}>temporary</Text> way to connect with other users.
+                    <Text style={tw`text-green-500 font-semibold text-[15px]`}>{Texts.Anonymous}</Text> {Texts.and}{' '}
+                    <Text style={tw`text-green-500 font-semibold text-[15px]`}>{Texts.temporary}</Text> {Texts.RZmodalFirstPar}
                   </Text>
                 </View>
                 <View style={tw`flex-row items-start`}>
                   <Text style={tw`text-${modal_text_color}`}>• </Text>
                   <Text style={tw`flex-1 text-${modal_text_color} text-[15px]`}>
-                    <Text style={tw`text-blue-500 font-semibold text-[15px]`}>Tap Start</Text> to begin your search for a partner.
+                    <Text style={tw`text-blue-500 font-semibold text-[15px]`}>{Texts.TapStart}</Text> {Texts.RZToSearch}
                   </Text>
                 </View>
                 <View style={tw`flex-row items-start`}>
                   <Text style={tw`text-${modal_text_color}`}>• </Text>
                   <Text style={tw`flex-1 text-${modal_text_color} text-[15px]`}>
-                    <Text style={tw`text-red-500 font-semibold text-[15px]`}>3 minutes</Text> of automatic connection if two users are actively searching.
+                    <Text style={tw`text-red-500 font-semibold text-[15px]`}>{Texts.ThreeMin}</Text> {Texts.RZConnect}
                   </Text>
                 </View>
               </View>
-              <Text style={tw`font-bold text-${RZ_connection_text_color} mb-6 text-sm`}>Are you ready for a random connection?</Text>
+              <Text style={tw`font-bold text-${RZ_connection_text_color} mb-6 text-sm`}>{Texts.RZReady}</Text>
               <TouchableOpacity style={tw`bg-${Modal_accept_button} rounded-full py-2 px-4 mb-4`} onPress={startSearch}>
-                <Text style={tw`text-white text-center`}>Start</Text>
+                <Text style={tw`text-white text-center`}>{Texts.RZStartButton}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={tw`bg-${Modal_cancel_button} rounded-full py-2 px-4`} onPress={onClose}>
-                <Text style={tw`text-${modal_text_color} text-center`}>Not yet</Text>
+                <Text style={tw`text-${modal_text_color} text-center`}>{Texts.RZCancelButton}</Text>
               </TouchableOpacity>
             </>
           ) : (
             <>
-              <Text style={tw`font-bold text-${RZ_connection_text_color} mb-4 text-center text-base `}>Searching for a connection...</Text>
+              <Text style={tw`font-bold text-${RZ_connection_text_color} mb-4 text-center text-base `}>{Texts.RZSearchingCon}</Text>
               <View style={tw`mb-4`}>
                 <Loading />
               </View>

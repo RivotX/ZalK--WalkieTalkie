@@ -10,6 +10,7 @@ import getEnvVars from '../../config';
 import ChatComponent from '../../components/shared/ChatComponent';
 import Loading from '../../components/shared/Loading';
 import FloatingAddButton from '../../components/shared/FloatingAddButton';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function GroupsScreen() {
   const backgroundColor = useThemeColor({}, 'background');
@@ -20,6 +21,7 @@ export default function GroupsScreen() {
   const { SERVER_URL } = getEnvVars();
   const [userID, setUserID] = useState(null);
   const [loading, setLoading] = useState(false);
+  const { Texts } = useLanguage();
 
   useEffect(() => {
     if (socket != null) {
@@ -68,7 +70,7 @@ export default function GroupsScreen() {
       <ScrollView style={tw` w-full`}>
         {roomsAmIn && roomsAmIn.length == 0 ? (
           <Text style={tw`text-[${textColor}] text-2xl  mt-10 font-medium text-center`}>
-            Join a group to get started!
+            {Texts.AddGroupStarted}
           </Text>
         ) : (
           roomsAmIn.map((room, index) => {

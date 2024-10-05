@@ -5,10 +5,10 @@ import tw from 'twrnc';
 import { useThemeColor } from '../hooks/useThemeColor';
 import axios from 'axios';
 import ChatComponent from '../components/shared/ChatComponent';
-import GroupIcon from '../assets/images/groupicon.png';
 import getEnvVars from '../config';
 import { useSocket } from '../context/SocketContext';
 import Loading from '../components/shared/Loading';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function AddGroupsScreen() {
   const backgroundColor = useThemeColor({}, 'background');
@@ -22,6 +22,7 @@ export default function AddGroupsScreen() {
   const [socket, setSocket] = useState(useSocket());
   const [loading, setLoading] = useState(false);
   const [loadingOnAdd, setLoadingOnAdd] = useState(false);
+  const { Texts } = useLanguage();
 
   const [rooms, setrooms] = useState([
     {
@@ -98,7 +99,7 @@ export default function AddGroupsScreen() {
             <TextInput
               style={tw`h-10 w-11/12 my-3 border-b border-gray-400 px-2 text-[${textColor}]`}
               placeholderTextColor="#9ca3af"
-              placeholder="Buscar por grupo"
+              placeholder= {Texts.AddGroupsInput}
               autoFocus={true}
               value={text}
               onChangeText={(e) => {

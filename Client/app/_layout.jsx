@@ -29,7 +29,10 @@ const loadFonts = async () => {
   });
 };
 
-export default function RootLayout() {
+import { LanguageProvider } from '../context/LanguageContext';
+import { useLanguage } from '../context/LanguageContext';
+
+function RootLayout() {
   const [modalIconVisible, setModalIconVisible] = useState(false);
   const SoftbackgroundColor = useThemeColor({}, 'Softbackground');
   const textColor = useThemeColor({}, 'text');
@@ -47,11 +50,12 @@ export default function RootLayout() {
   // const [socketCreated, setSocketCreated] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [expoPushToken, setExpoPushToken] = useState('');
+  const { Texts } = useLanguage();
 
 
   // // ===== Notifications =====
 
-    
+
   //   const registerForPushNotificationsAsync = async () => {
   //     let token;
   //     if (true===true) {
@@ -72,7 +76,7 @@ export default function RootLayout() {
   //     } else {
   //       alert('Must use physical device for Push Notifications');
   //     }
-    
+
   //     if (Platform.OS === 'android') {
   //       Notifications.setNotificationChannelAsync('default', {
   //         name: 'default',
@@ -81,13 +85,13 @@ export default function RootLayout() {
   //         lightColor: '#FF231F7C',
   //       });
   //     }
-    
+
   //     if (Platform.OS === 'web') {
   //       const vapidPublicKey = 'YOUR_VAPID_PUBLIC_KEY'; // Replace with your VAPID public key
   //       token = await Notifications.getDevicePushTokenAsync({ vapidPublicKey });
   //       console.log(token);
   //     }
-    
+
   //     return token;
   //   }
 
@@ -98,10 +102,10 @@ export default function RootLayout() {
   //     shouldSetBadge: true,
   //   }),
   // });
-  
+
   // ===== Loads the custom font =====
 
-  useEffect(()=> {
+  useEffect(() => {
     loadFonts().then(() => setFontsLoaded(true));
     // registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
   }, []);
@@ -343,7 +347,7 @@ export default function RootLayout() {
                     backgroundColor: SoftbackgroundColor, // Dark background color for the header
                   },
                   headerTintColor: textColor,
-                  headerTitle: 'Add Contacts',
+                  headerTitle: Texts.AddContacts,
                 }}
               />
               {/* Add groups */}
@@ -354,7 +358,7 @@ export default function RootLayout() {
                     backgroundColor: SoftbackgroundColor, // Dark background color for the header
                   },
                   headerTintColor: textColor,
-                  headerTitle: 'Add Groups',
+                  headerTitle: Texts.AddGroups,
                 }}
               />
               {/* Chat rooms | Private chats or groups */}
@@ -363,7 +367,7 @@ export default function RootLayout() {
                 options={({ route }) => {
                   const user = route.params.user;
                   const isContact = route.params.isContact;
-                  console.log('user xxx' , user);
+                  console.log('user xxx', user);
                   return {
                     headerStyle: {
                       backgroundColor: SoftbackgroundColor,
@@ -372,9 +376,9 @@ export default function RootLayout() {
                     headerTitle: () => (
                       <TouchableOpacity onPress={() => setModalIconVisible(true)} style={tw`flex-1 w-full`}>
                         <View style={tw`flex-1 flex-row justify-start items-center w-full`}>
-                          <UserProfileModal user={user} modalIconVisible={modalIconVisible} setModalIconVisible={setModalIconVisible} iconSize={12}  isContact={isContact}/>
+                          <UserProfileModal user={user} modalIconVisible={modalIconVisible} setModalIconVisible={setModalIconVisible} iconSize={12} isContact={isContact} />
                           <TouchableOpacity onPress={() => setModalIconVisible(true)} style={tw`ml-6`}>
-                            <Image source={user.profile ?? isContact? {uri: user.profile} : groupicon} style={tw`size-11 rounded-full`} />
+                            <Image source={user.profile ?? isContact ? { uri: user.profile } : groupicon} style={tw`size-11 rounded-full`} />
                           </TouchableOpacity>
                           <Text style={tw`text-[${textColor}] font-bold text-lg ml-2`}>{user.name ?? 'Chat Room'}</Text>
                         </View>
@@ -393,7 +397,7 @@ export default function RootLayout() {
                     backgroundColor: SoftbackgroundColor, // Dark background color for the header
                   },
                   headerTintColor: textColor,
-                  headerTitle: 'Settings',
+                  headerTitle: Texts.Settings,
                 }}
               />
               {/* Profile photo */}
@@ -404,7 +408,7 @@ export default function RootLayout() {
                     backgroundColor: SoftbackgroundColor,
                   },
                   headerTintColor: textColor,
-                  headerTitle: 'Profile Photo',
+                  headerTitle: Texts.ProfilePhoto,
                 }}
               />
               {/* NotificationsScreen */}
@@ -415,7 +419,7 @@ export default function RootLayout() {
                     backgroundColor: SoftbackgroundColor,
                   },
                   headerTintColor: textColor,
-                  headerTitle: 'Notifications',
+                  headerTitle: Texts.Notifications,
                 }}
               />
               {/* RandomZalkScreen */}
@@ -439,3 +443,11 @@ export default function RootLayout() {
     </GestureHandlerRootView>
   );
 }
+
+const App = () => (
+  <LanguageProvider>
+    <RootLayout />
+  </LanguageProvider>
+);
+
+export default App;

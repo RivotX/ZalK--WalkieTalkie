@@ -8,8 +8,8 @@ import { useSocket } from "../../context/SocketContext";
 import axios from "axios";
 import getEnvVars from "../../config";
 import Loading from "../../components/shared/Loading";
-import ProfileIcon from "../../assets/images/ProfileIcon.png";
 import FloatingAddButton from "../../components/shared/FloatingAddButton";
+import { useLanguage } from '../../context/LanguageContext';
 
 const ContactsScreen = ({ setLoadingLayout }) => {
   const backgroundColor = useThemeColor({}, "background");
@@ -21,6 +21,8 @@ const ContactsScreen = ({ setLoadingLayout }) => {
   const [userID, setUserID] = useState(null);
   const { SERVER_URL } = getEnvVars();
   const [loading, setLoading] = useState(false);
+  const { Texts } = useLanguage();
+
 
   // ===== Get the user ID and username =====
   useEffect(() => {
@@ -85,7 +87,7 @@ const ContactsScreen = ({ setLoadingLayout }) => {
           {/* Display contacts */}
           <ScrollView style={tw`w-full`}>
             {contacts.length === 0 ? (
-              <Text style={tw`text-[${textColor}] text-2xl mt-10 font-medium text-center`}>Add a contact to get started</Text>
+              <Text style={tw`text-[${textColor}] text-2xl mt-10 font-medium text-center`}>{Texts.AddContactStarted}</Text>
             ) : (
               contacts.map((contact, index) => (
                 <ChatComponent

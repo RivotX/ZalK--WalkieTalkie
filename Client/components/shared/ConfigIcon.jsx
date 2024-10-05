@@ -9,7 +9,8 @@ import getEnvVars from '../../config';
 import { useSocket } from '../../context/SocketContext';
 import AddDeleteFriendModal from '../modals/AddDeleteFriendModal';
 import Loading from './Loading';
-import CountryFlag from "react-native-country-flag";
+import { useLanguage } from '../../context/LanguageContext';
+import LanguagesButton from './LanguagesButton';
 
 const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisible, user, isContact, setLoadingLayout }) => {
   const textColor = useThemeColor({}, 'text');
@@ -26,6 +27,8 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
   const opacityAnim = useRef(new Animated.Value(0)).current; // Nueva animación de opacidad
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { Texts } = useLanguage();
+
 
   // Navigate to ProfileSettingsScreen
   const onPressSettings = () => {
@@ -110,7 +113,7 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
     setDropdownVisible(false);
   };
 
-  //delete contact
+  // delete contact
   const deleteContact = async () => {
     if (isContact) {
       await socket.emit("deleteContact", { username: userName, contact: user });
@@ -152,17 +155,16 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
                   <>
                     {/* App settings */}
                     <TouchableOpacity onPress={toggleBusyMode} style={tw`h-1/4 flex-row items-center`}>
-                      <Text style={tw`text-lg text-[${textColor}]`} >Busy mode</Text>
+                      <Text style={tw`text-lg ${isBusy ? 'text-[red]' : `text-[${textColor}]`}`}>
+                        { isBusy ? Texts.EndBusyMode : Texts.BusyMode}
+                      </Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={onPressSettings} style={tw`h-1/4 flex-row items-center`}>
-                      <Text style={tw`text-lg text-[${textColor}]`} >Profile settings</Text>
+                      <Text style={tw`text-lg text-[${textColor}]`} >{Texts.ProfileSettings}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={tw`h-1/4 flex-row items-center`}>
-                      <Text style={tw`text-lg text-[${textColor}] mr-2`}>Language</Text>
-                      <CountryFlag isoCode="es" size={20} style={{ marginLeft: 8 }} />
-                    </TouchableOpacity>
+                    <LanguagesButton twStyles={"h-1/4 flex-row items-center"} unselectedOpacity={0.1} text={Texts.Language} />
                     <TouchableOpacity onPress={handleLogout} style={tw`h-1/4 flex-row items-center`}>
-                      <Text style={tw`text-lg text-[${textColor}]`}>Log out</Text>
+                      <Text style={tw`text-lg text-[${textColor}]`}>{Texts.LogOut}</Text>
                     </TouchableOpacity>
                   </>
                 ) : (

@@ -5,8 +5,11 @@ import img_cascos from '../../assets/images/auriculares.png';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useThemeColor } from '../../hooks/useThemeColor';
 const { height, width } = Dimensions.get('window');
+import { useLanguage } from '../../context/LanguageContext';
+import LanguagesButton from '../shared/LanguagesButton';
 
 const FirstScreen = ({ SetFirstScreen, SetLoginScreenState }) => {
+  const { Texts } = useLanguage();
 
   const [isPressed, setIsPressed] = useState(false);
 
@@ -170,7 +173,7 @@ const FirstScreen = ({ SetFirstScreen, SetLoginScreenState }) => {
         {/* Title and subtitle */}
         <Text style={[tw`text-[${textColor}] text-5xl mb-1`, { fontFamily: 'Zalk', textShadowOffset: { width: 0, height: 0 }, textShadowRadius: 7, textShadowColor: 'pink', }]}>Zal<Text style={tw`text-[#B233A1]`} >K</Text></Text>
         <Text style={[tw`text-[${textColor}] text-lg font-medium mb-1 text-center p-3 mx-6`]}>
-          Subtitulo, cambiar BOTONES, cambiar letras, cambiar color (igual en modo claro/oscuro)
+          Subtitulo, PONER ALGO AQUI NOSE QUE a a a a a as ass
         </Text>
 
         {/* Headphones image */}
@@ -210,7 +213,7 @@ const FirstScreen = ({ SetFirstScreen, SetLoginScreenState }) => {
           onPressIn={() => { setIsPressed(true); }}
           onPressOut={() => { setIsPressed(false); }}
         >
-          <Text style={tw`text-white text-center text-lg`}>Login</Text>
+          <Text style={tw`text-white text-center text-lg`}>{Texts.Login}</Text>
         </TouchableOpacity>
 
         {/* Sign up button */}
@@ -218,8 +221,12 @@ const FirstScreen = ({ SetFirstScreen, SetLoginScreenState }) => {
           style={tw`text-white bg-[#3D3D69] w-32 py-3 rounded-lg`}
           onPress={() => GoLoginScreen(true)}
         >
-          <Text style={tw`text-white text-center text-lg`}>Sign up</Text>
+          <Text style={tw`text-white text-center text-lg`}>{Texts.SignUp}</Text>
         </TouchableOpacity>
+
+        {/* Languages button */}
+
+        <LanguagesButton twStyles={"flex-row absolute bottom-15 items-center"} unselectedOpacity={0.2} text={Texts.Language}/>
       </View>
     </View>
   );
