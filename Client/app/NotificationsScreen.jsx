@@ -43,8 +43,7 @@ const NotificationsScreen = () => {
     axios.post(`${SERVER_URL}/getRequest`, { userID: userID })
           .then((res) => {
             console.log('request', res);
-            setRequests(res.data)
-          })
+            setRequests({profile: res.data.profilePicture, username: res.data.username, id: res.data.id, info: res.data.info});          })
           .catch((error) => {
             console.log(error);
           })
