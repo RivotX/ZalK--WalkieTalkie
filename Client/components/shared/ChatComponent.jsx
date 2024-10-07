@@ -38,12 +38,12 @@ const ChatComponent = ({ user, iconChat, onAdd, iscontact, isrequest, setLoading
   }, []);
 
   const handleAccept = () => {
-    socket.emit('accept_request', { senderId: user.username, receiverId: username });
+    socket.emit('accept_request', { senderId: user.id, receiverId: username });
     setLoading(true);
   };
 
   const onDecline = () => {
-    socket.emit('decline_request', { senderId: user.username, receiverId: username });
+    socket.emit('decline_request', { senderId: user.id, receiverId: username });
     setLoading(true);
   };
 

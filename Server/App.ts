@@ -651,6 +651,15 @@ app.post('/getRequest', async (req, res) => {
           id: requests[i],
         },
       });
+      if(userRequest){
+        userRequest.dataValues.password = undefined; // Remove password from user info
+        userRequest.dataValues.groups = undefined; // Remove groups from user info
+        userRequest.dataValues.contacts = undefined; // Remove contacts from user info
+        userRequest.dataValues.requests = undefined; // Remove contacts from user info
+        userRequest.dataValues.token = undefined; // Remove contacts from user info
+        console.log('userRequest: DATOSSSSSSSSSSSSSSSSSS', userRequest);
+        requestsList.push(userRequest?.dataValues);
+      }
       console.log('userRequest: DATOSSSSSSSSSSSSSSSSSS', userRequest);
       requestsList.push(userRequest?.dataValues);
 
@@ -1376,14 +1385,14 @@ const initialRooms = [
   { name: 'Cocina Vegana', info: 'Comparte recetas veganas.' },
 ];
 
-sequelize.sync({ force: true }).then(() => {
+sequelize.sync({ alter: true }).then(() => {
   server.listen(3000, async () => {
     console.log('Server running...');
 
     // //create groups
-    for (const room of initialRooms) {
-      await Rooms.upsert(room);
-      console.log("Room created:", room);
-    }
+    // for (const room of initialRooms) {
+    //   await Rooms.upsert(room);
+    //   console.log("Room created:", room);
+    // }
   });
 });
