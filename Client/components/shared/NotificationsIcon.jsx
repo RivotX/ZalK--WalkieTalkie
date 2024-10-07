@@ -6,7 +6,8 @@ import tw from "twrnc";
 import { useNavigation } from "@react-navigation/native"; // Import useNavigation
 import axios from "axios";
 import { useSocket } from "../../context/SocketContext";
-import getEnvVars from "../../config";
+// import getEnvVars from "../../config";
+import { SERVER_URL } from '@env';
 
 const NotificationsIcon = () => {
   const textColor = useThemeColor({}, "text");
@@ -14,7 +15,6 @@ const NotificationsIcon = () => {
   const [requestCount, setRequestCount] = useState(0);
   const [socket, setSocket] = useState(useSocket()); // Estado para manejar la instancia del socket
   const [userID, setUserID] = useState(null);
-  const { SERVER_URL } = getEnvVars();
 
   // Get number of requests from sessions
   useEffect(() => {

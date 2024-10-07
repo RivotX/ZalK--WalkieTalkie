@@ -4,7 +4,7 @@ import React, { useState, useEffect, } from 'react';
 import tw from 'twrnc';
 import { useThemeColor } from '../../hooks/useThemeColor';
 import axios from 'axios';
-import getEnvVars from '../../config';
+import { SERVER_URL } from '@env';
 import { useSocket } from '../../context/SocketContext';
 import FriendRequestModal from '../../components/modals/FriendRequestModal';
 import RandomZalkModal from '../../components/modals/RandomZalkModal';
@@ -17,7 +17,6 @@ const RandomZalkScreen = () => {
 
   const [userID, setUserID] = useState();
   const [username, setUsername] = useState();
-  const { SERVER_URL } = getEnvVars();
   const [socket, setSocket] = useState(useSocket());
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisibleRandomZalk, setModalVisibleRandomZalk] = useState(false);

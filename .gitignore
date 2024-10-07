@@ -28,3 +28,6 @@ Client/config.js
 Server/.env
 
 %ProgramData%
+
+Client/.env
+Client/eas.json
