@@ -529,6 +529,7 @@ app.post('/searchRoom', async (req, res) => {
 // =================================================================
 
 app.post('/saveToken', async (req, res) => {
+  console.log('entro a saveToken');
   const { token, username } = req.body;
   const user = await Users.findOne({
     where: {

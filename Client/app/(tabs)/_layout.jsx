@@ -5,7 +5,7 @@ import ContactsScreen from './Contacts'; // Asegúrate de que la ruta sea correc
 import GroupsScreen from './Groups';
 import { Ionicons } from '@expo/vector-icons';
 import GroupIcon from '../../assets/GroupIcon';
-import { Text, View, Modal } from 'react-native'; // Importa Modal desde react-native
+import { Text, View, Modal, Alert } from 'react-native'; // Importa Modal desde react-native
 import tw from 'twrnc';
 import { useThemeColor } from '../../hooks/useThemeColor';
 import Loading from '../../components/shared/Loading';
@@ -54,6 +54,8 @@ export default function TabLayout({ }) {
       axios.post(`${SERVER_URL}/saveToken`, { token: token, username: username }).then((res) => {
         console.log(res.data);
       });
+    Alert.alert("TOKEN",`${token}Este es el token`);
+
       console.log(token, 'token and projectId', Constants.expoConfig.extra.eas.projectId);
     } else {
       alert('Must use physical device for Push Notifications');
