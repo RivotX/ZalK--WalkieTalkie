@@ -10,6 +10,7 @@ import FriendRequestModal from '../../components/modals/FriendRequestModal';
 import RandomZalkModal from '../../components/modals/RandomZalkModal';
 import * as Notifications from 'expo-notifications';
 import { useLanguage } from '../../context/LanguageContext';
+// import {SERVER_URL, SOCKET_URL} from '@env';
 
 const RandomZalkScreen = () => {
   const backgroundColor = useThemeColor({}, 'background');

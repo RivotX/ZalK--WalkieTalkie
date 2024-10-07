@@ -9,6 +9,7 @@ import { Ionicons } from "@expo/vector-icons";
 import PasswordToggle from "../shared/PasswordToggle";
 import { useLanguage } from "../../context/LanguageContext";
 import { showAlert } from "../shared/ShowAlert";
+// import {SERVER_URL, SOCKET_URL} from '@env';
 
 const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoading }) => {
   const [username, setUsername] = useState("");

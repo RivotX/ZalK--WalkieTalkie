@@ -12,6 +12,7 @@ import ProfileIcon from '../../assets/images/images.png';
 import groupIcon from '../../assets/images/emoGirlIcon.png';
 import { useLanguage } from '../../context/LanguageContext';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+// import {SERVER_URL, SOCKET_URL} from '@env';
 
 const ChatComponent = ({ user, iconChat, onAdd, iscontact, isrequest, setLoading, showModalOnPress, showModalOnProfilePicturePress, onGeneralPress, isFriend }) => {
   const textColor = useThemeColor({}, 'text');

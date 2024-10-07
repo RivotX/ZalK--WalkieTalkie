@@ -10,6 +10,7 @@ import getEnvVars from "../../config";
 import Loading from "../../components/shared/Loading";
 import FloatingAddButton from "../../components/shared/FloatingAddButton";
 import { useLanguage } from '../../context/LanguageContext';
+// import {SERVER_URL, SOCKET_URL} from '@env';
 
 const ContactsScreen = ({ setLoadingLayout }) => {
   const backgroundColor = useThemeColor({}, "background");

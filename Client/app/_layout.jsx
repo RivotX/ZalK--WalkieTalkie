@@ -23,6 +23,7 @@ import Loading from '../components/shared/Loading';
 const { SERVER_URL } = getEnvVars();
 const { SOCKET_URL } = getEnvVars();
 // import {SERVER_URL, SOCKET_URL} from '@env';
+
 import * as Font from 'expo-font';
 const loadFonts = async () => {
   await Font.loadAsync({

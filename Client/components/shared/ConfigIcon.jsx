@@ -11,6 +11,7 @@ import AddDeleteFriendModal from '../modals/AddDeleteFriendModal';
 import Loading from './Loading';
 import { useLanguage } from '../../context/LanguageContext';
 import LanguagesButton from './LanguagesButton';
+// import {SERVER_URL, SOCKET_URL} from '@env';
 
 const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisible, user, isContact, setLoadingLayout, isBusyLayout }) => {
   const textColor = useThemeColor({}, 'text');

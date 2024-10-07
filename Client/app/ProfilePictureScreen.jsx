@@ -8,6 +8,7 @@ import getEnvVars from "../config";
 import axios from "axios";
 import { useRoute } from "@react-navigation/native";
 import Loading from "../components/shared/Loading";
+// import {SERVER_URL, SOCKET_URL} from '@env';
 
 const ProfilePictureScreen = () => {
   const route = useRoute();
