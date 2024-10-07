@@ -49,10 +49,11 @@ export default function AddContactsScreen() {
     setUserFound(undefined);
     setLoading(true);
     axios
-      .post(`${SERVER_URL}/searchUser`, { usernamesearch: text, username: username })
+      .post(`${SERVER_URL}/searchUser`, { usernamesearch: text, userID: userID })
       .then((res) => {
         console.log('RES DATA MUYYYYYYYYYYYYYYYY IMPORTANTE', res.data);
         const usersData = res.data.map((user) => ({
+          id: user.id,
           name: user.username,
           profile: user.profilePicture ?? null,
           info: user.info,
@@ -88,7 +89,7 @@ export default function AddContactsScreen() {
   const addUser = (message) => {
     console.log("mesasge", message);
     if (socket != null && selectedUser) {
-      socket.emit("send_request", { senderId: username, receiverId: selectedUser.name, message: message });
+      socket.emit("send_request", { senderId: username, receiverId: selectedUser.id, message: message });
       console.log("Solicitud enviada a:", selectedUser.name);
       setUsers(users.filter((useradded) => useradded.name !== selectedUser.name));
       setModalVisible(false);

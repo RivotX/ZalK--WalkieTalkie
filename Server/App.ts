@@ -59,16 +59,16 @@ app.use(
     },
   })
   // ================Configuración de la sesión EN LOCALHOST=================
-  // session({
-  //   secret: 'secreto',
-  //   cookie: {
-  //     maxAge: 1000 * 60 * 60 * 24, // 1 día en milisegundos
-  //     httpOnly: true,
-  //     secure: false, // Establece a true si estás usando HTTPS
-  //   },
-  //   resave: true,
-  //   saveUninitialized: false,
-  // })
+//   session({
+//     secret: 'secreto',
+//     cookie: {
+//       maxAge: 1000 * 60 * 60 * 24, // 1 día en milisegundos
+//       httpOnly: true,
+//       secure: false, // Establece a true si estás usando HTTPS
+//     },
+//     resave: true,
+//     saveUninitialized: false,
+//   })
 );
 
 // =================================================================
@@ -550,10 +550,10 @@ app.post('/saveToken', async (req, res) => {
 });
 // =================================================================Search User=================================================================
 app.post('/searchUser', async (req, res) => {
-  const { usernamesearch, username } = req.body;
+  const { usernamesearch, userID } = req.body;
 
-  if (!username) {
-    return res.status(400).send(' Username is required');
+  if (!userID) {
+    return res.status(400).send(' userID is required');
   }
 
   console.log('server user: ' + usernamesearch);
@@ -561,7 +561,7 @@ app.post('/searchUser', async (req, res) => {
   // Use the Op.like operator to search for usernames that contain the search string
   const user = await Users.findOne({
     where: {
-      username: username,
+      id: userID,
     },
   });
   let contactsofuser = [];
@@ -575,7 +575,7 @@ app.post('/searchUser', async (req, res) => {
     }
   }
 
-  contactsofuser = contactsofuserDB.map((contact: any) => contact.username); // se obtienen los nombres de los contactos del usuario
+  contactsofuser = contactsofuserDB.map((contact: any) => contact.id); // se obtienen los nombres de los contactos del usuario
 
   const users = await Users.findAll({
     where: {
@@ -586,8 +586,8 @@ app.post('/searchUser', async (req, res) => {
           },
         },
         {
-          username: {
-            [Op.notIn]: [username, ...contactsofuser], // This will exclude the username provided and those in contactsofuser
+          id: {
+            [Op.notIn]: [userID, ...contactsofuser], // This will exclude the username provided and those in contactsofuser
           },
         },
       ],
@@ -610,7 +610,7 @@ app.post('/getContacts', async (req, res) => {
       {
         model: Users,
         as: 'User',
-        attributes: ['username', 'info', 'profilePicture', 'isBusy'], // Selecciona los campos de Users
+        attributes: ['id','username', 'info', 'profilePicture', 'isBusy'], // Selecciona los campos de Users
       },
     ],
     where: {
@@ -630,11 +630,49 @@ app.post('/getContacts', async (req, res) => {
   }
 });
 
+//Problema aqui tal vez o EN LA SCREEN DE NOTIFICACIONES
+app.post('/getRequest', async (req, res) => {
+  const { userID } = req.body;
+  const user = await Users.findOne({
+    where: {
+      id: userID,
+    },
+  });
+  console.log('entro a getRequest');
+  if (user && user.requests) {
+    let requests = JSON.parse(user.requests);
+    if (typeof requests === 'string') {
+      requests = JSON.parse(requests);
+    }
+    const requestsList = [];
+    for (let i = 0; i < requests.length; i++) {
+      const userRequest = await Users.findOne({
+        where: {
+          id: requests[i],
+        },
+      });
+      console.log('userRequest: DATOSSSSSSSSSSSSSSSSSS', userRequest);
+      requestsList.push(userRequest?.dataValues);
+
+
+    }
+    res.status(200).send(requestsList);
+    
+  
+
+  }
+});
+
 // =================================================================
 // * Messages and socket.io*
 // =================================================================
 
-const savecontacts = (user: any, usernameContact: string, currentRoom: any) => {
+const savecontacts = (user: any, userIdContact: number|undefined, usernameContact: string|undefined, currentRoom: any) => {
+
+  if(userIdContact === undefined || usernameContact === undefined){
+    return;
+  }
+
   // funcion para guardar los contactos en la base de datos
   if (user && user.contacts) {
     let contacts = JSON.parse(user.contacts);
@@ -642,9 +680,9 @@ const savecontacts = (user: any, usernameContact: string, currentRoom: any) => {
     if (typeof contacts === 'string') {
       contacts = JSON.parse(contacts);
     }
-    const contact = { username: usernameContact, room: currentRoom };
-    if (!contacts.some((c: any) => c.username === contact.username && c.room === contact.room)) {
-      // se verifica si el contacto ya esta en la lista ##AQUI VOY
+    const contact = {id: userIdContact, username: usernameContact, room: currentRoom };
+    if (!contacts.some((c: any) => c.username === contact.username && c.room === contact.room && c.id === contact.id)) {
+      // se verifica si el contacto ya esta en la lista de contactos
       contacts.push(contact);
       user.setcontacts(contacts);
       user.save().then(() => {
@@ -765,7 +803,7 @@ io.on('connection', (socket: Socket) => {
         requestsReceiver = JSON.parse(requestsReceiver);
       }
       console.log('requestsReceiver:', requestsReceiver);
-      const updatedRequests = requestsReceiver.filter((r: any) => r.username !== senderId);
+      const updatedRequests = requestsReceiver.filter((r: any) => r !== senderId);
       console.log('updatedRequests:', updatedRequests, 'el que envio fue:', senderId);
       userReceiver.setrequests(updatedRequests);
       userReceiver.save().then(() => {
@@ -789,7 +827,7 @@ io.on('connection', (socket: Socket) => {
     });
     const userB = await Users.findOne({
       where: {
-        username: contact.name,
+        id: contact.id,
       },
     });
 
@@ -927,7 +965,7 @@ io.on('connection', (socket: Socket) => {
 
     const userA = await Users.findOne({
       where: {
-        username: receiverId,
+        id: receiverId,
       },
     });
 
@@ -937,22 +975,38 @@ io.on('connection', (socket: Socket) => {
       },
     });
     if (userA && userA !== null && userA.requests !== null && userB && userB !== null && userB.requests !== null) {
-      
+      const receiverSocketId = connectedUsers[userA.id];
+
+// Si el usuario ya esta en las solicitudes no se envia la notificacion y se agregan a la lista de contactos
+      let RequestSender= JSON.parse(userB.requests);
+
+      if (typeof RequestSender === 'string') {
+        RequestSender = JSON.parse(RequestSender);
+      }
+
+      if(RequestSender.includes(userA.id)){
+        socket.emit('accept_request', { senderId: userB.id, receiverId: userA.username });
+       
+        console.log('Ya esta en las solicitudes');
+       
+       return;
+      }
+
+
       // se envia la notificacion al dispositivo del usuario
       await requestNotification(senderId,userA.token, message);
       console.log('Notification sent');
       // ==============================================
-      const receiverSocketId = connectedUsers[userA.id];
 
       let requestsA = JSON.parse(userA.requests);
 
       if (typeof requestsA === 'string') {
         requestsA = JSON.parse(requestsA);
       }
-      const newrequest = { username: senderId, profile: userB.profilePicture };
-      if (!requestsA.some((r: any) => r.username === newrequest.username)) {
+      const newrequest = userB.id;
+      if (!requestsA.includes(newrequest)) {
         if (receiverSocketId) {
-          io.to(receiverSocketId).emit('receive_request', { senderId, message }); // se envia la señal para que se actualicen las solicitudes en tiempo real
+          io.to(receiverSocketId).emit('receive_request', { userIdSender: userB.id, senderId, message }); // se envia la señal para que se actualicen las solicitudes en tiempo real
           console.log(`Solicitud enviada de ${senderId} a ${receiverId}`);
         }
         // se verifica si la solicitud ya esta en la lista
@@ -965,6 +1019,7 @@ io.on('connection', (socket: Socket) => {
       } else {
         console.log('Ya esta en las solicitudes');
       }
+
     }
   });
   // ======================*END Socket send request*===================
@@ -973,14 +1028,15 @@ io.on('connection', (socket: Socket) => {
   // *Socket Accept Request*
   // =================================================================
 
-  socket.on('accept_request', async (data: { senderId: string; receiverId: string }) => {
+
+  //VOY AQUI 
+  socket.on('accept_request', async (data: { senderId: number; receiverId: string }) => {
     const { senderId, receiverId } = data;
-    const currentRoom = `${senderId}-${receiverId}`;
     console.log('Entra a ACCEPT REQUEST');
 
     const userSender = await Users.findOne({
       where: {
-        username: data.senderId,
+        id: senderId,
       },
     });
 
@@ -989,9 +1045,11 @@ io.on('connection', (socket: Socket) => {
         username: data.receiverId,
       },
     });
+    const currentRoom = `${userSender?.username}-${receiverId}`;
 
-    savecontacts(userSender, data.receiverId, currentRoom);
-    savecontacts(userReceiver, data.senderId, currentRoom);
+
+    savecontacts(userSender,userReceiver?.id, data.receiverId, currentRoom);
+    savecontacts(userReceiver,userSender?.id, userSender?.username, currentRoom);
 
     if (userSender && userReceiver) {
       const senderSocketId = connectedUsers[userSender.id];
@@ -1025,7 +1083,7 @@ io.on('connection', (socket: Socket) => {
           requestsReceiver = JSON.parse(requestsReceiver);
         }
 
-        const updatedRequests = requestsReceiver.filter((r: any) => r.username !== senderId);
+        const updatedRequests = requestsReceiver.filter((r: any) => r !== senderId);
         userReceiver.setrequests(updatedRequests);
         userReceiver.save().then(() => {
           console.log('La solicitud ha sido Aceptado exitosamente.');
@@ -1318,14 +1376,14 @@ const initialRooms = [
   { name: 'Cocina Vegana', info: 'Comparte recetas veganas.' },
 ];
 
-sequelize.sync({ alter: true }).then(() => {
+sequelize.sync({ force: true }).then(() => {
   server.listen(3000, async () => {
     console.log('Server running...');
 
     // //create groups
-    // for (const room of initialRooms) {
-    //   await Rooms.upsert(room);
-    //   console.log("Room created:", room);
-    // }
+    for (const room of initialRooms) {
+      await Rooms.upsert(room);
+      console.log("Room created:", room);
+    }
   });
 });

@@ -25,7 +25,7 @@ const NotificationsScreen = () => {
     axios.get(`${SERVER_URL}/getsession`, { withCredentials: true })
       .then((res) => {
         setUserID(res.data.user.id);
-        setRequests(JSON.parse(res.data.user.requests));
+        
         console.log('userReq xx', res.data.user.requests);
       })
       .catch((error) => {
@@ -37,14 +37,12 @@ const NotificationsScreen = () => {
       });
   }, []);
 
-  useEffect(() => {
-
-    if (userID != null) {
-      socket.on('refreshcontacts', () => {
-        axios.post(`${SERVER_URL}/refreshSession`, { id: userID }, { withCredentials: true })
+  // ===== Get requests =====
+  const getRequests = () => {
+    axios.post(`${SERVER_URL}/getRequest`, { userID: userID })
           .then((res) => {
-            console.log('user xx', res.data.user);
-            setRequests(JSON.parse(res.data.user.requests).length > 0 ? JSON.parse(res.data.user.requests) : []);
+            console.log('request', res);
+            setRequests(res.data)
           })
           .catch((error) => {
             console.log(error);
@@ -52,6 +50,15 @@ const NotificationsScreen = () => {
           .finally(() => {
             setLoading(false);
           });
+  };
+
+  useEffect(() => {
+
+    if (userID != null) {
+      getRequests();
+      socket.on('refreshcontacts', () => {
+      getRequests();
+        
       });
     }
   }, [userID]);
