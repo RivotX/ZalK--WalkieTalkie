@@ -5,7 +5,7 @@ import tw from 'twrnc';
 import { useThemeColor } from '../hooks/useThemeColor';
 import axios from 'axios';
 import ChatComponent from '../components/shared/ChatComponent';
-import { SERVER_URL } from '@env';
+import getEnvVars from '../config';
 import { useSocket } from '../context/SocketContext';
 import Loading from '../components/shared/Loading';
 import { useLanguage } from '../context/LanguageContext';
@@ -30,6 +30,7 @@ export default function AddGroupsScreen() {
       info: '',
     },
   ]);
+  const { SERVER_URL } = getEnvVars();
 
   useEffect(() => {
     axios

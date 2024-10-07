@@ -6,7 +6,7 @@ import { useThemeColor } from '../hooks/useThemeColor';
 import axios from 'axios';
 import ChatComponent from '../components/shared/ChatComponent';
 import { useSocket } from '../context/SocketContext';
-import { SERVER_URL } from '@env';
+import getEnvVars from '../config';
 import Loading from '../components/shared/Loading';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -16,6 +16,7 @@ const NotificationsScreen = () => {
   const [requests, setRequests] = useState([{}]);
   const [socket, setSocket] = useState(useSocket()); // Estado para manejar la instancia del socket
   const [userID, setUserID] = useState(null);
+  const { SERVER_URL } = getEnvVars();
   const [loading, setLoading] = useState(true);
   const { Texts } = useLanguage();
 
@@ -42,7 +43,7 @@ const NotificationsScreen = () => {
     axios.post(`${SERVER_URL}/getRequest`, { userID: userID })
           .then((res) => {
             console.log('request', res);
-            setRequests({profile: res.data.profilePicture, username: res.data.username, id: res.data.id, info: res.data.info});
+            setRequests(res.data)
           })
           .catch((error) => {
             console.log(error);

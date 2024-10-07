@@ -7,7 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import ChangeProfileModal from "../components/modals/ChangeProfileModal";
 import axios from "axios";
-import { SERVER_URL } from '@env';
+import getEnvVars from "../config";
 import { useNavigation } from "@react-navigation/native";
 import ProfileIcon from "../assets/images/images.png";
 import Loading from "../components/shared/Loading";
@@ -35,6 +35,7 @@ const ProfileSettingsScreen = () => {
   const [profilePicture, setProfilePicture] = useState(null);
   const animation = useRef(new Animated.Value(0)).current;
   const [loading, setLoading] = useState(true);
+  const { SERVER_URL } = getEnvVars();
   const { Texts } = useLanguage();
 
   // ===== Maximum length for the user info in the UI =====

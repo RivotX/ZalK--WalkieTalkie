@@ -7,8 +7,8 @@ import ChatComponent from "../components/shared/ChatComponent";
 import { useSocket } from "../context/SocketContext";
 import Loading from "../components/shared/Loading";
 import AddDeleteFriendModal from "../components/modals/AddDeleteFriendModal";
-// import getEnvVars from "../config";
-import { SERVER_URL } from '@env';
+import getEnvVars from "../config";
+const { SERVER_URL } = getEnvVars();
 import { useLanguage } from '../context/LanguageContext';
 
 export default function AddContactsScreen() {

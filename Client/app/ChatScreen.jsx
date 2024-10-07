@@ -6,7 +6,7 @@ import { useRoute } from "@react-navigation/native";
 import { useThemeColor } from "../hooks/useThemeColor";
 import AudioComponent from "../components/shared/AudioComponent";
 import axios from "axios";
-import { SERVER_URL, SOCKET_URL } from '@env';
+import getEnvVars from "../config";
 
 export default function ChatScreen() {
   const backgroundColor = useThemeColor({}, "background");
@@ -15,6 +15,7 @@ export default function ChatScreen() {
   console.log("CS params" , route.params);
   const [currentRoom, setCurrentRoom] = useState(user.room);
   const [userID, setUserID] = useState();
+  const { SERVER_URL } = getEnvVars();
 
   useEffect(() => {
     axios

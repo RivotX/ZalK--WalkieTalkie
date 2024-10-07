@@ -3,7 +3,7 @@ import React from 'react';
 import { TouchableOpacity, Modal, Image, Text } from 'react-native';
 import tw from 'twrnc';
 import ProfileIcon from "../../assets/images/images.png";
-import groupicon from "../../assets/images/emoGirlIcon.png";
+import groupicon from "../../assets/images/groupicon.png";
 import { useThemeColor } from '../../hooks/useThemeColor';
 
 const UserProfileModal = ({ user, modalIconVisible, setModalIconVisible, iconSize, isContact }) => {

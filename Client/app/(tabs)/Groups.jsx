@@ -6,7 +6,7 @@ import { useThemeColor } from '../../hooks/useThemeColor';
 import { useNavigation } from '@react-navigation/native';
 import { useSocket } from '../../context/SocketContext';
 import axios from 'axios';
-import { SERVER_URL } from '@env';
+import getEnvVars from '../../config';
 import ChatComponent from '../../components/shared/ChatComponent';
 import Loading from '../../components/shared/Loading';
 import FloatingAddButton from '../../components/shared/FloatingAddButton';
@@ -18,6 +18,7 @@ export default function GroupsScreen() {
   const navigation = useNavigation();
   const [socket, setSocket] = useState(useSocket()); // Estado para manejar la instancia del socket
   const [roomsAmIn, setRoomsAmIn] = useState([]);
+  const { SERVER_URL } = getEnvVars();
   const [userID, setUserID] = useState(null);
   const [loading, setLoading] = useState(false);
   const { Texts } = useLanguage();

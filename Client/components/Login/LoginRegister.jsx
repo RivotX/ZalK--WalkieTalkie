@@ -4,7 +4,7 @@ import tw from "twrnc";
 import { useThemeColor } from "../../hooks/useThemeColor";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { SERVER_URL } from '@env';
+import getEnvVars from "../../config";
 import { Ionicons } from "@expo/vector-icons";
 import PasswordToggle from "../shared/PasswordToggle";
 import { useLanguage } from "../../context/LanguageContext";
@@ -124,6 +124,7 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
   }, [email, password, Confpassword, LoginScreenState]);
 
   //====== Sumbit de login o registro  ======
+  const { SERVER_URL } = getEnvVars();
   const handleSumbit = () => {
     console.log("login pulsado");
 

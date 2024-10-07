@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import ChatComponent from "../../components/shared/ChatComponent";
 import { useSocket } from "../../context/SocketContext";
 import axios from "axios";
-import { SERVER_URL } from '@env';
+import getEnvVars from "../../config";
 import Loading from "../../components/shared/Loading";
 import FloatingAddButton from "../../components/shared/FloatingAddButton";
 import { useLanguage } from '../../context/LanguageContext';
@@ -19,6 +19,7 @@ const ContactsScreen = ({ setLoadingLayout }) => {
   const [username, setUsername] = useState(null);
   const textColor = useThemeColor({}, "text");
   const [userID, setUserID] = useState(null);
+  const { SERVER_URL } = getEnvVars();
   const [loading, setLoading] = useState(false);
   const { Texts } = useLanguage();
 

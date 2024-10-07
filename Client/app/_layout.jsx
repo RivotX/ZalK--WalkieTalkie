@@ -13,15 +13,15 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SocketProvider } from '../context/SocketContext';
 import profilepicture from '../assets/images/images.png';
-import groupicon from '../assets/images/emoGirlIcon.png';
+import groupicon from '../assets/images/groupicon.png';
 import { Audio } from 'expo-av';
 import NotificationsIcon from '../components/shared/NotificationsIcon';
 import { Ionicons } from '@expo/vector-icons';
 import io from 'socket.io-client';
-// import getEnvVars from '../config';
+import getEnvVars from '../config';
 import Loading from '../components/shared/Loading';
-import { SERVER_URL, SOCKET_URL } from '@env';
-
+const { SERVER_URL } = getEnvVars();
+const { SOCKET_URL } = getEnvVars();
 import * as Font from 'expo-font';
 const loadFonts = async () => {
   await Font.loadAsync({
@@ -52,8 +52,7 @@ function RootLayout() {
   const [expoPushToken, setExpoPushToken] = useState('');
   const { Texts } = useLanguage();
 
-  console.log('SERVER_URL:', SERVER_URL);
-  console.log('SOCKET_URL:', SOCKET_URL);
+
   // // ===== Notifications =====
 
 

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "ZalK",
+    "name": "ReWalkieTalkie",
     "slug": "WalkieTalkieApp",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -41,8 +41,7 @@
       "output": "static"
     },
     "plugins": [
-      "expo-router",
-      "expo-build-properties"
+      "expo-router"
     ],
     "experiments": {
       "typedRoutes": true

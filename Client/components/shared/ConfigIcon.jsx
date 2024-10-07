@@ -5,13 +5,12 @@ import { useThemeColor } from '../../hooks/useThemeColor';
 import tw from 'twrnc';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation
 import axios from 'axios';
-// import getEnvVars from '../../config';
+import getEnvVars from '../../config';
 import { useSocket } from '../../context/SocketContext';
 import AddDeleteFriendModal from '../modals/AddDeleteFriendModal';
 import Loading from './Loading';
 import { useLanguage } from '../../context/LanguageContext';
 import LanguagesButton from './LanguagesButton';
-import { SERVER_URL } from '@env';
 
 const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisible, user, isContact, setLoadingLayout, isBusyLayout }) => {
   const textColor = useThemeColor({}, 'text');
@@ -21,6 +20,7 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
   const navigation = useNavigation(); // Use the useNavigation hook
   const [userID, setUserID] = useState(null);
   const [userName, setUserName] = useState(null);
+  const { SERVER_URL } = getEnvVars();
   const [socket, setSocket] = useState(useSocket()); // Estado para manejar la instancia del socket
   const [isBusy, setIsBusy] = useState(isBusyLayout);
   const heightAnim = useRef(new Animated.Value(0)).current;
