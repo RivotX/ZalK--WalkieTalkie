@@ -10,6 +10,7 @@ import AddDeleteFriendModal from "../components/modals/AddDeleteFriendModal";
 import getEnvVars from "../config";
 const { SERVER_URL } = getEnvVars();
 import { useLanguage } from '../context/LanguageContext';
+// import {SERVER_URL, SOCKET_URL} from '@env';
 
 export default function AddContactsScreen() {
   const backgroundColor = useThemeColor({}, "background");

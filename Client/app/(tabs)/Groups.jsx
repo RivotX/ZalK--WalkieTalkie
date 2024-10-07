@@ -11,6 +11,7 @@ import ChatComponent from '../../components/shared/ChatComponent';
 import Loading from '../../components/shared/Loading';
 import FloatingAddButton from '../../components/shared/FloatingAddButton';
 import { useLanguage } from '../../context/LanguageContext';
+// import {SERVER_URL, SOCKET_URL} from '@env';
 
 export default function GroupsScreen() {
   const backgroundColor = useThemeColor({}, 'background');

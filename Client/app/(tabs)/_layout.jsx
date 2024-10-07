@@ -16,6 +16,7 @@ import Constants from 'expo-constants';
 import axios from 'axios';
 import getEnvVars from '../../config';
 import { useLanguage } from '../../context/LanguageContext';
+// import {SERVER_URL, SOCKET_URL} from '@env';
 
 const { SERVER_URL } = getEnvVars();
 const Tab = createMaterialTopTabNavigator();

@@ -7,6 +7,8 @@ import { useThemeColor } from "../hooks/useThemeColor";
 import AudioComponent from "../components/shared/AudioComponent";
 import axios from "axios";
 import getEnvVars from "../config";
+// import {SERVER_URL, SOCKET_URL} from '@env';
+
 
 export default function ChatScreen() {
   const backgroundColor = useThemeColor({}, "background");

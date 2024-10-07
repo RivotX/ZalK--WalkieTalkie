@@ -13,6 +13,7 @@ import ProfileIcon from "../assets/images/images.png";
 import Loading from "../components/shared/Loading";
 import showAlert from "../components/shared/ShowAlert";
 import { useLanguage } from '../context/LanguageContext';
+// import {SERVER_URL, SOCKET_URL} from '@env';
 
 const ProfileSettingsScreen = () => {
   const backgroundColor = useThemeColor({}, "background");

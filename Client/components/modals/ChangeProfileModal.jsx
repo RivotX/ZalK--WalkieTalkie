@@ -8,6 +8,7 @@ import getEnvVars from "../../config";
 import Loading from "../shared/Loading";
 const { SERVER_URL } = getEnvVars();
 import { useLanguage } from "../../context/LanguageContext";
+// import {SERVER_URL, SOCKET_URL} from '@env';
 
 const ChangeProfileModal = ({ PropToChange, setModalVisibility, ModalIcon, isPassword, refreshSession, userID, currentProp }) => {
   const backgroundColor = useThemeColor({}, "background");

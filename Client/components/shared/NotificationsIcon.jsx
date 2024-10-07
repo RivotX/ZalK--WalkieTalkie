@@ -7,6 +7,7 @@ import { useNavigation } from "@react-navigation/native"; // Import useNavigatio
 import axios from "axios";
 import { useSocket } from "../../context/SocketContext";
 import getEnvVars from "../../config";
+// import {SERVER_URL, SOCKET_URL} from '@env';
 
 const NotificationsIcon = () => {
   const textColor = useThemeColor({}, "text");
