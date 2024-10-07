@@ -4,7 +4,8 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import tw from "twrnc";
 import { useThemeColor } from "../hooks/useThemeColor";
 import ProfileIcon from "../assets/images/images.png";
-import getEnvVars from "../config";
+import { SERVER_URL } from '@env';
+
 import axios from "axios";
 import { useRoute } from "@react-navigation/native";
 import Loading from "../components/shared/Loading";
@@ -13,7 +14,6 @@ const ProfilePictureScreen = () => {
   const route = useRoute();
   const backgroundColor = useThemeColor({}, "background");
   const { userID } = route.params;
-  const { SERVER_URL } = getEnvVars();
   const [userName, setUserName] = useState(null);
   const [info, setInfo] = useState();
   const textColor = useThemeColor({}, "text");

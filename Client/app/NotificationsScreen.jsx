@@ -6,7 +6,7 @@ import { useThemeColor } from '../hooks/useThemeColor';
 import axios from 'axios';
 import ChatComponent from '../components/shared/ChatComponent';
 import { useSocket } from '../context/SocketContext';
-import getEnvVars from '../config';
+import { SERVER_URL } from '@env';
 import Loading from '../components/shared/Loading';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -16,7 +16,6 @@ const NotificationsScreen = () => {
   const [requests, setRequests] = useState([{}]);
   const [socket, setSocket] = useState(useSocket()); // Estado para manejar la instancia del socket
   const [userID, setUserID] = useState(null);
-  const { SERVER_URL } = getEnvVars();
   const [loading, setLoading] = useState(true);
   const { Texts } = useLanguage();
 

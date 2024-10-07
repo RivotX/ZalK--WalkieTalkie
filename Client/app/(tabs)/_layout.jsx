@@ -14,10 +14,9 @@ import { useRoute } from '@react-navigation/native';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import axios from 'axios';
-import getEnvVars from '../../config';
+import { SERVER_URL } from '@env';
 import { useLanguage } from '../../context/LanguageContext';
 
-const { SERVER_URL } = getEnvVars();
 const Tab = createMaterialTopTabNavigator();
 function TabIcon({ name, focused, color }) {
   return <Ionicons name={name} size={24} color={focused ? color : 'gray'} />;

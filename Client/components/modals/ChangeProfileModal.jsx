@@ -4,9 +4,9 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import tw from "twrnc";
 import { useThemeColor } from "../../hooks/useThemeColor";
 import axios from "axios";
-import getEnvVars from "../../config";
+// import getEnvVars from "../../config";
 import Loading from "../shared/Loading";
-const { SERVER_URL } = getEnvVars();
+import { SERVER_URL } from '@env';
 import { useLanguage } from "../../context/LanguageContext";
 
 const ChangeProfileModal = ({ PropToChange, setModalVisibility, ModalIcon, isPassword, refreshSession, userID, currentProp }) => {
