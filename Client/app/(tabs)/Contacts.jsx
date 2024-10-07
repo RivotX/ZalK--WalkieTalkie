@@ -49,6 +49,7 @@ const ContactsScreen = ({ setLoadingLayout }) => {
         console.log("CONTACTS DEL ENDPOINT GETCONTACTS TABLE", res.data);
         const lastcontacts = res.data.map((contact) => ({
           // Parsea los contactos y los guarda en el estado SE DEBE HACER UN ENDPOINT PARA OBTENER LA FOTO DEL CONTACTO
+          id: contact.User.id,
           name: contact.User.username,
           room: contact.room,
           profile: contact.User.profilePicture ?? null,

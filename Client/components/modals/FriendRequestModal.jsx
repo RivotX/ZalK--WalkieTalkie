@@ -55,13 +55,13 @@ const FriendRequestModal = ({ setModalVisible, modalVisible, request, acceptRequ
             <View style={tw`flex-row justify-between`}>
               <TouchableOpacity
                 style={[tw`flex-1 bg-${decline_button_color} p-2 rounded-full mx-1`, styles.button]}
-                onPress={() => declineRequest(request.senderId)}
+                onPress={() => declineRequest(request.userIdSender)}
               >
                 <Text style={[tw`text-white font-bold text-center`, styles.text]}>Decline</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[tw`flex-1 bg-${accept_button_color} p-2 rounded-full mx-1`, styles.button]}
-                onPress={() => acceptRequest(request.senderId)}
+                onPress={() => acceptRequest(request.userIdSender)}
               >
                 <Text style={[tw`text-white font-bold text-center`, styles.text]}>Accept</Text>
               </TouchableOpacity>
