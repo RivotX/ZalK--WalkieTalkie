@@ -226,7 +226,7 @@ const FirstScreen = ({ SetFirstScreen, SetLoginScreenState }) => {
 
         {/* Languages button */}
 
-        <LanguagesButton twStyles={"flex-row absolute bottom-15 items-center"} unselectedOpacity={0.2} text={Texts.Language}/>
+        <LanguagesButton twStyles={"flex-row absolute bottom-15 items-center"} unselectedOpacity={0.2}/>
       </View>
     </View>
   );
