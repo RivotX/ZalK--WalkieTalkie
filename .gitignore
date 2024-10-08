@@ -24,10 +24,10 @@ Client/expo-env.d.ts
 # @end expo-cli
 
 # env variables
-Client/config.js
 Server/.env
 
 %ProgramData%
 
 Client/.env
 Client/eas.json
+Client/config.js

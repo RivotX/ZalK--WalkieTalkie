@@ -4,12 +4,13 @@ import tw from "twrnc";
 import { useThemeColor } from "../../hooks/useThemeColor";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import getEnvVars from "../../config";
 import { Ionicons } from "@expo/vector-icons";
 import PasswordToggle from "../shared/PasswordToggle";
 import { useLanguage } from "../../context/LanguageContext";
 import { showAlert } from "../shared/ShowAlert";
 // import {SERVER_URL, SOCKET_URL} from '@env';
+import getEnvVars from "../../config";
+const { SERVER_URL, SOCKET_URL  } = getEnvVars();
 
 const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoading }) => {
   const [username, setUsername] = useState("");
@@ -28,6 +29,7 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
   const [formError, setFormError] = useState("default");
   const [LoginScreenState, setLoginScreenState] = useState(LoginScreen);
 
+  console.log("SERVER_URL LOGIN", SERVER_URL);
   // === Animaciones para los placeholders ====
   const usernamePlaceholderAnim = useRef(new Animated.Value(0)).current;
   const emailPlaceholderAnim = useRef(new Animated.Value(0)).current;
@@ -125,7 +127,6 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
   }, [email, password, Confpassword, LoginScreenState]);
 
   //====== Sumbit de login o registro  ======
-  const { SERVER_URL } = getEnvVars();
   const handleSumbit = () => {
     console.log("login pulsado");
 
@@ -246,6 +247,7 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
 
   // ===== Handle back button press ======= 
   useEffect(() => {
+    showAlert("url server", SERVER_URL);
     const backAction = () => {
       setFirstScreen(true);
       return true;

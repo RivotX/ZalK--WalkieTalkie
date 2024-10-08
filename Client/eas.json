@@ -6,13 +6,25 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "SERVER_URL": "process.env.SERVER_URL",
+        "SOCKET_URL": "process.env.SOCKET_URL"
+      }
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "SERVER_URL": "process.env.SERVER_URL",
+        "SOCKET_URL": "process.env.SOCKET_URL"
+      }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "SERVER_URL": "process.env.SERVER_URL",
+        "SOCKET_URL": "process.env.SOCKET_URL"
+      }
     }
   },
   "submit": {

@@ -18,10 +18,9 @@ import { Audio } from 'expo-av';
 import NotificationsIcon from '../components/shared/NotificationsIcon';
 import { Ionicons } from '@expo/vector-icons';
 import io from 'socket.io-client';
-import getEnvVars from '../config';
 import Loading from '../components/shared/Loading';
-const { SERVER_URL } = getEnvVars();
-const { SOCKET_URL } = getEnvVars();
+import getEnvVars from '../config';
+const { SERVER_URL, SOCKET_URL  } = getEnvVars();
 // import {SERVER_URL, SOCKET_URL} from '@env';
 
 import * as Font from 'expo-font';
