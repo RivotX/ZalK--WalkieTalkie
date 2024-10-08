@@ -1,6 +1,7 @@
-# Zalk WalkieTalkie
+> [!Note]
+> Development is currently in progress.
 
-Note: Development is currently in progress.
+# Zalk WalkieTalkie
 
 Zalk is a mobile application developed using React Native and ExpressJS. It enables users to send and receive audio messages in real-time to their contacts or groups.
 
