@@ -247,7 +247,6 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
 
   // ===== Handle back button press ======= 
   useEffect(() => {
-    showAlert("url server", SERVER_URL);
     const backAction = () => {
       setFirstScreen(true);
       return true;
