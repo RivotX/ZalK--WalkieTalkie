@@ -376,18 +376,16 @@ function RootLayout() {
                     },
                     headerTintColor: textColor,
                     headerTitle: () => (
-                      <TouchableOpacity onPress={() => setModalIconVisible(true)} style={tw`flex-1 w-full`}>
-                        <View style={tw`flex-1 flex-row justify-start items-center w-full`}>
-                          <UserProfileModal user={user} modalIconVisible={modalIconVisible} setModalIconVisible={setModalIconVisible} iconSize={12} isContact={isContact} />
-                          <TouchableOpacity onPress={() => setModalIconVisible(true)} style={tw`ml-6`}>
-                            <Image
-                              source={user.profile ? { uri: user.profile } : (isContact ? ProfileIcon : groupicon)}
-                              style={tw`size-11 rounded-full`}
-                            />
-                          </TouchableOpacity>
-                          <Text style={tw`text-[${textColor}] font-bold text-lg ml-2`}>{user.name ?? 'Chat Room'}</Text>
-                        </View>
-                      </TouchableOpacity>
+                      <View style={tw`flex-1 flex-row justify-start items-center w-full`}>
+                        <UserProfileModal user={user} modalIconVisible={modalIconVisible} setModalIconVisible={setModalIconVisible} iconSize={12} isContact={isContact} />
+                          <Image
+                            source={user.profile ? { uri: user.profile } : (isContact ? ProfileIcon : groupicon)}
+                            style={tw`size-11 rounded-full ml-8`}
+                          />
+                        <TouchableOpacity onPress={() => setModalIconVisible(true)}>
+                        <Text style={tw`text-[${textColor}] font-bold text-lg ml-2`}>{user.name ?? 'Chat Room'}</Text>
+                        </TouchableOpacity>
+                      </View>
                     ),
                     headerLeft: () => <View style={{ marginLeft: -50 }} />,
                     headerRight: () => <ConfigIcon chatroom={true} setModalIconVisible={setModalIconVisible} user={user} isContact={isContact} setLoadingLayout={setLoading} />,
