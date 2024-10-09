@@ -29,21 +29,14 @@
       },
       "package": "com.rewalkietalkie.app",
       "useNextNotificationsApi": true,
-      "permissions": [
-        "CAMERA",
-        "NOTIFICATIONS",
-        "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE"
-      ]
+      "permissions": ["CAMERA", "NOTIFICATIONS", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"],
+      "googleServicesFile": "./android/google-services.json"
     },
     "web": {
       "bundler": "metro",
       "output": "static"
     },
-    "plugins": [
-      "expo-router",
-      "expo-build-properties"
-    ],
+    "plugins": ["expo-router", "expo-build-properties"],
     "experiments": {
       "typedRoutes": true
     }
