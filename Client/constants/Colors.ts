@@ -68,7 +68,7 @@ export const Colors = {
     RZ_Gradient_1: '#2E0854',
     RZ_Gradient_2: '#4B0082',
     RZ_Gradient_3: '#6A0DAD',
-    UserProfileModal_BG: 'black',
+    UserProfileModal_BG: '#000000',
     AudioComponent_ButtonColor: '#151718',
     AudioComponent_BorderColor: 'violet-600',
     AudioComponent_ActiveButtonColor: '#7f1d1d',
