@@ -30,4 +30,3 @@ Server/.env
 
 Client/.env
 Client/eas.json
-Client/config.js
