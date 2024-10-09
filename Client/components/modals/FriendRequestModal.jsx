@@ -3,6 +3,7 @@ import { Modal, View, Text, TouchableOpacity, StyleSheet, Pressable, Animated } 
 import { Ionicons } from '@expo/vector-icons';
 import tw from 'twrnc';
 import { useThemeColor } from '../../hooks/useThemeColor';
+import { useLanguage } from '../../context/LanguageContext';
 
 const FriendRequestModal = ({ setModalVisible, modalVisible, request, acceptRequest, declineRequest }) => {
   const modal_bg_color = useThemeColor({}, 'modal_bg_color');
@@ -10,6 +11,7 @@ const FriendRequestModal = ({ setModalVisible, modalVisible, request, acceptRequ
   const modal_title_color = useThemeColor({}, 'modal_title_color');
   const accept_button_color = useThemeColor({}, 'Modal_accept_button');
   const decline_button_color = useThemeColor({}, 'Modal_cancel_button');
+  const { Texts } = useLanguage();
 
   const slideAnim = useRef(new Animated.Value(300)).current;
 
@@ -45,9 +47,9 @@ const FriendRequestModal = ({ setModalVisible, modalVisible, request, acceptRequ
           <TouchableOpacity style={tw`absolute top-[-2] right-[-2] p-4`} onPress={() => setModalVisible(false)}>
             <Ionicons name="close" size={24} color={modal_text_color} />
           </TouchableOpacity>
-          <Text style={[tw`text-xl font-bold mb-2 text-${modal_title_color}`, styles.text]}>Friend Request</Text>
+          <Text style={[tw`text-xl font-bold mb-2 text-${modal_title_color}`, styles.text]}>{Texts.FriendRequest}</Text>
           <Text style={[tw`text-lg font-semibold mb-2 text-${modal_text_color}`, styles.text]}>
-            from <Text style={tw`text-purple-500`}>@{request.senderId}</Text>
+          {Texts.From} <Text style={tw`text-purple-500`}>@{request.senderId}</Text>
           </Text>
           <Text style={[tw`text-base italic text-center text-${modal_text_color}`, styles.text]}>{request.message}</Text>
 
@@ -57,13 +59,13 @@ const FriendRequestModal = ({ setModalVisible, modalVisible, request, acceptRequ
                 style={[tw`flex-1 bg-${decline_button_color} p-2 rounded-full mx-1`, styles.button]}
                 onPress={() => declineRequest(request.userIdSender)}
               >
-                <Text style={[tw`text-white font-bold text-center`, styles.text]}>Decline</Text>
+                <Text style={[tw`text-white font-bold text-center`, styles.text]}>{Texts.Decline}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[tw`flex-1 bg-${accept_button_color} p-2 rounded-full mx-1`, styles.button]}
                 onPress={() => acceptRequest(request.userIdSender)}
               >
-                <Text style={[tw`text-white font-bold text-center`, styles.text]}>Accept</Text>
+                <Text style={[tw`text-white font-bold text-center`, styles.text]}>{Texts.Accept}</Text>
               </TouchableOpacity>
             </View>
           </View>

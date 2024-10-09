@@ -661,8 +661,6 @@ app.post('/getRequest', async (req, res) => {
         console.log('userRequest: DATOSSSSSSSSSSSSSSSSSS', userRequest);
         requestsList.push(userRequest?.dataValues);
       }
-      console.log('userRequest: DATOSSSSSSSSSSSSSSSSSS', userRequest);
-
 
     }
     res.status(200).send(requestsList);

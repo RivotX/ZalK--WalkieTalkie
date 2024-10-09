@@ -185,7 +185,7 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
                       onPress={handlePressDeleteContact}
                       style={tw`flex justify-center h-1/2`}>
                       <Text style={tw`text-lg text-[${textColor}]`}>
-                      {isContact ? Texts.DeleteContact : Texts.ViewGroup}
+                      {isContact ? Texts.DeleteContact : Texts.DeleteGroup}
                       </Text>
                     </TouchableOpacity>
                   </>
@@ -202,9 +202,9 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
             modalVisible={deleteModalVisible}
             selectedUser={user}
             action="delete"
-            title={"You are about to unfriend"}
-            acceptButton={"Confirm"}
-            cancelButton={"Cancel"}
+            title={isContact? Texts.UnfriendContactConfirm: Texts.LeaveGroupConfirm}
+            acceptButton={Texts.Confirm}
+            cancelButton={Texts.Cancel}
             OnAccept={deleteContact}
           />
         )}
