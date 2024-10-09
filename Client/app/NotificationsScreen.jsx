@@ -28,7 +28,7 @@ const NotificationsScreen = () => {
       .then((res) => {
         setUserID(res.data.user.id);
         
-        console.log('userReq xx', res.data.user.requests);
+        console.log('sessiones', res.data);
       })
       .catch((error) => {
         console.log(error);

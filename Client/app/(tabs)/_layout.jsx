@@ -54,14 +54,13 @@ export default function TabLayout({ }) {
       token = (await Notifications.getExpoPushTokenAsync({ projectId: Constants.expoConfig.extra.eas.projectId, })).data;
       axios.post(`${SERVER_URL}/saveToken`, { token: token, username: username }).then((res) => {
         console.log(res.data);
-      });
+      }); 
     Alert.alert("TOKEN",`${token}Este es el token`);
-
-      console.log(token, 'token and projectId', Constants.expoConfig.extra.eas.projectId);
+console.log("projectId",Constants.expoConfig.extra.eas.projectId);
+    Alert.alert('projectId',`${Constants.expoConfig.extra.eas.projectId}`);
     } else {
       alert('Must use physical device for Push Notifications');
     }
-
     if (Platform.OS === 'android') {
       Notifications.setNotificationChannelAsync('default', {
         name: 'default',
