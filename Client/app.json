@@ -1,44 +1,73 @@
 {
-  "expo": {
-    "name": "ZalK",
-    "slug": "zalk",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/images/adaptive-icon.png",
-    "scheme": "myapp",
-    "extra": {
-      "eas": {
-        "projectId": "c5650cfd-40a0-40a5-84d8-5a4080d5a6b0"
-      }
-    },
-    "owner": "zalk2",
-    "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/images/adaptive-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.rewalkietalkie.app"
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.rewalkietalkie.app",
-      "useNextNotificationsApi": true,
-      "permissions": ["CAMERA", "NOTIFICATIONS", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"],
-      "googleServicesFile": "./android/google-services.json"
-    },
-    "web": {
-      "bundler": "metro",
-      "output": "static"
-    },
-    "plugins": ["expo-router", "expo-build-properties"],
-    "experiments": {
-      "typedRoutes": true
-    }
-  }
+  "name": "rewalkietalkie",
+  "main": "expo-router/entry",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "expo start",
+    "reset-project": "node ./scripts/reset-project.js",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "test": "jest --watchAll",
+    "lint": "expo lint",
+    "doctor": "expo doctor"
+  },
+  "jest": {
+    "preset": "jest-expo"
+  },
+  "dependencies": {
+    "@expo/vector-icons": "^14.0.2",
+    "@react-native-async-storage/async-storage": "^1.24.0",
+    "@react-native-community/push-notification-ios": "^1.11.0",
+    "@react-native-firebase/app": "^21.0.0",
+    "@react-native-firebase/messaging": "^21.0.0",
+    "@react-navigation/material-top-tabs": "^6.6.14",
+    "@react-navigation/native": "^6.0.2",
+    "axios": "^1.7.2",
+    "expo": "~51.0.22",
+    "expo-av": "^14.0.6",
+    "expo-background-fetch": "^12.0.1",
+    "expo-build-properties": "~0.12.5",
+    "expo-constants": "~16.0.2",
+    "expo-device": "^6.0.2",
+    "expo-firebase-core": "^6.0.0",
+    "expo-font": "~12.0.9",
+    "expo-image-picker": "~15.0.7",
+    "expo-linear-gradient": "~13.0.2",
+    "expo-linking": "~6.3.1",
+    "expo-notifications": "~0.28.18",
+    "expo-router": "~3.5.18",
+    "expo-server-sdk": "^3.11.0",
+    "expo-splash-screen": "~0.27.5",
+    "expo-status-bar": "~1.12.1",
+    "expo-system-ui": "~3.0.7",
+    "expo-task-manager": "^11.8.2",
+    "expo-web-browser": "~13.0.3",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-native": "0.74.3",
+    "react-native-country-flag": "^2.0.2",
+    "react-native-dotenv": "^3.4.11",
+    "react-native-gesture-handler": "~2.16.1",
+    "react-native-pager-view": "6.3.0",
+    "react-native-push-notification": "^8.1.1",
+    "react-native-reanimated": "~3.10.1",
+    "react-native-safe-area-context": "4.10.5",
+    "react-native-screens": "3.31.1",
+    "react-native-svg": "^15.4.0",
+    "react-native-web": "^0.19.12",
+    "socket.io-client": "^4.7.5",
+    "twrnc": "^4.5.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "@types/jest": "^29.5.12",
+    "@types/react": "~18.2.45",
+    "@types/react-test-renderer": "^18.0.7",
+    "jest": "^29.2.1",
+    "jest-expo": "~51.0.3",
+    "react-test-renderer": "18.2.0",
+    "typescript": "~5.3.3"
+  },
+  "private": true
 }

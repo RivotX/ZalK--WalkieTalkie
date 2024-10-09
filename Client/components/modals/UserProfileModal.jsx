@@ -18,7 +18,7 @@ const UserProfileModal = ({ user, modalIconVisible, setModalIconVisible, iconSiz
           activeOpacity={1}
           onPress={() => setModalIconVisible(false)}
         >
-            <Text style={tw`text-[${textColor}] text-2xl font-bold text-center mb-10  border-gray-400 w-full`}>{user.name}</Text>
+            <Text style={tw`text-[${textColor}] text-2xl font-bold text-center mb-4  border-gray-400 w-full`}>{user.name}</Text>
 
             <View style={tw`h-100 w-full px-8`}>
               <Image
@@ -26,7 +26,7 @@ const UserProfileModal = ({ user, modalIconVisible, setModalIconVisible, iconSiz
                 source={user.profile ? { uri: user.profile } : isContact ? ProfileIcon : groupicon}
               />
             </View>
-            <Text style={tw`text-[${textColor}] text-center mt-10 w-2/3 opacity-60`}>"{user.info}"</Text>
+            <Text style={tw`text-[${textColor}] text-center mt-10 w-2/3 italic`}>{user.info}</Text>
         </TouchableOpacity>
       </Modal>
     </>
