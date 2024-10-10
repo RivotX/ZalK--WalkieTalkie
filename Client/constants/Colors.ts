@@ -10,7 +10,7 @@ export const Colors = {
   light: {
     mode: 'light',
     text: '#11181C',
-    disabledText: '#A9A9A9',
+    disabledText: '#8F8F8F',
     reverseText: '#ECEDEE',
     background: '#f5f5f5',
     Softbackground: '#fff',

@@ -28,6 +28,17 @@ const NotificationsIcon = () => {
       .catch((error) => {
         console.log(error);
       });
+
+    socket.on("refreshcontact", () => {
+      axios
+        .get(`${SERVER_URL}/getsession`, { withCredentials: true })
+        .then((res) => {
+          setRequestCount(JSON.parse(res.data.user.requests).length);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    });
   }, []);
 
   //Escucha el evento de refrescar contactos enviado desde el servidor

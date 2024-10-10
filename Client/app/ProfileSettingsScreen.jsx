@@ -280,8 +280,8 @@ const ProfileSettingsScreen = () => {
               <View style={tw`w-5/6 flex flex-col border-b border-gray-400 py-3 ml-2`}>
                 <View style={tw`flex-row w-full justify-between items-center`}>
                   <View>
-                    <Text style={tw`text-[${textColor}] mb-1`}>{Texts.Username}</Text>
-                    <Text style={tw`text-[${disabledText}]`}>{username}</Text>
+                    <Text style={tw`text-[${disabledText}] mb-1`}>{Texts.Username}</Text>
+                    <Text style={tw`text-[${textColor}]`}>{username}</Text>
                   </View>
                   <Ionicons name="build-outline" size={20} color={textColor} />
                 </View>
@@ -303,8 +303,8 @@ const ProfileSettingsScreen = () => {
               <View style={tw`w-5/6 flex flex-col border-b border-gray-400 py-3 ml-2`}>
                 <View style={tw`flex-row w-full justify-between items-center`}>
                   <View>
-                    <Text style={tw`text-[${textColor}] mb-1`}>{Texts.Info}</Text>
-                    <Text style={tw`text-[${disabledText}]`}>{userInfo}</Text>
+                    <Text style={tw`text-[${disabledText}] mb-1`}>{Texts.Info}</Text>
+                    <Text style={tw`text-[${textColor}]`}>{userInfo}</Text>
                   </View>
                   <Ionicons name="build-outline" size={20} color={textColor} />
                 </View>
@@ -326,8 +326,8 @@ const ProfileSettingsScreen = () => {
               <View style={tw`w-5/6 flex flex-col border-b border-gray-400 py-3 ml-2`}>
                 <View style={tw`flex-row w-full justify-between items-center`}>
                   <View>
-                    <Text style={tw`text-[${textColor}] mb-1`}>{Texts.Email}</Text>
-                    <Text style={tw`text-[${disabledText}]`}>{userEmail}</Text>
+                    <Text style={tw`text-[${disabledText}] mb-1`}>{Texts.Email}</Text>
+                    <Text style={tw`text-[${textColor}]`}>{userEmail}</Text>
                   </View>
                   <Ionicons name="build-outline" size={20} color={textColor} />
                 </View>
@@ -349,8 +349,8 @@ const ProfileSettingsScreen = () => {
               <View style={tw`w-5/6 flex flex-col border-b border-gray-400 py-3 ml-2`}>
                 <View style={tw`flex-row w-full justify-between items-center`}>
                   <View>
-                    <Text style={tw`text-[${textColor}] mb-1`}>{Texts.Password}</Text>
-                    <Text style={tw`text-[${disabledText}]`}>***</Text>
+                    <Text style={tw`text-[${disabledText}] mb-1`}>{Texts.Password}</Text>
+                    <Text style={tw`text-[${textColor}]`}>***</Text>
                   </View>
                   <Ionicons name="build-outline" size={20} color={textColor} />
                 </View>

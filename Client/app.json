@@ -30,7 +30,7 @@
       "package": "com.rewalkietalkie.app",
       "useNextNotificationsApi": true,
       "permissions": ["CAMERA", "NOTIFICATIONS", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"],
-      "googleServicesFile": "./android/google-services.json"
+      "googleServicesFile": "google-services.json"
     },
     "web": {
       "bundler": "metro",

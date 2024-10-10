@@ -85,6 +85,7 @@ export const Texts = {
     From : "From",
     Accept : "Accept",
     Decline : "Decline",
+    TapToDetails: "Tap to see details",
   },
   es: {
     Language: "Idioma",
@@ -170,5 +171,6 @@ export const Texts = {
     From : "De",
     Accept : "Aceptar",
     Decline : "Rechazar",
+    TapToDetails: "Toca para ver detalles",
   },
 };
