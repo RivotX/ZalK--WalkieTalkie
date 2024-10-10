@@ -19,7 +19,7 @@ export async function requestNotification(senderUsername: string , token: string
   messages.push({
     to: token,
     sound: 'default',
-    title: `@${senderUsername} has sent you a friend request.`,
+    title: `@${senderUsername} sent you a friend request.`,
     body: message,
     data: { data: 'goes here',_displayInForeground: false  },
   });
