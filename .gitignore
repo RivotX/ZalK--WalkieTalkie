@@ -30,3 +30,4 @@ Server/.env
 
 Client/.env
 Client/eas.json
+Client/android/google-services.json
