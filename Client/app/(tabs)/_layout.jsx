@@ -19,6 +19,8 @@ import { useLanguage } from "../../context/LanguageContext";
 // import {SERVER_URL, SOCKET_URL} from '@env';
 import messaging from "@react-native-firebase/messaging";
 import { useFilterScreenChildren } from "expo-router/build/layouts/withLayoutContext";
+import {PermissionsAndroid} from 'react-native';
+
 
 const { SERVER_URL } = getEnvVars();
 const Tab = createMaterialTopTabNavigator();
@@ -40,152 +42,154 @@ export default function TabLayout({}) {
   const { Texts } = useLanguage();
 
     // ===== Notifications Migue =====
-      const requestuserPermission = async () => {
-        const authStatus = await messaging().requestPermission();
-        const enabled =
-          authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-          authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-        if (enabled) {
-          console.log('Authorization status:', authStatus);
-          Alert.alert('Authorization status:', authStatus);
-        }
-      };
+      // const requestuserPermission = async () => {
+      //   PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+      //   const authStatus = await messaging().requestPermission();
+      //   const enabled =
+      //     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      //     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+      //   if (enabled) {
+      //     console.log('Authorization status:', authStatus);
+      //     const token = await messaging().getToken(); 
+      //     Alert.alert('token:', token);
+      //   }
+      // };
       
-      useEffect(() => {
-        if (requestuserPermission()) {
-          messaging()
-            .getToken()
-            .then(token => {
-              console.log('Token:', token);
-              Alert.alert('Token:', token);
-            });
-        }else {
-          console.log('No permission', authStatus);
-          Alert.alert('No permission', authStatus);  
-        }
-        // check wheter an initial notification is available
-        messaging()
-          .getInitialNotification()
-          .then(async remoteMessage => {
-            if (remoteMessage) {
-              console.log('Notification caused app to open from quit state:', remoteMessage.notification);
-              Alert.alert('Notification caused app to open from quit state:', remoteMessage.notification);
-            }
-          });
-          // assume a message-notification contains a "type" property in the data payload of the screen to open
-          messaging().onNotificationOpenedApp(remoteMessage => {
-            console.log('Notification caused app to open from background state:', remoteMessage.notification);
-            Alert.alert('Notification caused app to open from background state:', remoteMessage.notification);
-          });
+      // useEffect(() => {
+      //   if (requestuserPermission()) {
+      //     messaging()
+      //       .getToken()
+      //       .then(token => {
+      //         console.log('Token:', token);
+      //         Alert.alert('Token:', token);
+      //       });
+      //   }else {
+      //     console.log('No permission', authStatus);
+      //     Alert.alert('No permission', authStatus);  
+      //   }
+      //   // check wheter an initial notification is available
+      //   messaging()
+      //     .getInitialNotification()
+      //     .then(async remoteMessage => {
+      //       if (remoteMessage) {
+      //         console.log('Notification caused app to open from quit state:', remoteMessage.notification);
+      //         Alert.alert('Notification caused app to open from quit state:', remoteMessage.notification);
+      //       }
+      //     });
+      //     // assume a message-notification contains a "type" property in the data payload of the screen to open
+      //     messaging().onNotificationOpenedApp(remoteMessage => {
+      //       console.log('Notification caused app to open from background state:', remoteMessage.notification);
+      //       Alert.alert('Notification caused app to open from background state:', remoteMessage.notification);
+      //     });
 
-          //register background handler
-          messaging().setBackgroundMessageHandler(async remoteMessage => {
-            console.log('Message handled in the background!', remoteMessage);
-            Alert.alert('Message handled in the background!', remoteMessage);
-          });
-          const unsubscribe = messaging().onMessage(async remoteMessage => {
-            console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
-            Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-          });
-          return unsubscribe;
-      }, []);
+      //     //register background handler
+      //     messaging().setBackgroundMessageHandler(async remoteMessage => {
+      //       console.log('Message handled in the background!', remoteMessage);
+      //       Alert.alert('Message handled in the background!', remoteMessage);
+      //     });
+      //     const unsubscribe = messaging().onMessage(async remoteMessage => {
+      //       console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
+      //       Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+      //     });
+      //     return unsubscribe;
+      // }, []);
 
   // ===== Notifications =====
-  // const registerForPushNotificationsAsync = async () => {
-  //   let token;
-  //   try {
-  //     const { status: existingStatus } = await Notifications.getPermissionsAsync();
-  //     let finalStatus = existingStatus;
-  //     if (existingStatus !== "granted") {
-  //       const { status } = await Notifications.requestPermissionsAsync();
-  //       finalStatus = status;
-  //       Alert.alert("Status", `Permission status: ${status}`);
-  //     }
-  //     if (finalStatus !== "granted") {
-  //       Alert.alert("Error", "Failed to get push token for push notification!");
-  //       return;
-  //     }
+  const registerForPushNotificationsAsync = async () => {
+    let token;
+    try {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== "granted") {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+        Alert.alert("Status", `Permission status: ${status}`);
+      }
+      if (finalStatus !== "granted") {
+        Alert.alert("Error", "Failed to get push token for push notification!");
+        return;
+      }
 
-  //     Alert.alert("Project ID", `${Constants.expoConfig.extra.eas.projectId}`);
+      Alert.alert("Project ID", `${Constants.expoConfig.extra.eas.projectId}`);
 
-  //     try {
-  //       token = (await Notifications.getExpoPushTokenAsync({ projectId: Constants.expoConfig.extra.eas.projectId })).data;
-  //       Alert.alert("Token", `Token obtained: ${token}`);
-  //     } catch (error) {
-  //       Alert.alert("Error", `Failed to get Expo push token: ${error.message}`);
-  //       return;
-  //     }
+      try {
+        token = (await Notifications.getExpoPushTokenAsync({ projectId: Constants.expoConfig.extra.eas.projectId })).data;
+        Alert.alert("Token", `Token obtained: ${token}`);
+      } catch (error) {
+        Alert.alert("Error", `Failed to get Expo push token: ${error.message}`);
+        return;
+      }
 
-  //     try {
-  //       await axios.post(`${SERVER_URL}/saveToken`, { token: token, username: username });
-  //       Alert.alert("Success", "Token saved successfully");
-  //     } catch (error) {
-  //       Alert.alert("Error", `Failed to save token: ${error.message}`);
-  //       return;
-  //     }
+      try {
+        await axios.post(`${SERVER_URL}/saveToken`, { token: token, username: username });
+        Alert.alert("Success", "Token saved successfully");
+      } catch (error) {
+        Alert.alert("Error", `Failed to save token: ${error.message}`);
+        return;
+      }
 
-  //     if (Platform.OS === "android") {
-  //       try {
-  //         await Notifications.setNotificationChannelAsync("default", {
-  //           name: "default",
-  //           importance: Notifications.AndroidImportance.MAX,
-  //           vibrationPattern: [0, 250, 250, 250],
-  //           lightColor: "#FF231F7C",
-  //         });
-  //         Alert.alert("Android", "Notification channel set");
-  //       } catch (error) {
-  //         Alert.alert("Error", `Failed to set notification channel: ${error.message}`);
-  //       }
-  //     }
+      if (Platform.OS === "android") {
+        try {
+          await Notifications.setNotificationChannelAsync("default", {
+            name: "default",
+            importance: Notifications.AndroidImportance.MAX,
+            vibrationPattern: [0, 250, 250, 250],
+            lightColor: "#FF231F7C",
+          });
+          Alert.alert("Android", "Notification channel set");
+        } catch (error) {
+          Alert.alert("Error", `Failed to set notification channel: ${error.message}`);
+        }
+      }
 
-  //     if (Platform.OS === "web") {
-  //       const vapidPublicKey = "YOUR_VAPID_PUBLIC_KEY"; // Replace with your VAPID public key
-  //       try {
-  //         token = await Notifications.getDevicePushTokenAsync({ vapidPublicKey });
-  //         console.log(token);
-  //       } catch (error) {
-  //         Alert.alert("Error", `Failed to get web push token: ${error.message}`);
-  //       }
-  //     }
+      if (Platform.OS === "web") {
+        const vapidPublicKey = "YOUR_VAPID_PUBLIC_KEY"; // Replace with your VAPID public key
+        try {
+          token = await Notifications.getDevicePushTokenAsync({ vapidPublicKey });
+          console.log(token);
+        } catch (error) {
+          Alert.alert("Error", `Failed to get web push token: ${error.message}`);
+        }
+      }
 
-  //     return token;
-  //   } catch (error) {
-  //     Alert.alert("Error", `An error occurred: ${error.message}`);
-  //     console.error(error);
-  //   }
-  // };
+      return token;
+    } catch (error) {
+      Alert.alert("Error", `An error occurred: ${error.message}`);
+      console.error(error);
+    }
+  };
 
-  // Notifications.setNotificationHandler({
-  //   //CONFIGURACION DE NOTIFICACIONES AL RECIBIR UNA NOTIFICACION CON AUDIO
-  //   handleNotification: async (notification) => {
-  //     const audioData = notification.request.content.data.audioData;
-  //     if (audioData) {
-  //       const { sound } = await Audio.Sound.createAsync({ uri: audioData });
-  //       await sound.playAsync();
-  //     }
-  //     return {
-  //       shouldShowAlert: true,
-  //       shouldPlaySound: true,
-  //       shouldSetBadge: false,
-  //     };
-  //   },
-  // });
+  Notifications.setNotificationHandler({
+    //CONFIGURACION DE NOTIFICACIONES AL RECIBIR UNA NOTIFICACION CON AUDIO
+    handleNotification: async (notification) => {
+      const audioData = notification.request.content.data.audioData;
+      if (audioData) {
+        const { sound } = await Audio.Sound.createAsync({ uri: audioData });
+        await sound.playAsync();
+      }
+      return {
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: false,
+      };
+    },
+  });
 
-  // useEffect(() => {
-  //   registerForPushNotificationsAsync().then((token) => console.log(token));
+  useEffect(() => {
+    registerForPushNotificationsAsync().then((token) => console.log(token));
 
-  //   //COPIADO POR EL COPILOT NO SE COMO FUNCIONA PERO NO LO BORRO POR SI ACASO
+    //COPIADO POR EL COPILOT NO SE COMO FUNCIONA PERO NO LO BORRO POR SI ACASO
 
-  //   // const subscription = Notifications.addNotificationReceivedListener(async notification => {
-  //   //   const audioData = notification.request.content.data.audioData;
-  //   //   if (audioData) {
-  //   //     const { sound } = await Audio.Sound.createAsync({ uri: audioData });
-  //   //     await sound.playAsync();
-  //   //   }
-  //   // });
+    // const subscription = Notifications.addNotificationReceivedListener(async notification => {
+    //   const audioData = notification.request.content.data.audioData;
+    //   if (audioData) {
+    //     const { sound } = await Audio.Sound.createAsync({ uri: audioData });
+    //     await sound.playAsync();
+    //   }
+    // });
 
-  //   // return () => subscription.remove();
-  // }, [username]);
+    // return () => subscription.remove();
+  }, [username]);
 
   return (
     <>
