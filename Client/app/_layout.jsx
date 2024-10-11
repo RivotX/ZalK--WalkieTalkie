@@ -22,21 +22,21 @@ import Loading from "../components/shared/Loading";
 import getEnvVars from "../config";
 const { SERVER_URL, SOCKET_URL } = getEnvVars();
 // import {SERVER_URL, SOCKET_URL} from '@env';
-
 import * as Font from "expo-font";
 const loadFonts = async () => {
   await Font.loadAsync({
     Zalk: require("../assets/fonts/AppleTea-z8R1a.ttf"), // Asegúrate de que la ruta sea correcta
   });
 };
-
 import { LanguageProvider } from "../context/LanguageContext";
 import { useLanguage } from "../context/LanguageContext";
+import { setBackgroundColorAsync } from "expo-system-ui";
 
 function RootLayout() {
   const [appState, setAppState] = useState(AppState.currentState);
   const [modalIconVisible, setModalIconVisible] = useState(false);
   const SoftbackgroundColor = useThemeColor({}, "Softbackground");
+  const backgroundColor = useThemeColor({}, "background");
   const textColor = useThemeColor({}, "text");
   const RZ_Gradient_1 = useThemeColor({}, "RZ_Gradient_1");
   const [username, setUsername] = useState("");
@@ -53,11 +53,14 @@ function RootLayout() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [expoPushToken, setExpoPushToken] = useState("");
   const { Texts } = useLanguage();
-
   console.log("SERVER_URL:", SERVER_URL);
   console.log("SOCKET_URL:", SOCKET_URL);
-  // // ===== Notifications =====
 
+  // ===== Changes the background color of the app =====
+  setBackgroundColorAsync(backgroundColor);
+
+
+  // // ===== Notifications =====
   //   const registerForPushNotificationsAsync = async () => {
   //     let token;
   //     if (true===true) {
@@ -105,8 +108,8 @@ function RootLayout() {
   //   }),
   // });
 
-  // ===== Loads the custom font =====
 
+  // ===== Loads the custom font =====
   useEffect(() => {
     loadFonts().then(() => setFontsLoaded(true));
     // registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
@@ -335,27 +338,26 @@ function RootLayout() {
               <Stack.Screen
                 name="(tabs)"
                 options={{
-                  headerLeft: () => (
-                    <TouchableOpacity style={tw`flex-row items-center w-full`} onPress={() => setModalIconVisible(true)}>
-                      <Image source={profilePicture ? { uri: profilePicture } : ProfileIcon} style={tw`size-9 mr-2 rounded-full`} />
-                      <UserProfileModal
-                        user={{ name: username, info: info, profile: profilePicture ?? null }}
-                        modalIconVisible={modalIconVisible}
-                        setModalIconVisible={setModalIconVisible}
-                        iconSize={12}
-                        isContact={true}
-                      />
-                      <Text style={tw`text-base font-semibold text-[${textColor}]`}>{username} </Text>
-                      {isBusy && <Ionicons name="notifications-off" size={18} color="red" />}
-                    </TouchableOpacity>
-                  ),
-                  headerRight: () => (
-                    <View style={tw`flex-row`}>
-                      <NotificationsIcon />
-                      <ConfigIcon setIsBusyLayout={setIsBusy} handleLogout={handleLogout} isBusyLayout={isBusy} />
+                  headerTitle: () => (
+                    <View style={tw`flex-row justify-between items-center w-full`}>
+                      <TouchableOpacity style={tw`flex-row items-center w-[68%]`} onPress={() => setModalIconVisible(true)}>
+                        <Image source={profilePicture ? { uri: profilePicture } : ProfileIcon} style={tw`size-9 mr-2 rounded-full`} />
+                        <UserProfileModal
+                          user={{ name: username, info: info, profile: profilePicture ?? null }}
+                          modalIconVisible={modalIconVisible}
+                          setModalIconVisible={setModalIconVisible}
+                          iconSize={12}
+                          isContact={true}
+                        />
+                        <Text style={tw`text-base font-semibold text-[${textColor}]`}>{username} </Text>
+                        {isBusy && <Ionicons name="notifications-off" size={18} color="red" />}
+                      </TouchableOpacity>
+                      <View style={tw`flex-row w-1/4 mr-[26px]`}>
+                        <NotificationsIcon />
+                        <ConfigIcon setIsBusyLayout={setIsBusy} handleLogout={handleLogout} isBusyLayout={isBusy} />
+                      </View>
                     </View>
                   ),
-                  headerTitle: "",
                   headerTitleAlign: "center",
                   headerStyle: tw`bg-[${SoftbackgroundColor}]`,
                 }}

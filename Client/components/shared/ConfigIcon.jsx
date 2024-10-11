@@ -18,14 +18,14 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
   const SoftbackgroundColor = useThemeColor({}, 'Softbackground');
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const navigation = useNavigation(); // Use the useNavigation hook
+  const navigation = useNavigation(); 
   const [userID, setUserID] = useState(null);
   const [userName, setUserName] = useState(null);
   const { SERVER_URL } = getEnvVars();
-  const [socket, setSocket] = useState(useSocket()); // Estado para manejar la instancia del socket
+  const [socket, setSocket] = useState(useSocket()); 
   const [isBusy, setIsBusy] = useState(isBusyLayout);
   const heightAnim = useRef(new Animated.Value(0)).current;
-  const opacityAnim = useRef(new Animated.Value(0)).current; // Nueva animación de opacidad
+  const opacityAnim = useRef(new Animated.Value(0)).current;
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const { Texts } = useLanguage();
@@ -141,7 +141,7 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
         </Modal>
       )}
 
-      <View style={tw`relative`}>
+      <View>
         {/* Settings icon */}
         <TouchableOpacity onPress={() => setDropdownVisible(!dropdownVisible)} style={tw`px-3`}>
           <Ionicons name="ellipsis-vertical-outline" size={24} color={textColor} />

@@ -1,3 +1,4 @@
+//Client/app/AddContactsScreen.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Vibration } from "react-native";
 import tw from "twrnc";
@@ -24,7 +25,7 @@ export default function AddContactsScreen() {
   const [socket, setSocket] = useState(useSocket());
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null); // Estado para el usuario seleccionado
+  const [selectedUser, setSelectedUser] = useState(null);
   const [users, setUsers] = useState([]);
   const { Texts } = useLanguage();
 
