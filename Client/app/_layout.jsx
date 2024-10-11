@@ -113,7 +113,8 @@ function RootLayout() {
   }, []);
 
   useEffect(() => {
-    const handleAppStateChange = (nextAppState) => {
+    if (socket!=null) {
+      const handleAppStateChange = (nextAppState) => {
       // Si la app pasa de segundo plano a primer plano, ejecuta la función
       if (appState === "background" && nextAppState === "active") {
         onForeground();
@@ -126,7 +127,8 @@ function RootLayout() {
     return () => {
       subscription.remove();
     };
-  }, [appState]);
+  }
+  }, [appState, socket]);
 
   const onForeground = () => {
     console.log("La app ha vuelto al primer plano.");
@@ -334,20 +336,18 @@ function RootLayout() {
                 name="(tabs)"
                 options={{
                   headerLeft: () => (
-                    <View style={tw`flex-row items-center `}>
-                      <TouchableOpacity onPress={() => setModalIconVisible(true)}>
-                        <Image source={profilePicture ? { uri: profilePicture } : ProfileIcon} style={tw`size-9 mr-2 rounded-full`} />
-                        <UserProfileModal
-                          user={{ name: username, info: info, profile: profilePicture ?? null }}
-                          modalIconVisible={modalIconVisible}
-                          setModalIconVisible={setModalIconVisible}
-                          iconSize={12}
-                          isContact={true}
-                        />
-                      </TouchableOpacity>
+                    <TouchableOpacity style={tw`flex-row items-center w-full`} onPress={() => setModalIconVisible(true)}>
+                      <Image source={profilePicture ? { uri: profilePicture } : ProfileIcon} style={tw`size-9 mr-2 rounded-full`} />
+                      <UserProfileModal
+                        user={{ name: username, info: info, profile: profilePicture ?? null }}
+                        modalIconVisible={modalIconVisible}
+                        setModalIconVisible={setModalIconVisible}
+                        iconSize={12}
+                        isContact={true}
+                      />
                       <Text style={tw`text-base font-semibold text-[${textColor}]`}>{username} </Text>
                       {isBusy && <Ionicons name="notifications-off" size={18} color="red" />}
-                    </View>
+                    </TouchableOpacity>
                   ),
                   headerRight: () => (
                     <View style={tw`flex-row`}>

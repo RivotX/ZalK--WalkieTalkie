@@ -11,6 +11,7 @@ const FriendRequestModal = ({ setModalVisible, modalVisible, request, acceptRequ
   const modal_title_color = useThemeColor({}, 'modal_title_color');
   const accept_button_color = useThemeColor({}, 'Modal_accept_button');
   const decline_button_color = useThemeColor({}, 'Modal_cancel_button');
+  const textcolor = useThemeColor({}, 'text');
   const { Texts } = useLanguage();
 
   const slideAnim = useRef(new Animated.Value(300)).current;
@@ -45,7 +46,7 @@ const FriendRequestModal = ({ setModalVisible, modalVisible, request, acceptRequ
           onStartShouldSetResponder={() => true}
         >
           <TouchableOpacity style={tw`absolute top-[-2] right-[-2] p-4`} onPress={() => setModalVisible(false)}>
-            <Ionicons name="close" size={24} color={modal_text_color} />
+            <Ionicons name="close" size={24} color={textcolor} />
           </TouchableOpacity>
           <Text style={[tw`text-xl font-bold mb-2 text-${modal_title_color}`, styles.text]}>{Texts.FriendRequest}</Text>
           <Text style={[tw`text-lg font-semibold mb-2 text-${modal_text_color}`, styles.text]}>

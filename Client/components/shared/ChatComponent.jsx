@@ -63,6 +63,9 @@ const ChatComponent = ({ user, iconChat, onAdd, iscontact, isrequest, setLoading
       setSelectedUser(user);
     }
   };
+  useEffect(() => {
+    console.log('SELECTEDuser XX', selectedUser);
+  } , [selectedUser])
 
   return (
     <>
@@ -82,7 +85,7 @@ const ChatComponent = ({ user, iconChat, onAdd, iscontact, isrequest, setLoading
           <View style={tw`flex-1 flex-row items-center justify-between border-b border-${ChatComponent_BorderColor} h-full py-4 ml-3`}>
             <View style={tw`${isrequest && 'w-[60%]'} `}>
               <Text style={[{ fontSize: 16 }, tw`font-bold text-[${textColor}]`]}>
-                {isrequest ? user.username : user.name} {user.isBusy && <Ionicons name="notifications-off" size={18} color="red" />}
+                {user.name} {user.isBusy && <Ionicons name="notifications-off" size={18} color="red" />}
               </Text>
               {isrequest ? <Text style={tw`text-gray-400`}>{Texts.SentRequest}</Text> : <Text style={tw`text-gray-400`}>{isFriend ? Texts.TapToChat : Texts.TapForDetails}</Text>}
             </View>

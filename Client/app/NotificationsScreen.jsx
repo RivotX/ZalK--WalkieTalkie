@@ -27,7 +27,6 @@ const NotificationsScreen = () => {
     axios.get(`${SERVER_URL}/getsession`, { withCredentials: true })
       .then((res) => {
         setUserID(res.data.user.id);
-        
         console.log('sessiones', res.data);
       })
       .catch((error) => {
@@ -41,12 +40,13 @@ const NotificationsScreen = () => {
 
   // ===== Get requests =====
   const getRequests = () => {
+    setLoading(true);
     axios.post(`${SERVER_URL}/getRequest`, { userID: userID })
           .then((res) => {
-            console.log('request', res);
+            console.log('request ZZ data', res.data);
             const requests = res.data.map(item => ({
               profile: item.profilePicture,
-              username: item.username,
+              name: item.username,
               id: item.id,
               info: item.info
             }));
@@ -60,13 +60,11 @@ const NotificationsScreen = () => {
           });
   };
 
-  useEffect(() => {
-
+  useEffect(() => { 
     if (userID != null) {
       getRequests();
       socket.on('refreshcontacts', () => {
       getRequests();
-        
       });
     }
   }, [userID]);
@@ -85,7 +83,7 @@ const NotificationsScreen = () => {
               <Loading />
             </View>
           </Modal>
-        ) : requests.length > 0 && requests[0] && Object.keys(requests[0]).length > 0 ? (
+        ) : requests.length > 0 ? (
           <>
             {/* Show requests */}
             {requests.map((request, index) => (
