@@ -548,6 +548,7 @@ app.post("/searchRoom", async (req, res) => {
     });
 
     if (rooms.length > 0) {
+      
       res.status(200).send(rooms); // Send back the list of matching rooms
     } else {
       res.status(404).send("No rooms found");
@@ -697,18 +698,15 @@ const getUser = async (userId: number) => {
 }
 
 // ================================================================= Get Groups =================================================================
-app.post("/getGroups", async (req, res) => {
+app.post('/getGroups', async (req, res) => {
   const { userId } = req.body;
-
   try {
     const user = await Users.findOne({
       where: { id: userId },
     });
-
     if (user && user.groups) {
       let groups = JSON.parse(user.groups);
-
-      if (typeof groups === "string") {
+      if (typeof groups === 'string') {
         groups = JSON.parse(groups);
       }
       const groupsList = [];
@@ -716,36 +714,21 @@ app.post("/getGroups", async (req, res) => {
         const group = await Rooms.findOne({
           where: { name: groups[i].name },
         });
-
-        if (group && group.members) {
-          let members = JSON.parse(group.members);
-
-          if (typeof members === "string") {
-            members = JSON.parse(members);
-          }
-          let membersList = [];
-          for (let j = 0; j < members.length; j++) {
-            const user= await getUser(members[j]);
-
-            if (user!==null) {
-              membersList.push(user);
-            }
-          }
-
-          group.dataValues.members = membersList;
+        if (group) {
           groupsList.push(group.dataValues);
         }
       }
-      console.log("grupos del usuario", groupsList);
+      console.log('grupos del usuario', groupsList);
       res.status(200).send(groupsList);
     } else {
-      res.status(404).send("No groups found");
+      res.status(404).send('No groups found');
     }
   } catch (error) {
-    console.error("Error getting groups:", error);
-    res.status(500).send("Internal server error");
+    console.error('Error getting groups:', error);
+    res.status(500).send('Internal server error');
   }
 });
+
 
 // ================================================================= Get Request =================================================================
 app.post("/getRequest", async (req, res) => {
