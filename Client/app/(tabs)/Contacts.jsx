@@ -10,6 +10,7 @@ import getEnvVars from "../../config";
 import Loading from "../../components/shared/Loading";
 import FloatingAddButton from "../../components/shared/FloatingAddButton";
 import { useLanguage } from '../../context/LanguageContext';
+import { useRoute } from "@react-navigation/native";
 // import {SERVER_URL, SOCKET_URL} from '@env';
 
 const ContactsScreen = ({ setLoadingLayout }) => {
@@ -17,33 +18,15 @@ const ContactsScreen = ({ setLoadingLayout }) => {
   const navigation = useNavigation();
   const [socket, setSocket] = useState(useSocket()); // Estado para manejar la instancia del socket
   const [contacts, setContacts] = useState([]);
-  const [username, setUsername] = useState(null);
   const textColor = useThemeColor({}, "text");
-  const [userID, setUserID] = useState(null);
   const { SERVER_URL } = getEnvVars();
   const [loading, setLoading] = useState(false);
   const { Texts } = useLanguage();
-
-
-  // ===== Get the user ID and username =====
-  useEffect(() => {
-    if (socket != null) {
-      console.log(socket, "socket EN CONTACTS");
-      axios.get(`${SERVER_URL}/getsession`, { withCredentials: true })
-        .then((res) => {
-          setUsername(res.data.user.username);
-          setUserID(res.data.user.id);
-          console.log("usuario definidon en contacts", res.data.user.username);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  }, []);
+  const route = useRoute();
+  const { userID } = route.params;
 
   // ==== Get contacts ====
   const getContacts = () => {
-    console.log("asd");
     setLoadingLayout(true);
     axios.post(`${SERVER_URL}/getContacts`, { userId: userID }, { withCredentials: true })
       .then((res) => {

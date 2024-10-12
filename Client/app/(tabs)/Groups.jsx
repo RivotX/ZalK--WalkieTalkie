@@ -11,6 +11,7 @@ import ChatComponent from '../../components/shared/ChatComponent';
 import Loading from '../../components/shared/Loading';
 import FloatingAddButton from '../../components/shared/FloatingAddButton';
 import { useLanguage } from '../../context/LanguageContext';
+import { useRoute } from '@react-navigation/native';
 // import {SERVER_URL, SOCKET_URL} from '@env';
 
 export default function GroupsScreen() {
@@ -20,42 +21,37 @@ export default function GroupsScreen() {
   const [socket, setSocket] = useState(useSocket()); // Estado para manejar la instancia del socket
   const [roomsAmIn, setRoomsAmIn] = useState([]);
   const { SERVER_URL } = getEnvVars();
-  const [userID, setUserID] = useState(null);
   const [loading, setLoading] = useState(false);
   const { Texts } = useLanguage();
+  const route = useRoute();
+  const { userID } = route.params;
 
-  useEffect(() => {
-    if (socket != null) {
-      console.log(socket, 'socket EN groups');
-      axios
-        .get(`${SERVER_URL}/getsession`, { withCredentials: true })
-        .then((res) => {
-          setUserID(res.data.user.id);
-          setRoomsAmIn(JSON.parse(res.data.user.groups));
-          console.log('Grupos res:', res.data.user.groups);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  }, []);
+  const getGroups = () => {
+    setLoading(true);
+    axios.post(`${SERVER_URL}/getGroups`, { userId: userID })
+      .then((res) => {
+        console.log('Grupos res:', res.data);
+        setRoomsAmIn(res.data);
+
+      })
+      .catch((error) => {
+        console.log(error);
+      }).finally(() => {
+        setLoading(false);
+      });
+  }
+    
 
   useEffect(() => {
     if (userID != null) {
-      socket.on('refreshgroups', () => {
+      getGroups();
+      socket.on('refreshcontacts', () => {
         console.log('REFRESH groups');
-        axios.post(`${SERVER_URL}/refreshSession`, { id: userID }, { withCredentials: true })
-          .then((res) => {
-            console.log('Grupos res:', res.data.user.groups);
-            setRoomsAmIn(JSON.parse(res.data.user.groups));
-          })
-          .catch((error) => {
-            console.log(error);
-          }).finally(() => {
-          });
+        getGroups();
       });
     }
-  }, [userID]);
+  }, []);
+
 
   return (
     <View style={tw`flex-1 items-center bg-[${backgroundColor}]`}>

@@ -19,11 +19,10 @@ import { useLanguage } from "../../context/LanguageContext";
 // import {SERVER_URL, SOCKET_URL} from '@env';
 import messaging from "@react-native-firebase/messaging";
 import { useFilterScreenChildren } from "expo-router/build/layouts/withLayoutContext";
-import {PermissionsAndroid} from 'react-native';
+import { PermissionsAndroid } from "react-native";
 import { Audio } from "expo-av";
 import { AppState } from "react-native";
 import { useSocket } from "../../context/SocketContext";
-
 
 const { SERVER_URL } = getEnvVars();
 const Tab = createMaterialTopTabNavigator();
@@ -40,28 +39,27 @@ export default function TabLayout({}) {
   const primarypurpleHEX = useThemeColor({}, "primarypurpleHEX");
   const [loading, setLoading] = useState(false);
   const route = useRoute();
-  const { username } = route.params;
   const { userID } = route.params;
   const { Texts } = useLanguage();
   const [appState, setAppState] = useState(AppState.currentState);
   const [socket, setSocket] = useState(useSocket());
- 
+
   // ===== AppState =====
   useEffect(() => {
-    if (socket!=null) {
+    if (socket != null) {
       const handleAppStateChange = (nextAppState) => {
-      // Si la app pasa de segundo plano a primer plano, ejecuta la función
-      if (appState === "background" && nextAppState === "active") {
-        onForeground();
-      }
-      setAppState(nextAppState);
-    };
-    const subscription = AppState.addEventListener("change", handleAppStateChange);
+        // Si la app pasa de segundo plano a primer plano, ejecuta la función
+        if (appState === "background" && nextAppState === "active") {
+          onForeground();
+        }
+        setAppState(nextAppState);
+      };
+      const subscription = AppState.addEventListener("change", handleAppStateChange);
 
-    return () => {
-      subscription.remove();
-    };
-  }
+      return () => {
+        subscription.remove();
+      };
+    }
   }, [appState, socket]);
 
   const onForeground = () => {
@@ -94,7 +92,7 @@ export default function TabLayout({}) {
         return;
       }
       try {
-        await axios.post(`${SERVER_URL}/saveToken`, { token: token, username: username });
+        await axios.post(`${SERVER_URL}/saveToken`, { token: token, userId: userID });
         Alert.alert("Success", "Token saved successfully");
       } catch (error) {
         Alert.alert("Error", `Failed to save token: ${error.message}`);
@@ -149,8 +147,9 @@ export default function TabLayout({}) {
   });
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then((token) => console.log(token));
-
+    if (userID != null) {
+      registerForPushNotificationsAsync().then((token) => console.log(token));
+    }
     //COPIADO POR EL COPILOT NO SE COMO FUNCIONA PERO NO LO BORRO POR SI ACASO
 
     // const subscription = Notifications.addNotificationReceivedListener(async notification => {
@@ -162,7 +161,7 @@ export default function TabLayout({}) {
     // });
 
     // return () => subscription.remove();
-  }, [username]);
+  }, []);
 
   return (
     <>
@@ -185,6 +184,7 @@ export default function TabLayout({}) {
       >
         <Tab.Screen
           name="Contacts"
+          initialParams={{ userID: userID }}
           options={{
             tabBarLabel: ({ focused }) => (
               <View style={tw`flex-1 items-center justify-center`}>
@@ -199,6 +199,7 @@ export default function TabLayout({}) {
         <Tab.Screen
           name="Groups"
           component={GroupsScreen}
+          initialParams={{ userID: userID }}
           options={{
             tabBarLabel: ({ focused }) => (
               <View style={tw`flex-1 items-center justify-center`}>
@@ -211,6 +212,7 @@ export default function TabLayout({}) {
         <Tab.Screen
           name="RandomZalk"
           component={RandomZalk}
+          initialParams={{ userID: userID}}
           options={{
             tabBarLabel: ({ focused }) => (
               <View style={tw`flex-1 items-center justify-center`}>

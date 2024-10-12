@@ -339,7 +339,7 @@ function RootLayout() {
                   headerTitleAlign: "center",
                   headerStyle: tw`bg-[${SoftbackgroundColor}]`,
                 }}
-                initialParams={{ username: username, userID: userID }}
+                initialParams={{userID: userID }}
               />
               {/* Add contacts */}
               <Stack.Screen

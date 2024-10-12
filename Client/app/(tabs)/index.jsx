@@ -10,42 +10,30 @@ import FriendRequestModal from '../../components/modals/FriendRequestModal';
 import RandomZalkModal from '../../components/modals/RandomZalkModal';
 import * as Notifications from 'expo-notifications';
 import { useLanguage } from '../../context/LanguageContext';
+import { useRoute } from '@react-navigation/native';
 // import {SERVER_URL, SOCKET_URL} from '@env';
 
 const RandomZalkScreen = () => {
   const backgroundColor = useThemeColor({}, 'background');
   const PrimaryPurple = useThemeColor({}, 'PrimaryPurple');
 
-  const [userID, setUserID] = useState();
   const [username, setUsername] = useState();
   const { SERVER_URL } = getEnvVars();
   const [socket, setSocket] = useState(useSocket());
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisibleRandomZalk, setModalVisibleRandomZalk] = useState(false);
   const { Texts } = useLanguage();
+  const route = useRoute();
+  const { userID } = route.params;
+  
 
   const [request, setRequest] = useState([{ senderId: null, receiverId: null, message: null }]);
   
-  const pushNotification = async(username,message)=> {
-    console.log('username', username);
-    if(true==true){
-        console.log('Device is a device');
-        await Notifications.scheduleNotificationAsync({
-        content: {
-          title: `@${username} has sent you a friend request.`,
-          body: message!=null?`message: "${message}"`:'no message',
-          data: { data: 'goes here' },
-        },
-        trigger: { seconds: 1 },
-      });
-    }
-  }
 
   useEffect(() => {
     if (socket != null) {
-      console.log(socket, 'socket EN INDEX');
       axios.get(`${SERVER_URL}/getsession`, { withCredentials: true })
-        .then((res) => { setUserID(res.data.user.id); setUsername(res.data.user.username) })
+        .then((res) => { setUsername(res.data.user.username);})
         .catch((error) => { console.log(error) });
 
       socket.on('receive_request', (data) => {
