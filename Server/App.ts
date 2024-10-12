@@ -574,7 +574,7 @@ app.post("/searchRoom", async (req, res) => {
         }
       }
       console.log("grupos del usuario", groupsList);
-      res.status(200).send({ rooms, groupsList }); // Send back the list of matching rooms and groups
+      res.status(200).send({groupsList }); // Send back the list of matching rooms and groups
     } else {
       res.status(404).send("No rooms found");
     }
