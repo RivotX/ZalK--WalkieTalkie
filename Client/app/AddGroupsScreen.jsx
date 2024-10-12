@@ -80,7 +80,7 @@ export default function AddGroupsScreen() {
 
   // ===== Friend request =====
   const joinRoom = (room) => {
-    socket.emit('join', { room: room, username: username });
+    socket.emit('join', { room: room, userId: userID });
     setrooms(rooms.filter((roomadded) => roomadded.name !== room));
   };
 

@@ -123,7 +123,7 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
       console.log("zz");
 
     } else if (!isContact) {
-      await socket.emit("deleteGroup", { username: userName, group: user });
+      await socket.emit("deleteGroup", { userId: userID, group: user });
       navigation.navigate('Groups');
       setLoadingLayout(true);
       console.log("xxx");
