@@ -551,11 +551,11 @@ app.post('/searchRoom', async (req, res) => {
 // ================================================================= Save Token =================================================================
 app.post('/saveToken', async (req, res) => {
   console.log('entro a saveToken');
-  const { token, username } = req.body;
+  const { token, userId } = req.body;
 
   try {
     const user = await Users.findOne({
-      where: { username: username },
+      where: { id: userId },
     });
 
     if (user) {
@@ -660,6 +660,43 @@ app.post('/getContacts', async (req, res) => {
     }
   } catch (error) {
     console.error('Error getting contacts:', error);
+    res.status(500).send('Internal server error');
+  }
+});
+
+// ================================================================= Get Groups =================================================================
+app.post('/getGroups', async (req, res) => {
+  const { userId } = req.body;
+
+  try {
+    const user = await Users.findOne({
+      where: { id: userId },
+    });
+
+    if (user && user.groups) {
+      let groups = JSON.parse(user.groups);
+
+      if (typeof groups === 'string') {
+        groups = JSON.parse(groups);
+      }
+      const groupsList = [];
+      for (let i = 0; i < groups.length; i++) {
+        const group = await Rooms.findOne({
+          where: { name: groups[i].name },
+        });
+
+        if (group) {
+          groupsList.push(group.dataValues);
+        }
+      }
+      console.log('grupos del usuario', groupsList);
+      res.status(200).send(groupsList);
+
+    } else {
+      res.status(404).send('No groups found');
+    }
+  } catch (error) {
+    console.error('Error getting groups:', error);
     res.status(500).send('Internal server error');
   }
 });
@@ -804,7 +841,7 @@ io.on('connection', (socket: Socket) => {
           user.setgroups(groups);
           await user.save();
           console.log('Los cambios han sido guardados exitosamente.');
-          socket.emit('refreshgroups');
+          socket.emit('refreshcontacts');
         } else {
           console.log('Ya está en el grupo');
         }
@@ -924,7 +961,7 @@ io.on('connection', (socket: Socket) => {
         await userA.save();
         console.log('Grupo eliminado');
         socket.leave(group.name);
-        socket.emit('refreshgroups');
+        socket.emit('refreshcontacts');
       } else {
         console.log('No se encontró el grupo');
       }
