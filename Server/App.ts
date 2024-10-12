@@ -729,6 +729,36 @@ app.post('/getGroups', async (req, res) => {
   }
 });
 
+// ================================================================= get Group Members =================================================================
+
+app.post('/getGroupMembers', async (req, res) => {
+  const {groupId} = req.body;
+  try {
+    const group = await Rooms.findOne({
+      where: { id: groupId },
+    });
+    if (group && group.members) {
+      let members = JSON.parse(group.members);
+      if (typeof members === 'string') {
+        members = JSON.parse(members);
+      }
+      const membersList = [];
+      for (let i = 0; i < members.length; i++) {
+        const member = await getUser(members[i]);
+        if (member) {
+          membersList.push(member);
+        }
+      }
+      console.log('Miembros del grupo:', membersList);
+      res.status(200).send(membersList);
+    } else {
+      res.status(404).send('No members found');
+    }
+  } catch (error) {
+    console.error('Error getting group members:', error);
+    res.status(500).send('Internal server error');
+  }
+});
 
 // ================================================================= Get Request =================================================================
 app.post("/getRequest", async (req, res) => {

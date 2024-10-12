@@ -54,6 +54,7 @@ export default function AddGroupsScreen() {
       .then((res) => {
         console.log(res.data);
         const roomsData = res.data.map((room) => ({
+          id: room.id,
           name: room.name,
           info: room.info,
         }));

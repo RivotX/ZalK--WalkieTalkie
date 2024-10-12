@@ -87,11 +87,11 @@ export default function GroupsScreen() {
           roomsAmIn.map((room, index) => {
             console.log('ROOM', room);
             const roomdata = {
+              id: room.id,
               name: room.name,
               profile: null,
               room: room.name,
               info: room.info,
-              members: room.members,
             };
             return (
               <ChatComponent

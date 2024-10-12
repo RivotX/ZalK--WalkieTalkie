@@ -1,18 +1,36 @@
 // UserProfileModal.jsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TouchableOpacity, Modal, Image, Text, View } from "react-native";
 import tw from "twrnc";
 import ProfileIcon from "../../assets/images/images.png";
 import groupicon from "../../assets/images/emoGirlIcon.png";
 import { useThemeColor } from "../../hooks/useThemeColor";
 import { useLanguage } from "../../context/LanguageContext";
+import axios from "axios";
 
 const UserProfileModal = ({ user, modalIconVisible, setModalIconVisible, iconSize, isContact }) => {
   const textColor = useThemeColor({}, "text");
   const UserProfileModal_BG = useThemeColor({}, "UserProfileModal_BG");
   console.log("userprofileModal: ", user);
-  const qty = user.members ? user.members.length : 0;
+  const [qty, setQty] = useState(0);
+  const [members, setMembers] = useState([]);
   const { Texts } = useLanguage();
+
+  useEffect(() => {
+    console.log("userprofileModal: ", user);
+
+    if(!isContact){
+      axios.post(`${SERVER_URL}/getGroupMembers`, { groupId: user.id }).then((res) => {
+        console.log("Members: ", res.data);
+        setQty(res.data.length);
+        setMembers(res.data);
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+  }, [user]);
+
+
   
 
   return (
@@ -32,11 +50,11 @@ const UserProfileModal = ({ user, modalIconVisible, setModalIconVisible, iconSiz
               />
             </View>
             <Text style={tw`text-[${textColor}] text-center mt-10 w-2/3 italic`}>{user.info}</Text>
-            {user.members && (
+            {members && (
               <View style={tw`w-full mt-4`}>
             <Text style={tw`text-[${textColor}] text-center mt-4`}><Text style={tw`text-[${textColor}] text-center font-bold`} >{Texts.Members} :</Text> {qty}</Text>
 
-                {user.members.map((member, index) => (
+                {members.map((member, index) => (
                   <Text key={index} style={tw`text-[${textColor}] text-center`}>
                     - {member.username}
                   </Text>
