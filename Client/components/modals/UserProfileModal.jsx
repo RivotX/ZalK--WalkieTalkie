@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { TouchableOpacity, Modal, Image, Text, View } from "react-native";
 import tw from "twrnc";
 import ProfileIcon from "../../assets/images/images.png";
-import groupicon from "../../assets/images/icongroups.png";
+import groupicon from "../../assets/images/groupicon.png";
 import { useThemeColor } from "../../hooks/useThemeColor";
 import { useLanguage } from "../../context/LanguageContext";
 import axios from "axios";
