@@ -7,14 +7,17 @@ import groupicon from "../../assets/images/emoGirlIcon.png";
 import { useThemeColor } from "../../hooks/useThemeColor";
 import { useLanguage } from "../../context/LanguageContext";
 import axios from "axios";
+import getEnvVars from "../../config";
 
 const UserProfileModal = ({ user, modalIconVisible, setModalIconVisible, iconSize, isContact }) => {
   const textColor = useThemeColor({}, "text");
   const UserProfileModal_BG = useThemeColor({}, "UserProfileModal_BG");
   console.log("userprofileModal: ", user);
-  const [qty, setQty] = useState(0);
+  const [qty, setQty] = useState(null);
   const [members, setMembers] = useState([]);
   const { Texts } = useLanguage();
+
+  const { SERVER_URL } = getEnvVars();
 
   useEffect(() => {
     console.log("userprofileModal: ", user);
@@ -52,7 +55,7 @@ const UserProfileModal = ({ user, modalIconVisible, setModalIconVisible, iconSiz
             <Text style={tw`text-[${textColor}] text-center mt-10 w-2/3 italic`}>{user.info}</Text>
             {members && (
               <View style={tw`w-full mt-4`}>
-            <Text style={tw`text-[${textColor}] text-center mt-4`}><Text style={tw`text-[${textColor}] text-center font-bold`} >{Texts.Members} :</Text> {qty}</Text>
+            <Text style={tw`text-[${textColor}] text-center mt-4`}><Text style={tw`text-[${textColor}] text-center font-bold`} >{qty!=null&&`${Texts.Members} : ${qty}`} </Text> </Text>
 
                 {members.map((member, index) => (
                   <Text key={index} style={tw`text-[${textColor}] text-center`}>

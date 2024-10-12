@@ -1047,12 +1047,12 @@ io.on("connection", (socket: Socket) => {
         }
 
         if (members.includes(userId)) {
-          members.filter((member: any) => member !== userId);
-          group.setMembers(members);
+          const miembrosFiltrados = members.filter((member: any) => member !== userId);
+          group.setMembers(miembrosFiltrados);
           await group.save();
           console.log(`el usuario ${userA?.username} ha sido eliminado exitosamente. y en el grupo estan: ${members}`);
         } else {
-          console.log("Ya está en el grupo");
+          console.log("no existe el usuario en el grupo");
         }
       }
 
