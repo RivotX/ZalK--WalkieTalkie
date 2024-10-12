@@ -725,7 +725,7 @@ app.post("/getGroups", async (req, res) => {
           }
           let membersList = [];
           for (let j = 0; j < members.length; j++) {
-            const user= getUser(members[j]);
+            const user= await getUser(members[j]);
 
             if (user!==null) {
               membersList.push(user);
