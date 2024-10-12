@@ -78,21 +78,6 @@ export default function TabLayout({}) {
         const { status } = await Notifications.requestPermissionsAsync();
         finalStatus = status;
         Alert.alert("Status", `Permission status: ${status}`);
-
-        try {
-          token = (await Notifications.getExpoPushTokenAsync({ projectId: Constants.expoConfig.extra.eas.projectId })).data;
-          Alert.alert("Token", `Token obtained: ${token}`);
-        } catch (error) {
-          Alert.alert("Error", `Failed to get Expo push token: ${error.message}`);
-          return;
-        }
-        try {
-          await axios.post(`${SERVER_URL}/saveToken`, { token: token, username: username });
-          Alert.alert("Success", "Token saved successfully");
-        } catch (error) {
-          Alert.alert("Error", `Failed to save token: ${error.message}`);
-          return;
-        }
       }
       if (finalStatus !== "granted") {
         Alert.alert("Error", "Failed to get push token for push notification!");
@@ -106,6 +91,13 @@ export default function TabLayout({}) {
         Alert.alert("Token", `Token obtained: ${token}`);
       } catch (error) {
         Alert.alert("Error", `Failed to get Expo push token: ${error.message}`);
+        return;
+      }
+      try {
+        await axios.post(`${SERVER_URL}/saveToken`, { token: token, username: username });
+        Alert.alert("Success", "Token saved successfully");
+      } catch (error) {
+        Alert.alert("Error", `Failed to save token: ${error.message}`);
         return;
       }
 
