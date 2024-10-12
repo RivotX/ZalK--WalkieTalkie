@@ -3,6 +3,7 @@ import { View } from "react-native";
 // Client/constants/Texts.js
 export const Texts = {
   en: {
+    Members: "Members",
     Language: "Language",
     ChangeLanguage: "Change language",
     BusyMode: "Busy Mode",
@@ -88,6 +89,7 @@ export const Texts = {
     TapToDetails: "Tap to see details",
   },
   es: {
+    Members: "Miembros",
     Language: "Idioma",
     ChangeLanguage: "Cambiar idioma",
     BusyMode: "Modo ocupado",

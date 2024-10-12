@@ -5,11 +5,16 @@ import tw from "twrnc";
 import ProfileIcon from "../../assets/images/images.png";
 import groupicon from "../../assets/images/emoGirlIcon.png";
 import { useThemeColor } from "../../hooks/useThemeColor";
+import { useLanguage } from "../../context/LanguageContext";
 
 const UserProfileModal = ({ user, modalIconVisible, setModalIconVisible, iconSize, isContact }) => {
   const textColor = useThemeColor({}, "text");
   const UserProfileModal_BG = useThemeColor({}, "UserProfileModal_BG");
   console.log("userprofileModal: ", user);
+  const qty = user.members ? user.members.length : 0;
+  const { Texts } = useLanguage();
+  
+
   return (
     <>
       <Modal animationType="fade" transparent={true} visible={modalIconVisible} onRequestClose={() => setModalIconVisible(false)}>
@@ -29,9 +34,11 @@ const UserProfileModal = ({ user, modalIconVisible, setModalIconVisible, iconSiz
             <Text style={tw`text-[${textColor}] text-center mt-10 w-2/3 italic`}>{user.info}</Text>
             {user.members && (
               <View style={tw`w-full mt-4`}>
+            <Text style={tw`text-[${textColor}] text-center mt-4`}><Text style={tw`text-[${textColor}] text-center font-bold`} >{Texts.Members} :</Text> {qty}</Text>
+
                 {user.members.map((member, index) => (
                   <Text key={index} style={tw`text-[${textColor}] text-center`}>
-                    - {member.name}
+                    - {member.username}
                   </Text>
                 ))}
               </View>

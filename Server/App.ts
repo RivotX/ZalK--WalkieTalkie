@@ -504,7 +504,7 @@ app.post("/logout", (req, res) => {
 
 // ================================================================= Search Room =================================================================
 app.post("/searchRoom", async (req, res) => {
-  const { roomsearch, username } = req.body;
+  const { roomsearch, username, userId } = req.body;
 
   if (!username) {
     return res.status(400).send("Username is required");
@@ -548,7 +548,33 @@ app.post("/searchRoom", async (req, res) => {
     });
 
     if (rooms.length > 0) {
-      res.status(200).send(rooms); // Send back the list of matching rooms
+      const groupsList = [];
+      for (let i = 0; i < groupsofuserDB.length; i++) {
+        const group = await Rooms.findOne({
+          where: { name: groupsofuserDB[i].name },
+        });
+
+        if (group && group.members) {
+          let members = JSON.parse(group.members);
+
+          if (typeof members === "string") {
+            members = JSON.parse(members);
+          }
+          let membersList = [];
+          for (let j = 0; j < members.length; j++) {
+            const user = await getUser(members[j]);
+
+            if (user !== null) {
+              membersList.push(user);
+            }
+          }
+
+          group.dataValues.members = membersList;
+          groupsList.push(group.dataValues);
+        }
+      }
+      console.log("grupos del usuario", groupsList);
+      res.status(200).send({ rooms, groupsList }); // Send back the list of matching rooms and groups
     } else {
       res.status(404).send("No rooms found");
     }
