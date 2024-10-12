@@ -9,7 +9,7 @@ import { useSocket } from '../../context/SocketContext';
 import getEnvVars from '../../config';
 const { SERVER_URL } = getEnvVars();
 import ProfileIcon from '../../assets/images/images.png';
-import groupIcon from '../../assets/images/emoGirlIcon.png';
+import groupIcon from '../../assets/images/icongroups.png';
 import { useLanguage } from '../../context/LanguageContext';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 // import {SERVER_URL, SOCKET_URL} from '@env';
