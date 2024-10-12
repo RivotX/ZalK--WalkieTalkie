@@ -91,6 +91,7 @@ export default function GroupsScreen() {
               profile: null,
               room: room.name,
               info: room.info,
+              members: room.members,
             };
             return (
               <ChatComponent

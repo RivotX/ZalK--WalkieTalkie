@@ -285,10 +285,10 @@ class Rooms extends Model {
   declare id: number;
   declare name: string;
   declare info: string;
-  declare Members: string;
+  declare members: string;
 
   setMembers(members: object): void {
-    this.Members = JSON.stringify(members);
+    this.members = JSON.stringify(members);
   }
 }
 
@@ -308,7 +308,7 @@ Rooms.init(
       type: DataTypes.STRING(120),
       allowNull: true,
     },
-    Members: {
+    members: {
       type: DataTypes.JSON,
       allowNull: true,
       defaultValue: "[]",
@@ -717,8 +717,8 @@ app.post("/getGroups", async (req, res) => {
           where: { name: groups[i].name },
         });
 
-        if (group && group.Members) {
-          let members = JSON.parse(group.Members);
+        if (group && group.members) {
+          let members = JSON.parse(group.members);
 
           if (typeof members === "string") {
             members = JSON.parse(members);
@@ -732,7 +732,7 @@ app.post("/getGroups", async (req, res) => {
             }
           }
 
-          group.dataValues.Members = membersList;
+          group.dataValues.members = membersList;
           groupsList.push(group.dataValues);
         }
       }
@@ -879,8 +879,8 @@ io.on("connection", (socket: Socket) => {
         },
       });
 
-      if (group && group.Members) {
-        let members = JSON.parse(group.Members);
+      if (group && group.members) {
+        let members = JSON.parse(group.members);
 
         if (typeof members === "string") {
           members = JSON.parse(members);
@@ -1026,8 +1026,8 @@ io.on("connection", (socket: Socket) => {
         },
       });
 
-      if (group && group.Members) {
-        let members = JSON.parse(group.Members);
+      if (group && group.members) {
+        let members = JSON.parse(group.members);
 
         if (typeof members === "string") {
           members = JSON.parse(members);

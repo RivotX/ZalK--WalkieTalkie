@@ -27,6 +27,17 @@ const UserProfileModal = ({ user, modalIconVisible, setModalIconVisible, iconSiz
               />
             </View>
             <Text style={tw`text-[${textColor}] text-center mt-10 w-2/3 italic`}>{user.info}</Text>
+            {user.members && (
+              <View style={tw`w-full mt-4`}>
+                {user.members.map((member, index) => (
+                  <Text key={index} style={tw`text-[${textColor}] text-center`}>
+                    - {member.name}
+                  </Text>
+                ))}
+              </View>
+            )
+
+            }
         </TouchableOpacity>
       </Modal>
     </>
