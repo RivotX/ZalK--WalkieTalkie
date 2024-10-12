@@ -20,6 +20,9 @@ import { useLanguage } from "../../context/LanguageContext";
 import messaging from "@react-native-firebase/messaging";
 import { useFilterScreenChildren } from "expo-router/build/layouts/withLayoutContext";
 import {PermissionsAndroid} from 'react-native';
+import { Audio } from "expo-av";
+import { AppState } from "react-native";
+import { useSocket } from "../../context/SocketContext";
 
 
 const { SERVER_URL } = getEnvVars();
@@ -38,62 +41,33 @@ export default function TabLayout({}) {
   const [loading, setLoading] = useState(false);
   const route = useRoute();
   const { username } = route.params;
-
+  const { userID } = route.params;
   const { Texts } = useLanguage();
+  const [appState, setAppState] = useState(AppState.currentState);
+  const [socket, setSocket] = useState(useSocket());
+ 
+  // ===== AppState =====
+  useEffect(() => {
+    if (socket!=null) {
+      const handleAppStateChange = (nextAppState) => {
+      // Si la app pasa de segundo plano a primer plano, ejecuta la función
+      if (appState === "background" && nextAppState === "active") {
+        onForeground();
+      }
+      setAppState(nextAppState);
+    };
+    const subscription = AppState.addEventListener("change", handleAppStateChange);
 
-    // ===== Notifications Migue =====
-      // const requestuserPermission = async () => {
-      //   PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
-      //   const authStatus = await messaging().requestPermission();
-      //   const enabled =
-      //     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      //     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-      //   if (enabled) {
-      //     console.log('Authorization status:', authStatus);
-      //     const token = await messaging().getToken(); 
-      //     Alert.alert('token:', token);
-      //   }
-      // };
-      
-      // useEffect(() => {
-      //   if (requestuserPermission()) {
-      //     messaging()
-      //       .getToken()
-      //       .then(token => {
-      //         console.log('Token:', token);
-      //         Alert.alert('Token:', token);
-      //       });
-      //   }else {
-      //     console.log('No permission', authStatus);
-      //     Alert.alert('No permission', authStatus);  
-      //   }
-      //   // check wheter an initial notification is available
-      //   messaging()
-      //     .getInitialNotification()
-      //     .then(async remoteMessage => {
-      //       if (remoteMessage) {
-      //         console.log('Notification caused app to open from quit state:', remoteMessage.notification);
-      //         Alert.alert('Notification caused app to open from quit state:', remoteMessage.notification);
-      //       }
-      //     });
-      //     // assume a message-notification contains a "type" property in the data payload of the screen to open
-      //     messaging().onNotificationOpenedApp(remoteMessage => {
-      //       console.log('Notification caused app to open from background state:', remoteMessage.notification);
-      //       Alert.alert('Notification caused app to open from background state:', remoteMessage.notification);
-      //     });
+    return () => {
+      subscription.remove();
+    };
+  }
+  }, [appState, socket]);
 
-      //     //register background handler
-      //     messaging().setBackgroundMessageHandler(async remoteMessage => {
-      //       console.log('Message handled in the background!', remoteMessage);
-      //       Alert.alert('Message handled in the background!', remoteMessage);
-      //     });
-      //     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      //       console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
-      //       Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-      //     });
-      //     return unsubscribe;
-      // }, []);
-
+  const onForeground = () => {
+    console.log("La app ha vuelto al primer plano.");
+    socket.emit("appstate", { userID: userID });
+  };
   // ===== Notifications =====
   const registerForPushNotificationsAsync = async () => {
     let token;
@@ -104,6 +78,21 @@ export default function TabLayout({}) {
         const { status } = await Notifications.requestPermissionsAsync();
         finalStatus = status;
         Alert.alert("Status", `Permission status: ${status}`);
+
+        try {
+          token = (await Notifications.getExpoPushTokenAsync({ projectId: Constants.expoConfig.extra.eas.projectId })).data;
+          Alert.alert("Token", `Token obtained: ${token}`);
+        } catch (error) {
+          Alert.alert("Error", `Failed to get Expo push token: ${error.message}`);
+          return;
+        }
+        try {
+          await axios.post(`${SERVER_URL}/saveToken`, { token: token, username: username });
+          Alert.alert("Success", "Token saved successfully");
+        } catch (error) {
+          Alert.alert("Error", `Failed to save token: ${error.message}`);
+          return;
+        }
       }
       if (finalStatus !== "granted") {
         Alert.alert("Error", "Failed to get push token for push notification!");
@@ -117,14 +106,6 @@ export default function TabLayout({}) {
         Alert.alert("Token", `Token obtained: ${token}`);
       } catch (error) {
         Alert.alert("Error", `Failed to get Expo push token: ${error.message}`);
-        return;
-      }
-
-      try {
-        await axios.post(`${SERVER_URL}/saveToken`, { token: token, username: username });
-        Alert.alert("Success", "Token saved successfully");
-      } catch (error) {
-        Alert.alert("Error", `Failed to save token: ${error.message}`);
         return;
       }
 

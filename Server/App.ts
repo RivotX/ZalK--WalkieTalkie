@@ -823,6 +823,18 @@ io.on('connection', (socket: Socket) => {
   });
   //===================================================================
 
+  socket.on('appstate', async (data) => {
+    const userID = data.userID;
+    console.log('entro a primer plano en el server');
+    const UserSocket= connectedUsers[userID];
+    if(UserSocket){
+      io.to(UserSocket).emit('refreshcontacts');
+      console.log('Se envio la señal de refrescar contactos porque el usuario volvio a primer plano');
+    }
+
+
+  });
+
   // ============================= DELETE CONTACT ====================================
 
   socket.on('deleteContact', async (data) => {

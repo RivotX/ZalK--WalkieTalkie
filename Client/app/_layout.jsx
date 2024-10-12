@@ -33,7 +33,6 @@ import { useLanguage } from "../context/LanguageContext";
 import { setBackgroundColorAsync } from "expo-system-ui";
 
 function RootLayout() {
-  const [appState, setAppState] = useState(AppState.currentState);
   const [modalIconVisible, setModalIconVisible] = useState(false);
   const SoftbackgroundColor = useThemeColor({}, "Softbackground");
   const backgroundColor = useThemeColor({}, "background");
@@ -115,28 +114,7 @@ function RootLayout() {
     // registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
   }, []);
 
-  useEffect(() => {
-    if (socket!=null) {
-      const handleAppStateChange = (nextAppState) => {
-      // Si la app pasa de segundo plano a primer plano, ejecuta la función
-      if (appState === "background" && nextAppState === "active") {
-        onForeground();
-      }
-      setAppState(nextAppState);
-    };
 
-    const subscription = AppState.addEventListener("change", handleAppStateChange);
-
-    return () => {
-      subscription.remove();
-    };
-  }
-  }, [appState, socket]);
-
-  const onForeground = () => {
-    console.log("La app ha vuelto al primer plano.");
-    socket.emit("refreshcontacts");
-  };
 
   // ===== Creates socket connection for the user =====
   const createSocket = () => {
@@ -361,7 +339,7 @@ function RootLayout() {
                   headerTitleAlign: "center",
                   headerStyle: tw`bg-[${SoftbackgroundColor}]`,
                 }}
-                initialParams={{ username: username }}
+                initialParams={{ username: username, userID: userID }}
               />
               {/* Add contacts */}
               <Stack.Screen
