@@ -23,11 +23,22 @@ export default function GroupsScreen() {
   const { SERVER_URL } = getEnvVars();
   const [loading, setLoading] = useState(false);
   const { Texts } = useLanguage();
-  const route = useRoute();
-  const { userID } = route.params;
+  const [userID, setUserID] = useState(null);
+  useEffect(() => {
+    axios
+      .get(`${SERVER_URL}/getsession`, { withCredentials: true })
+      .then((res) => {
+        setUserID(res.data.user.id);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+  
 
   const getGroups = () => {
     setLoading(true);
+    console.log('USERID EN GROUP', userID);
     axios.post(`${SERVER_URL}/getGroups`, { userId: userID })
       .then((res) => {
         console.log('Grupos res:', res.data);
@@ -41,6 +52,8 @@ export default function GroupsScreen() {
       });
   }
     
+  
+
 
   useEffect(() => {
     if (userID != null) {
@@ -50,7 +63,8 @@ export default function GroupsScreen() {
         getGroups();
       });
     }
-  }, []);
+  }, [userID]);
+
 
 
   return (

@@ -23,8 +23,9 @@ const RandomZalkScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisibleRandomZalk, setModalVisibleRandomZalk] = useState(false);
   const { Texts } = useLanguage();
-  const route = useRoute();
-  const { userID } = route.params;
+  const [userID, setUserID] = useState(null);
+  
+
   
 
   const [request, setRequest] = useState([{ senderId: null, receiverId: null, message: null }]);
@@ -33,7 +34,9 @@ const RandomZalkScreen = () => {
   useEffect(() => {
     if (socket != null) {
       axios.get(`${SERVER_URL}/getsession`, { withCredentials: true })
-        .then((res) => { setUsername(res.data.user.username);})
+        .then((res) => { 
+           setUserID(res.data.user.id); 
+           setUsername(res.data.user.username);})
         .catch((error) => { console.log(error) });
 
       socket.on('receive_request', (data) => {

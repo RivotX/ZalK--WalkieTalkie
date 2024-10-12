@@ -22,8 +22,17 @@ const ContactsScreen = ({ setLoadingLayout }) => {
   const { SERVER_URL } = getEnvVars();
   const [loading, setLoading] = useState(false);
   const { Texts } = useLanguage();
-  const route = useRoute();
-  const { userID } = route.params;
+  const [userID, setUserID] = useState(null);
+  useEffect(() => {
+    axios
+      .get(`${SERVER_URL}/getsession`, { withCredentials: true })
+      .then((res) => {
+        setUserID(res.data.user.id);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   // ==== Get contacts ====
   const getContacts = () => {
@@ -48,6 +57,8 @@ const ContactsScreen = ({ setLoadingLayout }) => {
         setLoadingLayout(false);
       });
   }
+
+  
 
 
   // ===== Refresh contacts =====
