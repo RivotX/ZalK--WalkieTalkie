@@ -140,7 +140,7 @@ Users.init(
       autoIncrement: true,
     },
     username: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(30),
       unique: true,
       allowNull: false,
     },
@@ -153,7 +153,7 @@ Users.init(
       unique: true,
       allowNull: false,
     },
-    password: DataTypes.STRING(128),
+    password: DataTypes.STRING(30),
 
     groups: {
       type: DataTypes.JSON,

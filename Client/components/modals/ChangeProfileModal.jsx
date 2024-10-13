@@ -10,7 +10,7 @@ const { SERVER_URL } = getEnvVars();
 import { useLanguage } from "../../context/LanguageContext";
 // import {SERVER_URL, SOCKET_URL} from '@env';
 
-const ChangeProfileModal = ({ PropToChange, setModalVisibility, ModalIcon, isPassword, refreshSession, userID, currentProp }) => {
+const ChangeProfileModal = ({ PropToChange, setModalVisibility, ModalIcon, isPassword, refreshSession, userID, currentProp, maxLength }) => {
   const backgroundColor = useThemeColor({}, "background");
   const textColor = useThemeColor({}, "text");
   const [newProp, setNewProp] = useState("");
@@ -29,7 +29,6 @@ const ChangeProfileModal = ({ PropToChange, setModalVisibility, ModalIcon, isPas
       });
     }
   }, []);
-
 
   // inicia el valor de newProp con el valor actual de la propiedad
   useEffect(() => {
@@ -150,6 +149,7 @@ const ChangeProfileModal = ({ PropToChange, setModalVisibility, ModalIcon, isPas
                 onChangeText={(text) => {
                   setNewProp(text);
                 }}
+                maxLength={maxLength}
               />
               {isPassword && (
                 <Ionicons name={hidePassword ? "eye-off" : "eye"} size={20} color="gray" style={tw`mr-2`}
@@ -158,6 +158,8 @@ const ChangeProfileModal = ({ PropToChange, setModalVisibility, ModalIcon, isPas
                   }}
                 />
               )}
+              {/* Character Counter */}
+              <Text style={tw`text-gray-500 ml-2`}>{newProp.length}/{maxLength}</Text>
             </View>
             {/* POST button */}
             <TouchableOpacity

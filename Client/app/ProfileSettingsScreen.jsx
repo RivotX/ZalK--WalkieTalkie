@@ -32,6 +32,7 @@ const ProfileSettingsScreen = () => {
   const [userInfo, setUserInfo] = useState("");
   const [currentProp, setCurrentProp] = useState("");
   const [entireUserInfo, setEntireUserInfo] = useState("");
+  const [maxLength, setMaxLength] = useState(120);
   const navigation = useNavigation();
   const [profilePicture, setProfilePicture] = useState(null);
   const animation = useRef(new Animated.Value(0)).current;
@@ -119,7 +120,7 @@ const ProfileSettingsScreen = () => {
             })
             .catch((error) => {
               console.error("Error saving image URL:", error);
-              
+
             }).finally(() => {
               setLoading(false)
             });
@@ -141,21 +142,25 @@ const ProfileSettingsScreen = () => {
       setPropToChange("password");
       setModalIcon("lock-closed-outline");
       setIsPassword(true);
+      setMaxLength(30);
     } else if (id === "info") {
       setPropToChange("info");
       setModalIcon("person-outline");
       setCurrentProp(entireUserInfo);
       setIsPassword(false);
+      setMaxLength(120);
     } else if (id === "email") {
       setPropToChange("email");
       setModalIcon("mail-outline");
       setCurrentProp(userEmail);
       setIsPassword(false);
+      setMaxLength(100);
     } else if (id === "username") {
       setPropToChange("username");
       setModalIcon("information-circle-outline");
       setCurrentProp(username);
       setIsPassword(false);
+      setMaxLength(30);
     }
     setChangeProfileModalVisible(true);
     console.log("ChangeProfileModalVisible set to true");
@@ -369,6 +374,7 @@ const ProfileSettingsScreen = () => {
             refreshSession={refreshSession}
             userID={userID}
             currentProp={currentProp}
+            maxLength={maxLength}
           />
         )}
       </SafeAreaView>
