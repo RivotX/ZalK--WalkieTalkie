@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { Text, TouchableOpacity, View, Image } from 'react-native';
 import tw from 'twrnc';
 import { useThemeColor } from '../../hooks/useThemeColor';
 import { Ionicons } from '@expo/vector-icons';
-import UserProfileModal from '../modals/UserProfileModal';
+import UserProfileMiniModal from '../modals/UserProfileMiniModal';
 import axios from 'axios';
 import { useSocket } from '../../context/SocketContext';
 import getEnvVars from '../../config';
@@ -12,7 +12,7 @@ import ProfileIcon from '../../assets/images/images.png';
 import groupIcon from '../../assets/images/groupicon.png';
 import { useLanguage } from '../../context/LanguageContext';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-// import {SERVER_URL, SOCKET_URL} from '@env';
+import { useNavigation } from '@react-navigation/native';
 
 const ChatComponent = ({ user, iconChat, onAdd, iscontact, isrequest, setLoading, showModalOnPress, showModalOnProfilePicturePress, onGeneralPress, isFriend }) => {
   const textColor = useThemeColor({}, 'text');
@@ -20,9 +20,12 @@ const ChatComponent = ({ user, iconChat, onAdd, iscontact, isrequest, setLoading
   const [socket, setSocket] = useState(useSocket());
   const [userInfo, setUserInfo] = useState();
   const [selectedUser, setSelectedUser] = useState(user);
-  const [userProfileModalVisible, setuserProfileModalVisible] = useState(false);
+  const [UserProfileMiniModalVisible, setUserProfileMiniModalVisible] = useState(false);
+  const [imagePosition, setImagePosition] = useState(null);
+  const imageRef = useRef(null);
   const ChatComponent_BorderColor = useThemeColor({}, 'ChatComponent_BorderColor');
   const { Texts } = useLanguage();
+  const navigation = useNavigation();
 
   useEffect(() => {
     if (!onAdd) {
@@ -50,7 +53,7 @@ const ChatComponent = ({ user, iconChat, onAdd, iscontact, isrequest, setLoading
 
   const handleGeneralPress = () => {
     if (showModalOnPress) {
-      setuserProfileModalVisible(true);
+      setUserProfileMiniModalVisible(true);
       setSelectedUser(user);
     } else if (onGeneralPress) {
       onGeneralPress();
@@ -58,14 +61,18 @@ const ChatComponent = ({ user, iconChat, onAdd, iscontact, isrequest, setLoading
   };
 
   const handleProfilePicturePress = () => {
-    if (showModalOnProfilePicturePress) {
-      setuserProfileModalVisible(true);
-      setSelectedUser(user);
+    if (imageRef.current) {
+      imageRef.current.measure((x, y, width, height, pageX, pageY) => {
+        setImagePosition({ x: pageX, y: pageY, width, height });
+        setUserProfileMiniModalVisible(true);
+        setSelectedUser(user);
+      });
     }
   };
+
   useEffect(() => {
     console.log('SELECTEDuser XX', selectedUser);
-  } , [selectedUser])
+  }, [selectedUser]);
 
   return (
     <>
@@ -75,8 +82,8 @@ const ChatComponent = ({ user, iconChat, onAdd, iscontact, isrequest, setLoading
       >
         {/* Profile Picture */}
         <TouchableOpacity onPress={handleProfilePicturePress}>
-          <View style={tw`size-[14] rounded-full`}>
-            <Image style={[tw`rounded-full w-full h-full`]} source={user.profile ? { uri: user.profile } : iscontact ? ProfileIcon : groupIcon} />
+          <View style={tw`size-14 rounded-full`}>
+            <Image ref={imageRef} style={[tw`rounded-full w-full h-full`]} source={user.profile ? { uri: user.profile } : iscontact ? ProfileIcon : groupIcon} />
           </View>
         </TouchableOpacity>
 
@@ -108,27 +115,25 @@ const ChatComponent = ({ user, iconChat, onAdd, iscontact, isrequest, setLoading
               {/* Notifications */}
               {isrequest && (
                 <View style={tw`flex-row items-center justify-center`}>
-                <View style={tw`flex-row items-center p-2 rounded-lg`}>
-                  <TouchableOpacity style={tw`px-2`} onPress={onDecline}>
-                    <FontAwesome name="times-circle" size={32} color={'red'} />
-                  </TouchableOpacity>
-                  <View style={tw`w-0.5 h-8 bg-${ChatComponent_BorderColor} mx-2`} />
-                  <TouchableOpacity style={tw`px-2`} onPress={handleAccept}>
-                    <Ionicons name="person-add" size={32} color={'green'} />
-                  </TouchableOpacity>
+                  <View style={tw`flex-row items-center p-2 rounded-lg`}>
+                    <TouchableOpacity style={tw`px-2`} onPress={onDecline}>
+                      <FontAwesome name="times-circle" size={32} color={'red'} />
+                    </TouchableOpacity>
+                    <View style={tw`w-0.5 h-8 bg-${ChatComponent_BorderColor} mx-2`} />
+                    <TouchableOpacity style={tw`px-2`} onPress={handleAccept}>
+                      <Ionicons name="person-add" size={32} color={'green'} />
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
               )}
             </View>
           </View>
         </View>
       </TouchableOpacity>
 
-      {/* UserProfileModal */}
-      {userProfileModalVisible && (
-        <View style={tw`absolute inset-0 flex-1 justify-center items-center bg-black bg-opacity-50`}>
-          <UserProfileModal user={selectedUser} isContact={iscontact} modalIconVisible={userProfileModalVisible} setModalIconVisible={setuserProfileModalVisible} iconSize={14} />
-        </View>
+      {/* UserProfileMiniModal */}
+      {UserProfileMiniModalVisible && (
+        <UserProfileMiniModal user={selectedUser} isContact={iscontact} initialPosition={imagePosition} modalIconVisible={UserProfileMiniModalVisible} setModalIconVisible={setUserProfileMiniModalVisible} iconSize={14} />
       )}
     </>
   );

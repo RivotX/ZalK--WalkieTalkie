@@ -2,17 +2,17 @@
 import { useEffect, useState } from "react";
 import { Stack } from "expo-router";
 import tw from "twrnc";
-import { AppState, Image, View, Text, SafeAreaView, TouchableOpacity, Modal, Alert } from "react-native";
+import { Image, View, Text, SafeAreaView, TouchableOpacity, Modal, Alert } from "react-native";
 import ProfileIcon from "../assets/images/images.png";
 import LoginScreen from "./LoginScreen";
 import ConfigIcon from "../components/shared/ConfigIcon";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useThemeColor } from "../hooks/useThemeColor";
+import UserProfileMiniModal from "../components/modals/UserProfileMiniModal";
 import UserProfileModal from "../components/modals/UserProfileModal";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SocketProvider } from "../context/SocketContext";
-import profilepicture from "../assets/images/images.png";
 import groupicon from "../assets/images/groupicon.png";
 import { Audio } from "expo-av";
 import NotificationsIcon from "../components/shared/NotificationsIcon";
@@ -21,7 +21,6 @@ import io from "socket.io-client";
 import Loading from "../components/shared/Loading";
 import getEnvVars from "../config";
 const { SERVER_URL, SOCKET_URL } = getEnvVars();
-// import {SERVER_URL, SOCKET_URL} from '@env';
 import * as Font from "expo-font";
 const loadFonts = async () => {
   await Font.loadAsync({
@@ -290,7 +289,7 @@ function RootLayout() {
 
   if (!fontsLoaded) {
     return (
-      <Modal animationType="fade" transparent={true} onRequestClose={() => {}}>
+      <Modal animationType="fade" transparent={true} onRequestClose={() => { }}>
         <View style={[tw`flex-1 justify-center items-center`]}>
           <Loading />
         </View>
@@ -302,7 +301,7 @@ function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView style={{ flex: 1 }}>
         {loading && (
-          <Modal animationType="fade" transparent={true} onRequestClose={() => {}}>
+          <Modal animationType="fade" transparent={true} onRequestClose={() => { }}>
             <View style={[tw`flex-1 justify-center items-center`, { backgroundColor: "rgba(0, 0, 0, 0.5)" }]}>
               <Loading />
             </View>
@@ -339,7 +338,7 @@ function RootLayout() {
                   headerTitleAlign: "center",
                   headerStyle: tw`bg-[${SoftbackgroundColor}]`,
                 }}
-                initialParams={{userID: userID }}
+                initialParams={{ userID: userID }}
               />
               {/* Add contacts */}
               <Stack.Screen
@@ -385,7 +384,7 @@ function RootLayout() {
                           isContact={isContact}
                         />
                         <Image source={user.profile ? { uri: user.profile } : isContact ? ProfileIcon : groupicon} style={tw`size-11 rounded-full ml-8`} />
-                        <TouchableOpacity onPress={() => setModalIconVisible(true)}>
+                        <TouchableOpacity onPress={() => setModalIconVisible(true)} style={tw`w-[60%] py-2`}>
                           <Text style={tw`text-[${textColor}] font-bold text-lg ml-2`}>{user.name ?? "Chat Room"}</Text>
                         </TouchableOpacity>
                       </View>
@@ -439,6 +438,22 @@ function RootLayout() {
                   },
                   headerTintColor: "white",
                   headerTitle: "Random ZalK",
+                }}
+              />
+              {/* UserProfileScreen */}
+              <Stack.Screen
+                name="UserProfileScreen"
+                options={({ route }) => {
+                  const user = route.params.user;
+                  console.log("user xxx", user);
+                  return {
+                    headerStyle: {
+                      backgroundColor: "black",
+                    },
+                    headerTintColor: "white",
+                    headerTitle: user.name,
+                    animationEnabled: false,
+                  };
                 }}
               />
             </Stack>

@@ -50,8 +50,7 @@ export default function AddContactsScreen() {
     }
     setUserFound(undefined);
     setLoading(true);
-    axios
-      .post(`${SERVER_URL}/searchUser`, { usernamesearch: text, userID: userID })
+    axios.post(`${SERVER_URL}/searchUser`, { usernamesearch: text, userID: userID })
       .then((res) => {
         console.log('RES DATA MUYYYYYYYYYYYYYYYY IMPORTANTE', res.data);
         const usersData = res.data.map((user) => ({

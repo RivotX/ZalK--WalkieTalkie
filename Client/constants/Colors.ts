@@ -39,6 +39,7 @@ export const Colors = {
     AudioComponent_ActiveButtonColor: '#dc2626',
     AudioComponent_ActiveBorderColor: 'red-200',
     ChatComponent_BorderColor : 'gray-300',
+    UserProfileMiniModal_BG: 'black',
   },
 
   dark: {
@@ -74,5 +75,6 @@ export const Colors = {
     AudioComponent_ActiveButtonColor: '#7f1d1d',
     AudioComponent_ActiveBorderColor: 'red-600',
     ChatComponent_BorderColor : 'zinc-800',
+    UserProfileMiniModal_BG: 'black',
   },
 };
