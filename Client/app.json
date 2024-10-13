@@ -24,7 +24,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/zalkicon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.rewalkietalkie.app",
