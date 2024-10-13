@@ -4,7 +4,7 @@
     "slug": "zalk",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/adaptive-icon.png",
+    "icon": "./assets/images/zalkicon.png",
     "scheme": "myapp",
     "extra": {
       "eas": {
@@ -14,7 +14,7 @@
     "owner": "zalk2",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/adaptive-icon.png",
+      "image": "./assets/images/zalkicon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
