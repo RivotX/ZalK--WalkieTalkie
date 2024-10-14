@@ -1,10 +1,10 @@
-import React from "react";
-import { Image,  View, Dimensions } from "react-native";
-import tw from "twrnc";
-import ProfileIcon from "../assets/images/images.png";
-import groupicon from "../assets/images/groupicon.png";
-import ImageZoom from "react-native-image-pan-zoom";
-import { useRoute } from "@react-navigation/native";
+import React from 'react';
+import { Image, View, Dimensions } from 'react-native';
+import tw from 'twrnc';
+import ProfileIcon from '../assets/images/images.png';
+import groupicon from '../assets/images/groupicon.png';
+import ImageZoom from 'react-native-image-pan-zoom';
+import { useRoute } from '@react-navigation/native';
 
 export default function ProfilePictureScreen() {
   const route = useRoute();
@@ -17,12 +17,12 @@ export default function ProfilePictureScreen() {
           cropWidth={Dimensions.get('window').width}
           cropHeight={Dimensions.get('window').height}
           imageWidth={Dimensions.get('window').width}
-          imageHeight={Dimensions.get('window').width}
+          imageHeight={Dimensions.get('window').height / 2}
           minScale={1}
           maxScale={10}
         >
           <Image
-            style={[tw`size-full rounded-md`, { resizeMode: "cover" }]}
+            style={[tw`size-full rounded-md`, { resizeMode: 'cover' }]}
             source={user.profile ? { uri: user.profile } : isContact ? ProfileIcon : groupicon}
           />
         </ImageZoom>
