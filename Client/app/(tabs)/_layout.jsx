@@ -72,25 +72,25 @@ export default function TabLayout({}) {
       if (existingStatus !== 'granted') {
         const { status } = await Notifications.requestPermissionsAsync();
         finalStatus = status;
-        Alert.alert('Status', `Permission status: ${status}`);
+        // Alert.alert('Status', `Permission status: ${status}`);
       }
       if (finalStatus !== 'granted') {
-        Alert.alert('Error', 'Failed to get push token for push notification!');
+        // Alert.alert('Error', 'Failed to get push token for push notification!');
         return;
       }
 
-      Alert.alert('Project ID', `${Constants.expoConfig.extra.eas.projectId}`);
+      // Alert.alert('Project ID', `${Constants.expoConfig.extra.eas.projectId}`);
 
       try {
         token = (await Notifications.getExpoPushTokenAsync({ projectId: Constants.expoConfig.extra.eas.projectId })).data;
-        Alert.alert('Token', `Token obtained: ${token}`);
+        // Alert.alert('Token', `Token obtained: ${token}`);
       } catch (error) {
-        Alert.alert('Error', `Failed to get Expo push token: ${error.message}`);
+        // Alert.alert('Error', `Failed to get Expo push token: ${error.message}`);
         return;
       }
       try {
         await axios.post(`${SERVER_URL}/saveToken`, { token: token, userId: userID });
-        Alert.alert('Success', 'Token saved successfully');
+        // Alert.alert('Success', 'Token saved successfully');
       } catch (error) {
         Alert.alert('Error', `Failed to save token: ${error.message}`);
         return;
@@ -104,7 +104,7 @@ export default function TabLayout({}) {
             vibrationPattern: [0, 250, 250, 250],
             lightColor: '#FF231F7C',
           });
-          Alert.alert('Android', 'Notification channel set');
+          // Alert.alert('Android', 'Notification channel set');
         } catch (error) {
           Alert.alert('Error', `Failed to set notification channel: ${error.message}`);
         }
