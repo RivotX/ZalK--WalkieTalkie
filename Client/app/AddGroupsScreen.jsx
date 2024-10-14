@@ -9,7 +9,6 @@ import getEnvVars from '../config';
 import { useSocket } from '../context/SocketContext';
 import Loading from '../components/shared/Loading';
 import { useLanguage } from '../context/LanguageContext';
-// import {SERVER_URL, SOCKET_URL} from '@env';
 
 export default function AddGroupsScreen() {
   const backgroundColor = useThemeColor({}, 'background');

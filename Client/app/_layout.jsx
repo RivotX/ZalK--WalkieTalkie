@@ -45,66 +45,15 @@ function RootLayout() {
   const [userID, setUserID] = useState(null);
   const [info, setInfo] = useState(null);
   const [socket, setSocket] = useState(null);
-  const [auxconstIsloggedIn, setAuxconstIsloggedIn] = useState(false);
   const [loading, setLoading] = useState(false);
   const [profilePicture, setProfilePicture] = useState(null);
-  // const [socketCreated, setSocketCreated] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
-  const [expoPushToken, setExpoPushToken] = useState('');
   const { Texts } = useLanguage();
   console.log('SERVER_URL:', SERVER_URL);
   console.log('SOCKET_URL:', SOCKET_URL);
 
   // ===== Changes the background color of the app =====
   setBackgroundColorAsync(backgroundColor);
-
-  // // ===== Notifications =====
-  //   const registerForPushNotificationsAsync = async () => {
-  //     let token;
-  //     if (true===true) {
-  //       const { status: existingStatus } = await Notifications.getPermissionsAsync();
-  //       let finalStatus = existingStatus;
-  //       if (existingStatus !== 'granted') {
-  //         const { status } = await Notifications.requestPermissionsAsync();
-  //         finalStatus = status;
-  //       }
-  //       if (finalStatus !== 'granted') {
-  //         alert('Failed to get push token for push notification!');
-  //         return;
-  //       }
-  //       token = (await Notifications.getExpoPushTokenAsync({
-  //         projectId: Constants.expoConfig.extra.eas.projectId, // Replace with your own projectId MIGUEL
-  //       })).data;
-  //       console.log(token, 'token and projectId', Constants.expoConfig.extra.eas.projectId);
-  //     } else {
-  //       alert('Must use physical device for Push Notifications');
-  //     }
-
-  //     if (Platform.OS === 'android') {
-  //       Notifications.setNotificationChannelAsync('default', {
-  //         name: 'default',
-  //         importance: Notifications.AndroidImportance.MAX,
-  //         vibrationPattern: [0, 250, 250, 250],
-  //         lightColor: '#FF231F7C',
-  //       });
-  //     }
-
-  //     if (Platform.OS === 'web') {
-  //       const vapidPublicKey = 'YOUR_VAPID_PUBLIC_KEY'; // Replace with your VAPID public key
-  //       token = await Notifications.getDevicePushTokenAsync({ vapidPublicKey });
-  //       console.log(token);
-  //     }
-
-  //     return token;
-  //   }
-
-  //   Notifications.setNotificationHandler({
-  //   handleNotification: async () => ({
-  //     shouldShowAlert: true,
-  //     shouldPlaySound: true,
-  //     shouldSetBadge: true,
-  //   }),
-  // });
 
   // ===== Loads the custom font =====
   useEffect(() => {

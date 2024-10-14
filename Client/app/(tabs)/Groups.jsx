@@ -1,6 +1,6 @@
 //Client/app/(tabs)/Groups.jsx
 import React, { useEffect, useState } from 'react';
-import { View, Image, Text, Modal, ScrollView } from 'react-native';
+import { View, Text, Modal, ScrollView } from 'react-native';
 import tw from 'twrnc';
 import { useThemeColor } from '../../hooks/useThemeColor';
 import { useNavigation } from '@react-navigation/native';
@@ -11,8 +11,6 @@ import ChatComponent from '../../components/shared/ChatComponent';
 import Loading from '../../components/shared/Loading';
 import FloatingAddButton from '../../components/shared/FloatingAddButton';
 import { useLanguage } from '../../context/LanguageContext';
-import { useRoute } from '@react-navigation/native';
-// import {SERVER_URL, SOCKET_URL} from '@env';
 
 export default function GroupsScreen() {
   const backgroundColor = useThemeColor({}, 'background');
@@ -34,44 +32,39 @@ export default function GroupsScreen() {
         console.log(error);
       });
   }, []);
-  
 
   const getGroups = () => {
     setLoading(true);
     console.log('USERID EN GROUP', userID);
-    axios.post(`${SERVER_URL}/getGroups`, { userId: userID })
+    axios
+      .post(`${SERVER_URL}/getGroups`, { userId: userID })
       .then((res) => {
         console.log('Grupos res:', res.data);
         setRoomsAmIn(res.data);
-
       })
       .catch((error) => {
         console.log(error);
-      }).finally(() => {
+      })
+      .finally(() => {
         setLoading(false);
       });
-  }
-    
-  
-
+  };
 
   useEffect(() => {
     if (userID != null) {
       getGroups();
-      socket.on("refreshcontacts", () => {
+      socket.on('refreshcontacts', () => {
         console.log('REFRESH groups');
         getGroups();
       });
     }
   }, [userID]);
 
-
-
   return (
     <View style={tw`flex-1 items-center bg-[${backgroundColor}]`}>
       {/* Loading */}
       {loading && (
-        <Modal animationType="fade" transparent={true} onRequestClose={() => { }}>
+        <Modal animationType="fade" transparent={true} onRequestClose={() => {}}>
           <View style={[tw`flex-1 justify-center items-center`, { backgroundColor: 'rgba(0, 0, 0, 0.5)' }]}>
             <Loading />
           </View>
@@ -80,9 +73,7 @@ export default function GroupsScreen() {
       {/* Display groups */}
       <ScrollView style={tw` w-full`}>
         {roomsAmIn && roomsAmIn.length == 0 ? (
-          <Text style={tw`text-[${textColor}] text-2xl  mt-10 font-medium text-center`}>
-            {Texts.AddGroupStarted}
-          </Text>
+          <Text style={tw`text-[${textColor}] text-2xl  mt-10 font-medium text-center`}>{Texts.AddGroupStarted}</Text>
         ) : (
           roomsAmIn.map((room, index) => {
             console.log('ROOM', room);

@@ -1,24 +1,23 @@
 //Client/app/AddContactsScreen.jsx
-import React, { useEffect, useRef, useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Vibration } from "react-native";
-import tw from "twrnc";
-import { useThemeColor } from "../hooks/useThemeColor";
-import axios from "axios";
-import ChatComponent from "../components/shared/ChatComponent";
-import { useSocket } from "../context/SocketContext";
-import Loading from "../components/shared/Loading";
-import AddDeleteFriendModal from "../components/modals/AddDeleteFriendModal";
-import getEnvVars from "../config";
+import React, { useEffect, useRef, useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Vibration } from 'react-native';
+import tw from 'twrnc';
+import { useThemeColor } from '../hooks/useThemeColor';
+import axios from 'axios';
+import ChatComponent from '../components/shared/ChatComponent';
+import { useSocket } from '../context/SocketContext';
+import Loading from '../components/shared/Loading';
+import AddDeleteFriendModal from '../components/modals/AddDeleteFriendModal';
+import getEnvVars from '../config';
 const { SERVER_URL } = getEnvVars();
 import { useLanguage } from '../context/LanguageContext';
-// import {SERVER_URL, SOCKET_URL} from '@env';
 
 export default function AddContactsScreen() {
-  const backgroundColor = useThemeColor({}, "background");
-  const SoftbackgroundColor = useThemeColor({}, "Softbackground");
-  const textColor = useThemeColor({}, "text");
+  const backgroundColor = useThemeColor({}, 'background');
+  const SoftbackgroundColor = useThemeColor({}, 'Softbackground');
+  const textColor = useThemeColor({}, 'text');
   const inputRef = useRef(null);
-  const [text, setText] = useState("");
+  const [text, setText] = useState('');
   const [userFound, setUserFound] = useState(undefined);
   const [username, setUsername] = useState();
   const [userID, setUserID] = useState(null);
@@ -43,14 +42,14 @@ export default function AddContactsScreen() {
 
   // ==== Search for users to add friends ====
   const onSearchUser = () => {
-
     if (username === undefined) {
-      console.log("No se ha podido obtener el nombre de usuario");
+      console.log('No se ha podido obtener el nombre de usuario');
       return;
     }
     setUserFound(undefined);
     setLoading(true);
-    axios.post(`${SERVER_URL}/searchUser`, { usernamesearch: text, userID: userID })
+    axios
+      .post(`${SERVER_URL}/searchUser`, { usernamesearch: text, userID: userID })
       .then((res) => {
         console.log('RES DATA MUYYYYYYYYYYYYYYYY IMPORTANTE', res.data);
         const usersData = res.data.map((user) => ({
@@ -75,7 +74,7 @@ export default function AddContactsScreen() {
   useEffect(() => {
     inputRef.current?.focus();
     if (socket != null) {
-      console.log(socket, "socket EN AddContactsScreen");
+      console.log(socket, 'socket EN AddContactsScreen');
     }
   }, []);
 
@@ -88,10 +87,10 @@ export default function AddContactsScreen() {
 
   // ==== Add user to friendlist ====
   const addUser = (message) => {
-    console.log("mesasge", message);
+    console.log('mesasge', message);
     if (socket != null && selectedUser) {
-      socket.emit("send_request", { senderId: username, receiverId: selectedUser.id, message: message });
-      console.log("Solicitud enviada a:", selectedUser.name);
+      socket.emit('send_request', { senderId: username, receiverId: selectedUser.id, message: message });
+      console.log('Solicitud enviada a:', selectedUser.name);
       setUsers(users.filter((useradded) => useradded.name !== selectedUser.name));
       setModalVisible(false);
     }
@@ -105,7 +104,7 @@ export default function AddContactsScreen() {
           <TextInput
             style={tw`h-10 w-11/12 my-3 border-b border-gray-400 px-2 text-[${textColor}]`}
             placeholderTextColor="#9ca3af"
-            placeholder= {Texts.AddContactsInput}
+            placeholder={Texts.AddContactsInput}
             autoFocus={true}
             value={text}
             onChangeText={(e) => {
@@ -118,7 +117,7 @@ export default function AddContactsScreen() {
           {text.length > 0 && (
             <TouchableOpacity
               onPress={() => {
-                setText("");
+                setText('');
                 setUserFound(undefined);
               }}
               style={tw`ml-2 p-2 w-1/12`}
@@ -150,11 +149,7 @@ export default function AddContactsScreen() {
                 iscontact={true}
               />
             ))}
-          {userFound == false && (
-            <Text style={tw`text-[${textColor}] text-2xl  mt-10 font-medium text-center`}>
-              No users found
-            </Text>
-          )}
+          {userFound == false && <Text style={tw`text-[${textColor}] text-2xl  mt-10 font-medium text-center`}>No users found</Text>}
         </ScrollView>
       </View>
       {/* Add contact modal */}
