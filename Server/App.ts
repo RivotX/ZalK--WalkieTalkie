@@ -667,7 +667,7 @@ app.post("/getContacts", async (req, res) => {
     if (contacts.length > 0) {
       res.status(200).send(contacts);
     } else {
-      res.status(404).send("No contacts found");
+      res.status(200).send([]);
     }
   } catch (error) {
     console.error("Error getting contacts:", error);
@@ -721,7 +721,7 @@ app.post('/getGroups', async (req, res) => {
       console.log('grupos del usuario', groupsList);
       res.status(200).send(groupsList);
     } else {
-      res.status(404).send('No groups found');
+      res.status(200).send([]);
     }
   } catch (error) {
     console.error('Error getting groups:', error);
@@ -752,7 +752,7 @@ app.post('/getGroupMembers', async (req, res) => {
       console.log('Miembros del grupo:', membersList);
       res.status(200).send(membersList);
     } else {
-      res.status(404).send('No members found');
+      res.status(200).send([]);
     }
   } catch (error) {
     console.error('Error getting group members:', error);
@@ -792,7 +792,7 @@ app.post("/getRequest", async (req, res) => {
       }
       res.status(200).send(requestsList);
     } else {
-      res.status(404).send("No requests found");
+      res.status(200).send([]);
     }
   } catch (error) {
     console.error("Error getting requests:", error);
