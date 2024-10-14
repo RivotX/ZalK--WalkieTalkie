@@ -140,7 +140,7 @@ Users.init(
       autoIncrement: true,
     },
     username: {
-      type: DataTypes.STRING(17),
+      type: DataTypes.STRING(16),
       unique: true,
       allowNull: false,
     },
@@ -1507,7 +1507,7 @@ const initialRooms = [
   { name: "Cocina Vegana", info: "Comparte recetas veganas." },
 ];
 
-sequelize.sync({ force: true }).then(() => {
+sequelize.sync({ alter: true }).then(() => {
   server.listen(3000, async () => {
     console.log("Server running...");
 
