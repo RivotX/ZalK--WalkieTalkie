@@ -98,7 +98,7 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
   // ====== Validar campos de registro ======
   const validateForm = () => {
     // Username validation
-    if (username.length > 30) {
+    if (username.length > 23) {
       setFormError(Texts.UsernameTooLong);
       setLoading(false);
       return;
@@ -200,7 +200,7 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
       showAlert(Texts.RegistrationFailed, Texts.EmptyUsername);
       return;
     }
-    if (username.length > 30) {
+    if (username.length > 23) {
       setFormError(Texts.UsernameTooLong);
       setLoading(false);
       showAlert(Texts.RegistrationFailed, Texts.UsernameTooLong);
