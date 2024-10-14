@@ -1,76 +1,32 @@
-import { React, useState, useEffect } from "react";
-import { SafeAreaView, Image, Text, View } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import React from "react";
+import { Image,  View, Dimensions } from "react-native";
 import tw from "twrnc";
-import { useThemeColor } from "../hooks/useThemeColor";
 import ProfileIcon from "../assets/images/images.png";
-import getEnvVars from "../config";
-import axios from "axios";
+import groupicon from "../assets/images/groupicon.png";
+import ImageZoom from "react-native-image-pan-zoom";
 import { useRoute } from "@react-navigation/native";
-import Loading from "../components/shared/Loading";
-// import {SERVER_URL, SOCKET_URL} from '@env';
 
-const ProfilePictureScreen = () => {
+export default function ProfilePictureScreen() {
   const route = useRoute();
-  const backgroundColor = useThemeColor({}, "background");
-  const { userID } = route.params;
-  const { SERVER_URL } = getEnvVars();
-  const [userName, setUserName] = useState(null);
-  const [info, setInfo] = useState();
-  const textColor = useThemeColor({}, "text");
-  const [loading, setLoading] = useState(true);
-  // Get the info from session
-  useEffect(() => {
-    axios.get(`${SERVER_URL}/getsession`, { withCredentials: true })
-      .then((res) => {
-        setInfo(res.data.user.info);
-        setUserName(res.data.user.username);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
-
-  // ===== Fetches the user profile picture =======
-
-  const [profilePicture, setProfilePicture] = useState(null);
-  useEffect(() => {
-    fetchProfilePicture();
-  }, [userID]);
-
-  const fetchProfilePicture = async () => {
-    if (!userID) return;
-    try {
-      console.log("userID: ", userID);
-      const response = await axios.get(`${SERVER_URL}/get-image-url/${userID}`);
-      setProfilePicture(response.data.profilePicture);
-      setLoading(false);
-      console.log("response.data.profilePicture", response.data.profilePicture);
-    } catch (error) {
-      console.error("Error fetching profile picture:", error);
-      setLoading(false);
-    }
-  };
+  const { user, isContact } = route.params;
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaView style={tw`flex-1 bg-[${backgroundColor}] items-center justify-start`}>
-        <View style={tw`w-4/5 h-1/2 bg-[${backgroundColor}] mt-[10%]`}>
-          {loading
-            ? <Loading />
-            : (
-              <>
-                <Text style={tw`text-[${textColor}] text-4xl font-bold text-center my-4 py-2 border-b  border-gray-400 w-full`}>{userName}</Text>
-
-                <Image source={profilePicture ? { uri: profilePicture } : ProfileIcon} style={tw`size-full`} resizeMode="cover" />
-                <Text style={tw`text-[${textColor}] text-lg font-bold text-center mt-4 mb-2 border-t border-gray-400 w-full`}>{info}</Text>
-              </>
-            )
-          }
-        </View>
-      </SafeAreaView>
-    </GestureHandlerRootView>
+    <View style={tw`flex-1 items-center bg-black`}>
+      <View style={[tw`w-full flex-1 justify-center items-center`]}>
+        <ImageZoom
+          cropWidth={Dimensions.get('window').width}
+          cropHeight={Dimensions.get('window').height}
+          imageWidth={Dimensions.get('window').width}
+          imageHeight={Dimensions.get('window').width}
+          minScale={1}
+          maxScale={10}
+        >
+          <Image
+            style={[tw`size-full rounded-md`, { resizeMode: "cover" }]}
+            source={user.profile ? { uri: user.profile } : isContact ? ProfileIcon : groupicon}
+          />
+        </ImageZoom>
+      </View>
+    </View>
   );
-};
-
-export default ProfilePictureScreen;
+}

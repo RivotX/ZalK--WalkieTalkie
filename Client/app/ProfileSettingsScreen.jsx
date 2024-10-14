@@ -26,9 +26,7 @@ const ProfileSettingsScreen = () => {
   const [PropToChange, setPropToChange] = useState("");
   const [ModalIcon, setModalIcon] = useState("");
   const [isPassword, setIsPassword] = useState(false);
-  const [username, setUsername] = useState("");
-  const [userEmail, setuserEmail] = useState("");
-  const [userID, setUserID] = useState("");
+  const [user, setUser] = useState({});
   const [userInfo, setUserInfo] = useState("");
   const [currentProp, setCurrentProp] = useState("");
   const [entireUserInfo, setEntireUserInfo] = useState("");
@@ -47,13 +45,17 @@ const ProfileSettingsScreen = () => {
   };
   // Get session
   useEffect(() => {
-    axios
-      .get(`${SERVER_URL}/getsession`, { withCredentials: true })
+    axios.get(`${SERVER_URL}/getsession`, { withCredentials: true })
       .then((res) => {
         console.log("res.data", res.data);
-        setUsername(res.data.user.username);
-        setuserEmail(res.data.user.email);
-        setUserID(res.data.user.id);
+        setUser({
+          id: res.data.user.id,
+          name: res.data.user.username,
+          profile: res.data.user.profilePicture ?? null,
+          info: res.data.user.info,
+          isBusy: res.data.user.isBusy,
+          email: res.data.user.email,
+        })
         if (res.data.user.info) {
           setEntireUserInfo(res.data.user.info);
           setUserInfo(truncatedInfo(res.data.user.info));
@@ -66,17 +68,21 @@ const ProfileSettingsScreen = () => {
 
   useEffect(() => {
     fetchProfilePicture();
-  }, [userID]);
+  }, [user.id]);
 
   // Regresh session
   const refreshSession = () => {
-    axios.post(`${SERVER_URL}/refreshSession`, { id: userID }, { withCredentials: true })
+    axios.post(`${SERVER_URL}/refreshSession`, { id: user.id }, { withCredentials: true })
       .then((res) => {
-        setUsername(res.data.user.username);
-        setuserEmail(res.data.user.email);
         setEntireUserInfo(res.data.user.info);
         setUserInfo(truncatedInfo(res.data.user.info));
-        res.data.user.info;
+        setUser({
+          id: res.data.user.id,
+          name: res.data.user.username,
+          profile: res.data.user.profilePicture ?? null,
+          info: res.data.user.info,
+          email: res.data.user.email,
+        })
       })
       .catch((error) => {
         console.log(error);
@@ -112,11 +118,11 @@ const ProfileSettingsScreen = () => {
         if (responseJson.fileUrl) {
           // Save the image URL to your database
           const imageUrl = responseJson.fileUrl;
-          const userId = userID; // Replace with the actual user ID
+          const userId = user.id; // Replace with the actual user ID
           await axios.post(SERVER_URL + "/save-image-url", { profilePicture: imageUrl, userId })
             .then((res) => {
               console.log("Image uploaded successfully: ", res.data);
-              setProfilePicture(imageUrl);
+              setUser((prevUser) => ({ ...prevUser, profile: imageUrl }));
             })
             .catch((error) => {
               console.error("Error saving image URL:", error);
@@ -152,13 +158,13 @@ const ProfileSettingsScreen = () => {
     } else if (id === "email") {
       setPropToChange("email");
       setModalIcon("mail-outline");
-      setCurrentProp(userEmail);
+      setCurrentProp(user.email);
       setIsPassword(false);
       setMaxLength(100);
     } else if (id === "username") {
       setPropToChange("username");
       setModalIcon("information-circle-outline");
-      setCurrentProp(username);
+      setCurrentProp(user.name);
       setIsPassword(false);
       setMaxLength(30);
     }
@@ -168,12 +174,16 @@ const ProfileSettingsScreen = () => {
 
   // ===== Get the profile picture from server =====
   const fetchProfilePicture = async () => {
-    if (!userID) return;
+    if (!user.id) return;
     try {
-      console.log("userID: ", userID);
-      const response = await axios.get(`${SERVER_URL}/get-image-url/${userID}`);
-      setProfilePicture(response.data.profilePicture);
+      console.log("userID: ", user.id);
+      const response = await axios.get(`${SERVER_URL}/get-image-url/${user.id}`);
+      setUser((prevUser) => ({
+        ...prevUser,
+        profile: response.data.profilePicture,
+      }));
       console.log("response.data.profilePicture", response.data.profilePicture);
+      console.log("user.profile", user.profile);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching profile picture:", error);
@@ -250,13 +260,13 @@ const ProfileSettingsScreen = () => {
         <View style={tw`w-full h-1/3 flex items-center justify-center mt-2`}>
           <TouchableOpacity
             style={tw`bg-black h-42 w-42 rounded-full relative`}
-            onPress={() => navigation.navigate("ProfilePictureScreen", { userID: userID })}
+            onPress={() => navigation.navigate("UserProfileScreen", { user: user, isContact: true })}
           >
             {loading ? (
               <Loading />
             ) : (
-              profilePicture ? (
-                <Image source={{ uri: profilePicture }} style={tw`size-full rounded-full`} />
+              user.profile ? (
+                <Image source={{ uri: user.profile }} style={tw`size-full rounded-full`} />
               ) : (
                 <Image source={ProfileIcon} style={tw`size-full rounded-full`} />
               )
@@ -268,7 +278,7 @@ const ProfileSettingsScreen = () => {
               <Ionicons name="image-outline" size={24} color={textColor} />
             </TouchableOpacity>
           </TouchableOpacity>
-          <Text style={tw`text-[${textColor}] text-lg`}>{username}</Text>
+          <Text style={tw`text-[${textColor}] text-lg`}>{user.name}</Text>
         </View>
         <View style={tw`w-full flex items-center justify-center gap-2`}>
           {/* User name */}
@@ -286,7 +296,7 @@ const ProfileSettingsScreen = () => {
                 <View style={tw`flex-row w-full justify-between items-center`}>
                   <View>
                     <Text style={tw`text-[${disabledText}] mb-1`}>{Texts.Username}</Text>
-                    <Text style={tw`text-[${textColor}]`}>{username}</Text>
+                    <Text style={tw`text-[${textColor}]`}>{user.name}</Text>
                   </View>
                   <Ionicons name="build-outline" size={20} color={textColor} />
                 </View>
@@ -332,7 +342,7 @@ const ProfileSettingsScreen = () => {
                 <View style={tw`flex-row w-full justify-between items-center`}>
                   <View>
                     <Text style={tw`text-[${disabledText}] mb-1`}>{Texts.Email}</Text>
-                    <Text style={tw`text-[${textColor}]`}>{userEmail}</Text>
+                    <Text style={tw`text-[${textColor}]`}>{user.email}</Text>
                   </View>
                   <Ionicons name="build-outline" size={20} color={textColor} />
                 </View>
@@ -372,7 +382,7 @@ const ProfileSettingsScreen = () => {
             setModalVisibility={setModalVisibility}
             isPassword={isPassword}
             refreshSession={refreshSession}
-            userID={userID}
+            userID={user.id}
             currentProp={currentProp}
             maxLength={maxLength}
           />

@@ -409,13 +409,18 @@ function RootLayout() {
               />
               {/* Profile photo */}
               <Stack.Screen
-                name="ProfilePictureScreen"
-                options={{
-                  headerStyle: {
-                    backgroundColor: SoftbackgroundColor,
-                  },
-                  headerTintColor: textColor,
-                  headerTitle: Texts.ProfilePhoto,
+                name="UserProfileScreen"
+                options={({ route }) => {
+                  const user = route.params.user;
+                  console.log("user xxx", user);
+                  return {
+                    headerStyle: {
+                      backgroundColor: "black",
+                    },
+                    headerTintColor: "white",
+                    headerTitle: user.name,
+                    animationEnabled: false,
+                  };
                 }}
               />
               {/* NotificationsScreen */}
@@ -439,23 +444,7 @@ function RootLayout() {
                   headerTintColor: "white",
                   headerTitle: "Random ZalK",
                 }}
-              />
-              {/* UserProfileScreen */}
-              <Stack.Screen
-                name="UserProfileScreen"
-                options={({ route }) => {
-                  const user = route.params.user;
-                  console.log("user xxx", user);
-                  return {
-                    headerStyle: {
-                      backgroundColor: "black",
-                    },
-                    headerTintColor: "white",
-                    headerTitle: user.name,
-                    animationEnabled: false,
-                  };
-                }}
-              />
+              />              
             </Stack>
           </SocketProvider>
         ) : (
