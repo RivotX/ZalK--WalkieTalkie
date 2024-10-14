@@ -20,8 +20,8 @@ export async function AudioNotification(senderUsername: string , token: string, 
     to: token,
     sound: 'default',
     title: `@${senderUsername} is currently speaking.`,
-    body: "Walkie Talkie",
-    data: {data : "goes here"},
+    body: "Walkie Talkie Con audio",
+    data: {audioData : audioData, _displayInForeground: true},
     // Asegúrate de que la notificación se muestre en primer plano
   });
 
