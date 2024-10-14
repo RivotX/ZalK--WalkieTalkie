@@ -10,7 +10,7 @@ import { useLanguage } from "../../context/LanguageContext";
 import { showAlert } from "../shared/ShowAlert";
 // import {SERVER_URL, SOCKET_URL} from '@env';
 import getEnvVars from "../../config";
-const { SERVER_URL, SOCKET_URL  } = getEnvVars();
+const { SERVER_URL, SOCKET_URL } = getEnvVars();
 
 const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoading }) => {
   const [username, setUsername] = useState("");
@@ -97,10 +97,22 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
 
   // ====== Validar campos de registro ======
   const validateForm = () => {
+    // Username validation
+    if (username.length > 30) {
+      setFormError(Texts.UsernameTooLong);
+      setLoading(false);
+      return;
+    }
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (email.length > 0 && !emailRegex.test(email)) {
       setFormError(Texts.InvalidEmail);
+      setLoading(false);
+      return;
+    }
+
+    if (email.length > 100) {
+      setFormError(Texts.EmailTooLong);
       setLoading(false);
       return;
     }
@@ -116,6 +128,11 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
       setLoading(false);
       return;
     }
+    if (password.length > 30 || Confpassword.length > 30) {
+      setFormError(Texts.PasswordTooLong);
+      setLoading(false);
+      return
+    }
 
     setFormError("");
   };
@@ -124,7 +141,7 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
     if (!LoginScreenState) {
       validateForm();
     }
-  }, [email, password, Confpassword, LoginScreenState]);
+  }, [email, password, Confpassword, LoginScreenState, username]);
 
   //====== Sumbit de login o registro  ======
   const handleSumbit = () => {
@@ -176,25 +193,47 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
   // ===== Sign up ======= 
   const handleRegister = () => {
     setLoading(true);
+    // === Username validation ===
     if (username.trim().length === 0) {
       setFormError(Texts.EmptyUsername);
       setLoading(false);
       showAlert(Texts.RegistrationFailed, Texts.EmptyUsername);
       return;
     }
+    if (username.length > 30) {
+      setFormError(Texts.UsernameTooLong);
+      setLoading(false);
+      showAlert(Texts.RegistrationFailed, Texts.UsernameTooLong);
+      return;
+    }
+    // === Password validation ===
     if (password.trim().length === 0 || Confpassword.trim().length === 0) {
       setFormError(Texts.EmptyPassword);
       setLoading(false);
       showAlert(Texts.RegistrationFailed, Texts.EmptyPassword);
       return;
     }
+    if (password.length > 30 || Confpassword.length > 30) {
+      setFormError(Texts.PasswordTooLong);
+      setLoading(false);
+      showAlert(Texts.RegistrationFailed, Texts.PasswordTooLong);
+      return;
+    }
+    // === Email validation ===
     if (email.trim().length === 0) {
       setFormError(Texts.EmptyEmail);
       setLoading(false);
       showAlert(Texts.RegistrationFailed, Texts.EmptyEmail);
       return;
     }
-    if (formError == Texts.PasswordsDontMatch){
+    if (email.length > 100) {
+      setFormError(Texts.EmailTooLong);
+      setLoading(false);
+      showAlert(Texts.RegistrationFailed, Texts.EmailTooLong);
+      return;
+    }
+
+    if (formError == Texts.PasswordsDontMatch) {
       showAlert(Texts.RegistrationFailed, Texts.PasswordsDontMatch);
     }
     if (formError === "") {
