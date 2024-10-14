@@ -11,6 +11,10 @@
         "projectId": "ec6cdba1-dd3d-4516-bcc8-96647242ea00"
       }
     },
+    "notification": {
+      "icon": "./assets/images/icon_notification.png",
+      "color": "#000000"
+    },
     "owner": "changuazzz",
     "userInterfaceStyle": "automatic",
     "splash": {
