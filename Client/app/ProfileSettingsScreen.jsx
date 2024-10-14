@@ -260,7 +260,7 @@ const ProfileSettingsScreen = () => {
         <View style={tw`w-full h-1/3 flex items-center justify-center mt-2`}>
           <TouchableOpacity
             style={tw`bg-black h-42 w-42 rounded-full relative`}
-            onPress={() => navigation.navigate("UserProfileScreen", { user: user, isContact: true })}
+            onPress={() => navigation.navigate("ProfilePictureScreen", { user: user, isContact: true })}
           >
             {loading ? (
               <Loading />

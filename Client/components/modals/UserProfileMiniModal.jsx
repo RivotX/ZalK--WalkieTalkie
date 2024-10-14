@@ -118,7 +118,7 @@ const UserProfileMiniModal = ({ user, modalIconVisible, setModalIconVisible, ico
   };
   // ==== Handle profile image press ====
   const handleProfileImagePress = () => {
-    navigation.navigate("UserProfileScreen", { user, isContact });
+    navigation.navigate("ProfilePictureScreen", { user, isContact });
     setModalIconVisible(false);
     setHideText(false);
     setHideInfo(false);

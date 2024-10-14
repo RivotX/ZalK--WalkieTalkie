@@ -409,7 +409,7 @@ function RootLayout() {
               />
               {/* Profile photo */}
               <Stack.Screen
-                name="UserProfileScreen"
+                name="ProfilePictureScreen"
                 options={({ route }) => {
                   const user = route.params.user;
                   console.log("user xxx", user);
