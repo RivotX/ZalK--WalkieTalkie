@@ -1124,9 +1124,9 @@ io.on("connection", (socket: Socket) => {
     // =================================================================
   // *Socket Accept Request*
   // =================================================================
-  socket.on("accept_request", async (data: { senderId: number; receiverId: string }) => {
+   
+  const handleAcceptRequest = async (senderId: number, receiverId: string) => {
     try {
-      const { senderId, receiverId } = data;
       console.log("Entra a ACCEPT REQUEST");
 
       const userSender = await Users.findOne({
@@ -1137,14 +1137,14 @@ io.on("connection", (socket: Socket) => {
 
       const userReceiver = await Users.findOne({
         where: {
-          username: data.receiverId,
+          username: receiverId,
         },
       });
 
       const currentRoom = `${userSender?.username}-${receiverId}`;
 
       // Guardar contactos
-      savecontacts(userSender, userReceiver?.id, data.receiverId, currentRoom);
+      savecontacts(userSender, userReceiver?.id, receiverId, currentRoom);
       savecontacts(userReceiver, userSender?.id, userSender?.username, currentRoom);
 
       if (userSender && userReceiver) {
@@ -1196,7 +1196,12 @@ io.on("connection", (socket: Socket) => {
       console.log(`Solicitud aceptada de ${receiverId} a ${senderId}`);
     } catch (error) {
       console.error("Error en accept_request:", error);
-    }
+    }}
+
+
+  socket.on("accept_request", async (data: { senderId: number; receiverId: string }) => {
+    const { senderId, receiverId } = data;
+    await handleAcceptRequest(senderId, receiverId);
   });
   // ======================*END Socket accept request*===================
 
@@ -1227,7 +1232,7 @@ io.on("connection", (socket: Socket) => {
         }
 
         if (RequestSender.includes(userA.id)) {
-          socket.emit("accept_request", { senderId: userB.id, receiverId: userA.username });
+          await handleAcceptRequest(userB.id,userA.username);
 
           console.log("Ya esta en las solicitudes");
 
@@ -1264,6 +1269,7 @@ io.on("connection", (socket: Socket) => {
       console.error("Error en send_request:", error);
     }
   });
+
 
   // ======================*END Socket send request*===================
 
