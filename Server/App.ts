@@ -1121,72 +1121,7 @@ io.on("connection", (socket: Socket) => {
     console.log("User left room:", room);
   });
 
-  // send_request
-  socket.on("send_request", async (data: { senderId: string; receiverId: string; message: string }) => {
-    const { senderId, receiverId, message } = data;
-    try {
-      const userA = await Users.findOne({
-        where: {
-          id: receiverId,
-        },
-      });
-
-      const userB = await Users.findOne({
-        where: {
-          username: senderId,
-        },
-      });
-      if (userA && userA !== null && userA.requests !== null && userB && userB !== null && userB.requests !== null) {
-        const receiverSocketId = connectedUsers[userA.id];
-
-        // Si el usuario ya esta en las solicitudes no se envia la notificacion y se agregan a la lista de contactos
-        let RequestSender = JSON.parse(userB.requests);
-
-        if (typeof RequestSender === "string") {
-          RequestSender = JSON.parse(RequestSender);
-        }
-
-        if (RequestSender.includes(userA.id)) {
-          socket.emit("accept_request", { senderId: userB.id, receiverId: userA.username });
-
-          console.log("Ya esta en las solicitudes");
-
-          return;
-        }
-        // se envia la notificacion al dispositivo del usuario
-        await requestNotification(senderId, userA.token, message);
-        console.log("Notification sent");
-        // ==============================================
-
-        let requestsA = JSON.parse(userA.requests);
-
-        if (typeof requestsA === "string") {
-          requestsA = JSON.parse(requestsA);
-        }
-        const newrequest = userB.id;
-        if (!requestsA.includes(newrequest)) {
-          if (receiverSocketId) {
-            io.to(receiverSocketId).emit("receive_request", { userIdSender: userB.id, senderId, message }); // se envia la señal para que se actualicen las solicitudes en tiempo real
-            console.log(`Solicitud enviada de ${senderId} a ${receiverId}`);
-          }
-          // se verifica si la solicitud ya esta en la lista
-          requestsA.push(newrequest);
-          userA.setrequests(requestsA);
-          userA.save().then(() => {
-            console.log("La solicitud ha sido guardada exitosamente.");
-            io.to(receiverSocketId).emit("refreshcontacts"); // se envia la señal para que se actualicen las solicitudes en tiempo real
-          });
-        } else {
-          console.log("Ya esta en las solicitudes");
-        }
-      }
-    } catch (error) {
-      console.error("Error en send_request:", error);
-    }
-  });
-
-  // ======================*END Socket send request*===================
-  // =================================================================
+    // =================================================================
   // *Socket Accept Request*
   // =================================================================
   socket.on("accept_request", async (data: { senderId: number; receiverId: string }) => {
@@ -1264,6 +1199,73 @@ io.on("connection", (socket: Socket) => {
     }
   });
   // ======================*END Socket accept request*===================
+
+
+  // send_request
+  socket.on("send_request", async (data: { senderId: string; receiverId: string; message: string }) => {
+    const { senderId, receiverId, message } = data;
+    try {
+      const userA = await Users.findOne({
+        where: {
+          id: receiverId,
+        },
+      });
+
+      const userB = await Users.findOne({
+        where: {
+          username: senderId,
+        },
+      });
+      if (userA && userA !== null && userA.requests !== null && userB && userB !== null && userB.requests !== null) {
+        const receiverSocketId = connectedUsers[userA.id];
+
+        // Si el usuario ya esta en las solicitudes no se envia la notificacion y se agregan a la lista de contactos
+        let RequestSender = JSON.parse(userB.requests);
+
+        if (typeof RequestSender === "string") {
+          RequestSender = JSON.parse(RequestSender);
+        }
+
+        if (RequestSender.includes(userA.id)) {
+          socket.emit("accept_request", { senderId: userB.id, receiverId: userA.username });
+
+          console.log("Ya esta en las solicitudes");
+
+          return;
+        }
+        // se envia la notificacion al dispositivo del usuario
+        await requestNotification(senderId, userA.token, message);
+        console.log("Notification sent");
+        // ==============================================
+
+        let requestsA = JSON.parse(userA.requests);
+
+        if (typeof requestsA === "string") {
+          requestsA = JSON.parse(requestsA);
+        }
+        const newrequest = userB.id;
+        if (!requestsA.includes(newrequest)) {
+          if (receiverSocketId) {
+            io.to(receiverSocketId).emit("receive_request", { userIdSender: userB.id, senderId, message }); // se envia la señal para que se actualicen las solicitudes en tiempo real
+            console.log(`Solicitud enviada de ${senderId} a ${receiverId}`);
+          }
+          // se verifica si la solicitud ya esta en la lista
+          requestsA.push(newrequest);
+          userA.setrequests(requestsA);
+          userA.save().then(() => {
+            console.log("La solicitud ha sido guardada exitosamente.");
+            io.to(receiverSocketId).emit("refreshcontacts"); // se envia la señal para que se actualicen las solicitudes en tiempo real
+          });
+        } else {
+          console.log("Ya esta en las solicitudes");
+        }
+      }
+    } catch (error) {
+      console.error("Error en send_request:", error);
+    }
+  });
+
+  // ======================*END Socket send request*===================
 
   // =================================================================
   // *Socket send audio*
