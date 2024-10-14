@@ -4,6 +4,7 @@ import tw from 'twrnc';
 import { useThemeColor } from '../../hooks/useThemeColor';
 import { Ionicons } from '@expo/vector-icons';
 import UserProfileMiniModal from '../modals/UserProfileMiniModal';
+import UserProfileModal from '../modals/UserProfileModal';
 import axios from 'axios';
 import { useSocket } from '../../context/SocketContext';
 import getEnvVars from '../../config';
@@ -21,6 +22,7 @@ const ChatComponent = ({ user, iconChat, onAdd, iscontact, isrequest, setLoading
   const [userInfo, setUserInfo] = useState();
   const [selectedUser, setSelectedUser] = useState(user);
   const [UserProfileMiniModalVisible, setUserProfileMiniModalVisible] = useState(false);
+  const [UserProfileModalVisible, setUserProfileModalVisible] = useState(false);
   const [imagePosition, setImagePosition] = useState(null);
   const imageRef = useRef(null);
   const ChatComponent_BorderColor = useThemeColor({}, 'ChatComponent_BorderColor');
@@ -53,7 +55,7 @@ const ChatComponent = ({ user, iconChat, onAdd, iscontact, isrequest, setLoading
 
   const handleGeneralPress = () => {
     if (showModalOnPress) {
-      setUserProfileMiniModalVisible(true);
+      setUserProfileModalVisible(true);
       setSelectedUser(user);
     } else if (onGeneralPress) {
       onGeneralPress();
@@ -83,7 +85,11 @@ const ChatComponent = ({ user, iconChat, onAdd, iscontact, isrequest, setLoading
         {/* Profile Picture */}
         <TouchableOpacity onPress={handleProfilePicturePress}>
           <View style={tw`size-14 rounded-full`}>
-            <Image ref={imageRef} style={[tw`rounded-full w-full h-full`]} source={user.profile ? { uri: user.profile } : iscontact ? ProfileIcon : groupIcon} />
+            <Image
+              ref={imageRef}
+              style={[tw`rounded-full w-full h-full`]}
+              source={user.profile ? { uri: user.profile } : iscontact ? ProfileIcon : groupIcon}
+            />
           </View>
         </TouchableOpacity>
 
@@ -94,7 +100,11 @@ const ChatComponent = ({ user, iconChat, onAdd, iscontact, isrequest, setLoading
               <Text style={[{ fontSize: 16 }, tw`font-bold text-[${textColor}]`]}>
                 {user.name} {user.isBusy && <Ionicons name="notifications-off" size={18} color="red" />}
               </Text>
-              {isrequest ? <Text style={tw`text-gray-400`}>{Texts.SentRequest}</Text> : <Text style={tw`text-gray-400`}>{isFriend ? Texts.TapToChat : Texts.TapForDetails}</Text>}
+              {isrequest ? (
+                <Text style={tw`text-gray-400`}>{Texts.SentRequest}</Text>
+              ) : (
+                <Text style={tw`text-gray-400`}>{isFriend ? Texts.TapToChat : Texts.TapForDetails}</Text>
+              )}
             </View>
 
             <View style={tw`${isrequest && 'w-[40%]'}`}>
@@ -133,7 +143,22 @@ const ChatComponent = ({ user, iconChat, onAdd, iscontact, isrequest, setLoading
 
       {/* UserProfileMiniModal */}
       {UserProfileMiniModalVisible && (
-        <UserProfileMiniModal user={selectedUser} isContact={iscontact} initialPosition={imagePosition} modalIconVisible={UserProfileMiniModalVisible} setModalIconVisible={setUserProfileMiniModalVisible} iconSize={14} />
+        <UserProfileMiniModal
+          user={selectedUser}
+          isContact={iscontact}
+          initialPosition={imagePosition}
+          modalIconVisible={UserProfileMiniModalVisible}
+          setModalIconVisible={setUserProfileMiniModalVisible}
+        />
+      )}
+      {/* UserProfileModal */}
+      {UserProfileModalVisible && (
+        <UserProfileModal
+          user={selectedUser}
+          isContact={iscontact}
+          modalIconVisible={UserProfileModalVisible}
+          setModalIconVisible={setUserProfileModalVisible}
+        />
       )}
     </>
   );

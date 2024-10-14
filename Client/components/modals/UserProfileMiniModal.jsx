@@ -61,7 +61,7 @@ const UserProfileMiniModal = ({ user, modalIconVisible, setModalIconVisible, ico
           useNativeDriver: false,
         }),
         Animated.timing(size, {
-          toValue: 260,
+          toValue: 268,
           duration: 300,
           easing: Easing.out(Easing.ease),
           useNativeDriver: false,
@@ -140,7 +140,7 @@ const UserProfileMiniModal = ({ user, modalIconVisible, setModalIconVisible, ico
             />
           </TouchableOpacity>
           {/* User name */}
-          {!hideText && (
+          {!hideInfo && (
             <Animated.View style={[tw`absolute top-0 left-0 justify-start items-start bg-black bg-opacity-50 px-2 py-1`, { width: size }]}>
               <Text style={tw`text-white text-left text-lg`}>{user.name}</Text>
             </Animated.View>
