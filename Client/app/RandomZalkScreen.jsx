@@ -9,6 +9,7 @@ import { useThemeColor } from '../hooks/useThemeColor';
 import { useRoute } from '@react-navigation/native';
 import { showAlert } from '../components/shared/ShowAlert';
 import { useLanguage } from '../context/LanguageContext';
+import { AppState, AppStateStatus } from 'react-native';
 
 export default function RandomZalkScreen() {
   const route = useRoute();
@@ -35,6 +36,7 @@ export default function RandomZalkScreen() {
   const mb = height < 800 ? 3 : 6;
   const AudioCancelButtonMT = height < 800 ? "3" : "6";
   const EndConButtonBottom = height < 800 ? "5" : "10";
+  const [appState, setAppState] = useState(AppState.currentState);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -90,6 +92,31 @@ export default function RandomZalkScreen() {
     socket.emit('leave_room', RandomUser.room, RandomUser.userID);
     navigator.navigate("RandomZalk");
   };
+
+    // ===== AppState =====
+    useEffect(() => {
+      if (socket != null) {
+        const handleAppStateChange = (nextAppState) => {
+          if (nextAppState === 'background') {
+            onBackground();
+          }
+        };
+        const subscription = AppState.addEventListener('change', handleAppStateChange);
+  
+        return () => {
+          subscription.remove();
+        };
+      }
+    }, [appState, socket]);
+  
+    const onBackground = () => {
+      console.log('La app ha vuelto al primer plano.');
+      closeConnection();
+      
+    };
+  
+
+
 
   return (
     <LinearGradient
