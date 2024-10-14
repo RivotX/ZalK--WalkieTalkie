@@ -20,9 +20,9 @@ export async function AudioNotification(senderUsername: string , token: string, 
     to: token,
     sound: 'default',
     title: `@${senderUsername} is currently speaking.`,
-    data: { audioData, _displayInForeground: true },
+    body: "Walkie Talkie",
+    data: {data : "goes here"},
     // Asegúrate de que la notificación se muestre en primer plano
-
   });
 
   // The Expo push notification service accepts batches of notifications
