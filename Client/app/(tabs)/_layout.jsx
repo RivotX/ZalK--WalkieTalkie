@@ -129,18 +129,18 @@ export default function TabLayout({}) {
 
   Notifications.setNotificationHandler({
     //CONFIGURACION DE NOTIFICACIONES AL RECIBIR UNA NOTIFICACION CON AUDIO
-    handleNotification: async (notification) => {
-      const audioData = notification.request.content.data.audioData;
-      if (audioData) {
-        const { sound } = await Audio.Sound.createAsync({ uri: audioData });
-        await sound.playAsync();
-      }
-      return {
+    // handleNotification: async (notification) => {
+    //   const audioData = notification.request.content.data.audioData;
+    //   if (audioData) {
+    //     const { sound } = await Audio.Sound.createAsync({ uri: audioData });
+    //     await sound.playAsync();
+    //   }
+    //   return {
         shouldShowAlert: true,
         shouldPlaySound: true,
         shouldSetBadge: false,
-      };
-    },
+    //   };
+    // },
   });
 
   useEffect(() => {

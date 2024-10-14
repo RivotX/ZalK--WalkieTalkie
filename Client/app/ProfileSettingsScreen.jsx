@@ -99,6 +99,10 @@ const ProfileSettingsScreen = () => {
 
     if (image.assets && image.assets.length > 0) {
       // Upload the image to the server
+      if(image.assets[0].fileSize > 10000000) { 
+        showAlert("Error", `${Texts.ImageSizeError }`);
+        return;
+      }
       const formData = new FormData();
       formData.append("file", {
         uri: image.assets[0].uri,

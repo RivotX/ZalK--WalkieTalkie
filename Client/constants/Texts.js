@@ -90,6 +90,7 @@ export const Texts = {
     UsernameTooLong: 'Username cannot be longer than 16 characters',
     PasswordTooLong: 'Password cannot be longer than 30 characters',
     EmailTooLong: 'Email cannot be longer than 100 characters',
+    ImageSizeError: 'Image size must be less than 10MB',
   },
   es: {
     Members: 'Miembros',
@@ -180,5 +181,6 @@ export const Texts = {
     UsernameTooLong: 'El nombre de usuario no debe superar los 16 caracteres',
     PasswordTooLong: 'La contraseña no debe superar los 30 caracteres',
     EmailTooLong: 'El correo no debe superar los 100 caracteres',
+    ImageSizeError: 'El tamaño de la imagen debe ser inferior a 10MB',
   },
 };
