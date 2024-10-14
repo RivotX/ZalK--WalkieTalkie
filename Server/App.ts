@@ -153,7 +153,7 @@ Users.init(
       unique: true,
       allowNull: false,
     },
-    password: DataTypes.STRING(30),
+    password: DataTypes.STRING(128),
 
     groups: {
       type: DataTypes.JSON,
