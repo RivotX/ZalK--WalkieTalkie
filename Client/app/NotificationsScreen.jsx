@@ -23,7 +23,6 @@ const NotificationsScreen = () => {
 
   // ===== Get session =====
   useEffect(() => {
-    setLoading(true);
     axios.get(`${SERVER_URL}/getsession`, { withCredentials: true })
       .then((res) => {
         setUserID(res.data.user.id);
@@ -31,10 +30,8 @@ const NotificationsScreen = () => {
       })
       .catch((error) => {
         console.log(error);
-        setLoading(false);
       })
       .finally(() => {
-        setLoading(false);
       });
   }, []);
 
@@ -63,7 +60,7 @@ const NotificationsScreen = () => {
   useEffect(() => { 
     if (userID != null) {
       getRequests();
-      socket.on('refreshcontacts', () => {
+      socket.on("refreshcontacts", () => {
       getRequests();
       });
     }

@@ -1167,6 +1167,20 @@ io.on("connection", (socket: Socket) => {
 
         if (senderSocket) {
           senderSocket.join(currentRoom);
+
+          let requestsSender = JSON.parse(userSender.requests);
+
+          if (typeof requestsSender === "string") {
+            requestsSender = JSON.parse(requestsSender);
+          }
+
+          const updatedRequests = requestsSender.filter((r: any) => r !== userReceiver.id);
+          userSender.setrequests(updatedRequests);
+
+          await userSender.save(); // Asegúrate de que esto devuelva una promesa
+
+          console.log("La solicitud ha sido aceptada exitosamente.");
+          io.to(senderSocketId).emit("refreshcontacts"); // Enviar señal para que se actualicen las solicitudes en tiempo real
         }
       }
 
@@ -1191,7 +1205,10 @@ io.on("connection", (socket: Socket) => {
           console.log("La solicitud ha sido aceptada exitosamente.");
           io.to(receiverSocketId).emit("refreshcontacts"); // Enviar señal para que se actualicen las solicitudes en tiempo real
         }
+
+
       }
+      
 
       console.log(`Solicitud aceptada de ${receiverId} a ${senderId}`);
     } catch (error) {

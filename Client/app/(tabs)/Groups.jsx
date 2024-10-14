@@ -58,7 +58,7 @@ export default function GroupsScreen() {
   useEffect(() => {
     if (userID != null) {
       getGroups();
-      socket.on('refreshcontacts', () => {
+      socket.on("refreshcontacts", () => {
         console.log('REFRESH groups');
         getGroups();
       });

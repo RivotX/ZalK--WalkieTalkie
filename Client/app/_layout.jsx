@@ -215,7 +215,7 @@ function RootLayout() {
       });
       setLoading(false);
       setIsSocketConnected(true);
-      socket.on('refreshcontacts', () => {
+      socket.on("refreshcontacts", () => {
         console.log('refreshing session in RootLayout');
         axios
           .post(`${SERVER_URL}/refreshSession`, { id: userID }, { withCredentials: true })

@@ -35,8 +35,7 @@ const ContactsScreen = ({ setLoadingLayout }) => {
   }, []);
 
   // ==== Get contacts ====
-  const getContacts = () => {
-    setLoadingLayout(true);
+  const getContacts = async () => {
     axios.post(`${SERVER_URL}/getContacts`, { userId: userID }, { withCredentials: true })
       .then((res) => {
         console.log("CONTACTS DEL ENDPOINT GETCONTACTS TABLE", res.data);
@@ -51,10 +50,7 @@ const ContactsScreen = ({ setLoadingLayout }) => {
         }));
         console.log("LAST CONTACTS", lastcontacts);
         setContacts(lastcontacts);
-      }).catch(() => {
-        setLoadingLayout(false);
-      }).finally(() => {
-        setLoadingLayout(false);
+      }).catch((err) => { console.log(err) 
       });
   }
 
@@ -64,7 +60,8 @@ const ContactsScreen = ({ setLoadingLayout }) => {
   // ===== Refresh contacts =====
   useEffect(() => {
     if (userID != null) {
-      getContacts();
+      setLoadingLayout(true);
+      getContacts().then(() => { setLoadingLayout(false) });
       socket.on("refreshcontacts", () => {
         getContacts();
       });
