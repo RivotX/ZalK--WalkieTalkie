@@ -813,14 +813,14 @@ const savecontacts = (user: any, userIdContact: number | undefined, usernameCont
 
     if (typeof contacts === "string") {
       contacts = JSON.parse(contacts);
-    }
+    } 
     const contact = { id: userIdContact, username: usernameContact, room: currentRoom };
     if (!contacts.some((c: any) => c.username === contact.username && c.room === contact.room && c.id === contact.id)) {
       // se verifica si el contacto ya esta en la lista de contactos
       contacts.push(contact);
       user.setcontacts(contacts);
       user.save().then(() => {
-        console.log("Los cambios han sido guardados exitosamente.");
+        console.log(`Contacto ${usernameContact} guardado exitosamente en la sala ${currentRoom}`);
       });
     } else {
       console.log("Ya esta en con el contacto");
@@ -1141,8 +1141,8 @@ io.on("connection", (socket: Socket) => {
         },
       });
 
-      const currentRoom = `${userSender?.username}-${receiverId}`;
-
+      const currentRoom = `${userSender?.id}-${userReceiver?.id}`;
+      console.log("SALA UNIDA", currentRoom);
       // Guardar contactos
       savecontacts(userSender, userReceiver?.id, receiverId, currentRoom);
       savecontacts(userReceiver, userSender?.id, userSender?.username, currentRoom);
