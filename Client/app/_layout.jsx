@@ -337,7 +337,7 @@ function RootLayout() {
                     ),
                     headerLeft: () => <View style={{ marginLeft: -50 }} />,
                     headerRight: () => (
-                      <ConfigIcon chatroom={true} setModalIconVisible={setModalIconVisible} user={user} isContact={isContact} setLoadingLayout={setLoading} />
+                      <ConfigIcon chatroom={true} setModalIconVisible={setUserProfileModalSC} user={user} isContact={isContact} setLoadingLayout={setLoading} />
                     ),
                   };
                 }}
