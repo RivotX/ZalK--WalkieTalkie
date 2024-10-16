@@ -164,7 +164,7 @@ function RootLayout() {
       });
       setLoading(false);
       setIsSocketConnected(true);
-      socket.on("refreshcontacts", () => {
+      socket.on('refreshcontacts', () => {
         console.log('refreshing session in RootLayout');
         axios
           .post(`${SERVER_URL}/refreshSession`, { id: userID }, { withCredentials: true })
@@ -253,7 +253,7 @@ function RootLayout() {
             </View>
           </Modal>
         )}
-        {/* Alvaro comenta la linea de abajo u.u */}
+        {/* LoggedIn App*/}
         {isLoggedIn && socket ? (
           <SocketProvider socket={socket}>
             <Stack screenOptions={{ animation: 'slide_from_right' }}>
@@ -329,9 +329,9 @@ function RootLayout() {
                           iconSize={12}
                           isContact={isContact}
                         />
-                        <Image source={user.profile ? { uri: user.profile } : isContact ? ProfileIcon : groupicon} style={tw`size-11 rounded-full ml-8`} />
-                        <TouchableOpacity onPress={() => setUserProfileModalSC(true)} style={tw`w-[60%] py-2`}>
-                          <Text style={tw`text-[${textColor}] font-bold text-lg ml-2`}>{user.name ?? 'Chat Room'}</Text>
+                        <TouchableOpacity onPress={() => setUserProfileModalSC(true)} style={tw`ml-10 w-3/5 flex-row justify-start items-center`}>
+                          <Image source={user.profile ? { uri: user.profile } : isContact ? ProfileIcon : groupicon} style={tw`size-11 rounded-full `} />
+                          <Text style={tw`text-[${textColor}] font-bold text-lg ml-2  `}>{user.name ?? 'Chat Room'}</Text>
                         </TouchableOpacity>
                       </View>
                     ),
@@ -394,7 +394,7 @@ function RootLayout() {
             </Stack>
           </SocketProvider>
         ) : (
-          // Main login screen
+          // Login screens
           <LoginScreen setLoading={setLoading} SetLayoutLogged={SetLayoutLogged} />
         )}
       </SafeAreaView>

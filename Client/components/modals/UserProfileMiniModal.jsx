@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { TouchableOpacity, Modal, Image, Text, View, Animated, Easing, Dimensions } from 'react-native';
+import { TouchableOpacity, Modal, Image, Text, View, Animated, Easing, Dimensions, ScrollView } from 'react-native';
 import tw from 'twrnc';
 import ProfileIcon from '../../assets/images/images.png';
 import groupicon from '../../assets/images/groupicon.png';
@@ -9,6 +9,7 @@ import axios from 'axios';
 import getEnvVars from '../../config';
 const { SERVER_URL } = getEnvVars();
 import { useNavigation } from '@react-navigation/native';
+import Loading from '../shared/Loading';
 
 const UserProfileMiniModal = ({ user, modalIconVisible, setModalIconVisible, iconSize, isContact, initialPosition }) => {
   const textColor = useThemeColor({}, 'text');
@@ -29,8 +30,8 @@ const UserProfileMiniModal = ({ user, modalIconVisible, setModalIconVisible, ico
   const screenWidth = Dimensions.get('window').width;
   const screenHeight = Dimensions.get('window').height;
   const pictureWidth = 250;
-  const centerX = screenWidth / 2 - pictureWidth/2;
-  const centerY = (screenHeight - 56) / 2 / 4;
+  const centerX = screenWidth / 2 - pictureWidth / 2;
+  const centerY = ((screenHeight - pictureWidth) / 6) ;
   console.log('Screen width: ', screenWidth);
   console.log('Center X: ', centerX);
 
@@ -54,7 +55,6 @@ const UserProfileMiniModal = ({ user, modalIconVisible, setModalIconVisible, ico
   useEffect(() => {
     if (modalIconVisible && initialPosition) {
       setModalOpacity(50);
-
 
       Animated.parallel([
         Animated.timing(position, {
@@ -122,6 +122,7 @@ const UserProfileMiniModal = ({ user, modalIconVisible, setModalIconVisible, ico
       setIsClosing(false);
     });
   };
+
   // ==== Handle profile image press ====
   const handleProfileImagePress = () => {
     navigation.navigate('ProfilePictureScreen', { user, isContact });
@@ -129,7 +130,7 @@ const UserProfileMiniModal = ({ user, modalIconVisible, setModalIconVisible, ico
     setHideText(false);
     setHideInfo(false);
   };
-
+ 
   return (
     <Modal animationType="fade" transparent={true} visible={modalIconVisible} onRequestClose={handleCloseModal}>
       <TouchableOpacity style={tw`flex-1 justify-start items-center bg-black bg-opacity-${modalOpacity}`} activeOpacity={1} onPress={handleCloseModal}>
@@ -153,21 +154,23 @@ const UserProfileMiniModal = ({ user, modalIconVisible, setModalIconVisible, ico
               <Text style={tw`text-[#ECEDEE] text-center italic w-full`}>{user.info}</Text>
             </Animated.View>
           )}
-          {/* Group members */}
-          {!hideText && members.length != 0 && (
-            <Animated.View style={[tw`bg-black bg-opacity-10 p-3 mt-2`, { width: size }]}>
-              <Text style={tw`text-[${textColor}] text-center mt-4`}>
-                <Text style={tw`text-[${textColor}] text-center font-bold`}>{qty != null && `${Texts.Members} : ${qty}`}</Text>
-              </Text>
-              {members.map((member, index) => (
-                <Text key={index} style={tw`text-[${textColor}] text-center`}>
-                  - {member.username}
-                </Text>
-              ))}
-            </Animated.View>
-          )}
         </Animated.View>
       </TouchableOpacity>
+      {/* Group members */}
+      {!hideText && members.length != 0 && (
+        <View style={[tw`absolute top-[${centerY + 10}] bg-black bg-opacity-50 p-3`, { width: pictureWidth, alignSelf: 'center', maxHeight: '40%' }]}>
+          <Text style={tw`text-[${textColor}] text-center my-4`}>
+            <Text style={tw`text-[${textColor}] text-center font-bold`}>{qty != null && `${Texts.Members} : ${qty}`}</Text>
+          </Text>
+          <ScrollView>
+            {members.map((member, index) => (
+              <Text key={index} style={tw`text-[${textColor}] text-center`}>
+                - {member.username}
+              </Text>
+            ))}
+          </ScrollView>
+        </View>
+      )}
     </Modal>
   );
 };
