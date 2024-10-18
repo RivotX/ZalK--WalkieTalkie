@@ -100,7 +100,7 @@ const UserProfileModal = ({ user, modalIconVisible, setModalIconVisible, iconSiz
       <Modal animationType="fade" transparent={true} visible={modalIconVisible} onRequestClose={() => setModalIconVisible(false)}>
         {isContact ? (
           <TouchableOpacity
-            style={tw`flex-1 pt-[20%] items-center bg-[${UserProfileModal_BG}] bg-opacity-97`}
+            style={tw`flex-1 pt-[20%] items-center bg-[${UserProfileModal_BG}] bg-opacity-100`}
             activeOpacity={1}
             onPress={() => setModalIconVisible(false)}
           >
