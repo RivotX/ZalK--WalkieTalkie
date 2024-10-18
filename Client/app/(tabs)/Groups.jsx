@@ -34,7 +34,6 @@ export default function GroupsScreen() {
   }, []);
 
   const getGroups = () => {
-    setLoading(true);
     console.log('USERID EN GROUP', userID);
     axios
       .post(`${SERVER_URL}/getGroups`, { userId: userID })
