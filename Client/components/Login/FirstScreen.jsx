@@ -207,7 +207,7 @@ const FirstScreen = ({ SetFirstScreen, SetLoginScreenState }) => {
         <TouchableOpacity
           style={[
             isPressed ? tw`` : tw`shadow-lg shadow-purple-500`,
-            tw`text-white bg-[#B233A1] w-32 py-3 rounded-lg mb-4`
+            tw`text-white bg-[#B233A1] w-36 py-3 rounded-lg mb-4`
           ]}
           onPress={() => GoLoginScreen(false)}
           onPressIn={() => { setIsPressed(true); }}
@@ -218,7 +218,7 @@ const FirstScreen = ({ SetFirstScreen, SetLoginScreenState }) => {
 
         {/* Sign up button */}
         <TouchableOpacity
-          style={tw`text-white bg-[#3D3D69] w-32 py-3 rounded-lg`}
+          style={tw`text-white bg-[#3D3D69] w-36 py-3  rounded-lg`}
           onPress={() => GoLoginScreen(true)}
         >
           <Text style={tw`text-white text-center text-lg`}>{Texts.SignUp}</Text>
@@ -226,7 +226,7 @@ const FirstScreen = ({ SetFirstScreen, SetLoginScreenState }) => {
 
         {/* Languages button */}
 
-        <LanguagesButton twStyles={"flex-row absolute bottom-15 items-center"} unselectedOpacity={0.2}/>
+        <LanguagesButton twStyles={"flex-row absolute bottom-15 items-center"} unselectedOpacity={0.2} />
       </View>
     </View>
   );

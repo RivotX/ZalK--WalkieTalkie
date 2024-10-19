@@ -30,6 +30,7 @@ const loadFonts = async () => {
 import { LanguageProvider } from '../context/LanguageContext';
 import { useLanguage } from '../context/LanguageContext';
 import { setBackgroundColorAsync } from 'expo-system-ui';
+import { BusyProvider, useBusy } from '../context/BusyContext'; // Importa el BusyProvider y el hook useBusy
 
 function RootLayout() {
   const [modalIconVisible, setModalIconVisible] = useState(false);
@@ -41,7 +42,6 @@ function RootLayout() {
   const [username, setUsername] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isSocketConnected, setIsSocketConnected] = useState(true);
-  const [isBusy, setIsBusy] = useState(false);
   const [userID, setUserID] = useState(null);
   const [info, setInfo] = useState(null);
   const [socket, setSocket] = useState(null);
@@ -49,6 +49,8 @@ function RootLayout() {
   const [profilePicture, setProfilePicture] = useState(null);
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const { Texts } = useLanguage();
+  const { isBusy, setIsBusy } = useBusy();
+
   console.log('SERVER_URL:', SERVER_URL);
   console.log('SOCKET_URL:', SOCKET_URL);
 
@@ -112,6 +114,7 @@ function RootLayout() {
         .then((res) => {
           setUsername(res.data.user.username);
           setIsBusy(res.data.user.isBusy);
+          console.log('res isbusy en layout', res.data.user.isBusy);
           setUserID(res.data.user.id);
           setInfo(res.data.user.info);
           setProfilePicture(res.data.user.profilePicture);
@@ -122,6 +125,10 @@ function RootLayout() {
         });
     }
   };
+
+  useEffect(() => {
+    console.log('isBusy en RootLayout /getssesion', isBusy);
+  }, [isBusy]);
 
   // ===== Gets the user data when the user is logged in =======
   useEffect(() => {
@@ -182,6 +189,8 @@ function RootLayout() {
       });
 
       socket.on('receive-audio', async (base64Audio, room) => {
+        
+        if (isBusy) return;
         console.log('Received audio data from room', room);
 
         // Asegúrate de que el base64Audio no esté corrupto
@@ -201,7 +210,7 @@ function RootLayout() {
           // Alert.alert('playing sound');
           // Schedule a notification
         } catch (error) {
-          Alert.alert('Error playing sound');
+          Alert.alert('Error playing sound', error);
           console.error('Error playing sound:', error);
         }
       });
@@ -235,7 +244,7 @@ function RootLayout() {
 
   if (!fontsLoaded) {
     return (
-      <Modal animationType="fade" transparent={true} onRequestClose={() => {}}>
+      <Modal animationType="fade" transparent={true} onRequestClose={() => { }}>
         <View style={[tw`flex-1 justify-center items-center`]}>
           <Loading />
         </View>
@@ -247,7 +256,7 @@ function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView style={{ flex: 1 }}>
         {loading && (
-          <Modal animationType="fade" transparent={true} onRequestClose={() => {}}>
+          <Modal animationType="fade" transparent={true} onRequestClose={() => { }}>
             <View style={[tw`flex-1 justify-center items-center`, { backgroundColor: 'rgba(0, 0, 0, 0.5)' }]}>
               <Loading />
             </View>
@@ -277,7 +286,7 @@ function RootLayout() {
                       </TouchableOpacity>
                       <View style={tw`flex-row w-1/4 mr-[26px]`}>
                         <NotificationsIcon />
-                        <ConfigIcon setIsBusyLayout={setIsBusy} handleLogout={handleLogout} isBusyLayout={isBusy} />
+                        <ConfigIcon handleLogout={handleLogout} />
                       </View>
                     </View>
                   ),
@@ -404,7 +413,9 @@ function RootLayout() {
 
 const App = () => (
   <LanguageProvider>
-    <RootLayout />
+    <BusyProvider>
+      <RootLayout />
+    </BusyProvider>
   </LanguageProvider>
 );
 

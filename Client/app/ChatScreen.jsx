@@ -33,7 +33,7 @@ export default function ChatScreen() {
 
   return (
     <View style={tw`flex-1 bg-[${backgroundColor}] items-center justify-center`}>
-      {userID != undefined && <AudioComponent currentRoom={currentRoom} sizeInside={74} sizeOutside={84} iconSize={128} cancelButtonMT={"6"}/>}
+      {userID != undefined && <AudioComponent userID={userID} currentRoom={currentRoom} sizeInside={74} sizeOutside={84} iconSize={128} cancelButtonMT={"6"}/>}
     </View>
     );
 }

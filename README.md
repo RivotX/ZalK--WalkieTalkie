@@ -13,8 +13,8 @@ Zalk is a mobile application developed using React Native and ExpressJS. It enab
 
 ## Technologies Used
 
-- **Frontend**: React Native (JavaScript)
+- **Frontend**: React Native with Expo (JavaScript)
 - **Backend**: ExpressJS (TypeScript)
 - **Real-time Communication**: Socket.io
-- **Database**: MySQL + Sequelize
+- **Database**: MySQL + Sequelize, AWS
 - **Styles**: TailwindCSS

@@ -12,18 +12,19 @@ import Loading from './Loading';
 import { useLanguage } from '../../context/LanguageContext';
 import LanguagesButton from './LanguagesButton';
 // import {SERVER_URL, SOCKET_URL} from '@env';
+import {  useBusy } from '../../context/BusyContext'; // Importa el BusyProvider y el hook useBusy
 
-const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisible, user, isContact, setLoadingLayout, isBusyLayout }) => {
+const ConfigIcon = ({ handleLogout, chatroom, setModalIconVisible, user, isContact, setLoadingLayout }) => {
   const textColor = useThemeColor({}, 'text');
   const SoftbackgroundColor = useThemeColor({}, 'Softbackground');
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const navigation = useNavigation(); 
+  const navigation = useNavigation();
   const [userID, setUserID] = useState(null);
   const [userName, setUserName] = useState(null);
   const { SERVER_URL } = getEnvVars();
-  const [socket, setSocket] = useState(useSocket()); 
-  const [isBusy, setIsBusy] = useState(isBusyLayout);
+  const [socket, setSocket] = useState(useSocket());
+  const { isBusy, setIsBusy } = useBusy();
   const heightAnim = useRef(new Animated.Value(0)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current;
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
@@ -51,11 +52,13 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
   }, []);
 
   // Busy mode
-  useEffect(() => {
-    if (socket === null) return;
+  // useEffect(() => {
+  //   console.log('isBusy en configIcon' , isBusy);
 
-    isBusy ? socket.close() : socket.open();
-  }, [isBusy]);
+  //   if (socket === null) return;
+
+  //   isBusy ? socket.close() : socket.open();
+  // }, [isBusy]);
 
   // Toggle busy mode
   const toggleBusyMode = () => {
@@ -63,11 +66,15 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
     setLoading(true);
     // Implement toggleBusy
     axios.post(`${SERVER_URL}/toggleBusy`, { userId: userID }, { withCredentials: true }).then((res) => {
-      console.log('Busy mode toggled', isBusy);
+      console.log('Busy mode toggled', res.data.isBusy);
+      setIsBusy(res.data.isBusy);
+      console.log('res isbusy en configicon', res.data.isBusy);
+
+      setLoading(false);
+    }).catch((error) => {
+      console.error('Error toggling busy mode:', error);
       setLoading(false);
     });
-    setIsBusy(!isBusy);
-    setIsBusyLayout(!isBusy);
   };
 
   // Animation for the dropdown menu
@@ -185,7 +192,7 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
                       onPress={handlePressDeleteContact}
                       style={tw`flex justify-center h-1/2`}>
                       <Text style={tw`text-lg text-[${textColor}]`}>
-                      {isContact ? Texts.DeleteContact : Texts.DeleteGroup}
+                        {isContact ? Texts.DeleteContact : Texts.DeleteGroup}
                       </Text>
                     </TouchableOpacity>
                   </>
@@ -202,7 +209,7 @@ const ConfigIcon = ({ setIsBusyLayout, handleLogout, chatroom, setModalIconVisib
             modalVisible={deleteModalVisible}
             selectedUser={user}
             action="delete"
-            title={isContact? Texts.UnfriendContactConfirm: Texts.LeaveGroupConfirm}
+            title={isContact ? Texts.UnfriendContactConfirm : Texts.LeaveGroupConfirm}
             acceptButton={Texts.Confirm}
             cancelButton={Texts.Cancel}
             OnAccept={deleteContact}

@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 
 // Client/constants/Texts.js
 export const Texts = {
@@ -80,7 +80,6 @@ export const Texts = {
     RZConnected: 'Connection established!',
     LeaveGroupConfirm: 'Leaving the group',
     UnfriendContactConfirm: 'Removing from contacts',
-    Cancel: 'Cancel',
     Confirm: 'Confirm',
     FriendRequest: 'Friend Request',
     From: 'From',
@@ -91,6 +90,13 @@ export const Texts = {
     PasswordTooLong: 'Password cannot be longer than 30 characters',
     EmailTooLong: 'Email cannot be longer than 100 characters',
     ImageSizeError: 'Image size must be less than 10MB',
+    Alert: 'Alert',
+    BusyModeAlert1: 'You cannot send voice messages while',
+    BusyModeAlert2: 'busy mode is active.',
+    BusyModeAlert3: 'Disable it to continue.',
+    BusyModeAlertButton1: 'Back',
+    BusyModeAlertButton2: 'Disable',
+    Cancel: 'Cancel',
   },
   es: {
     Members: 'Miembros',
@@ -171,7 +177,6 @@ export const Texts = {
     RZConnected: 'Conexión establecida!',
     LeaveGroupConfirm: 'Salir del grupo',
     UnfriendContactConfirm: 'Eliminar de contactos',
-    Cancel: 'Cancelar',
     Confirm: 'Confirmar',
     FriendRequest: 'Solicitud de amistad',
     From: 'De',
@@ -182,5 +187,12 @@ export const Texts = {
     PasswordTooLong: 'La contraseña no debe superar los 30 caracteres',
     EmailTooLong: 'El correo no debe superar los 100 caracteres',
     ImageSizeError: 'El tamaño de la imagen debe ser inferior a 10MB',
+    Alert: 'Alerta',
+    BusyModeAlert1: 'No puedes enviar mensajes de voz estando',
+    BusyModeAlert2: 'en modo ocupado.',
+    BusyModeAlert3: 'Desactívalo para continuar.',
+    BusyModeAlertButton1: 'Volver',
+    BusyModeAlertButton2: 'Desactivar',
+    Cancel: 'Cancelar',
   },
 };

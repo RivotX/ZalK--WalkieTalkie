@@ -22,13 +22,25 @@ const NotificationsIcon = () => {
     axios
       .get(`${SERVER_URL}/getsession`, { withCredentials: true })
       .then((res) => {
-        setRequestCount(JSON.parse(res.data.user.requests).length);
+        const requests = JSON.parse(res.data.user.requests);
         setUserID(res.data.user.id);
+        console.log('Notificaciones cargadas en notificationsicon', requests.length);
+        return res.data.user.id; // Devuelve el userID para la siguiente promesa
+      }).then((userID) => {
+        axios.post(`${SERVER_URL}/getRequest`, { userID: userID })
+          .then((res) => {
+            setRequestCount(res.data.length);
+            console.log('Notificaciones cargadas en notificationsicon getRequest', res.data.length);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
+
 
   //Escucha el evento de refrescar contactos enviado desde el servidor
   useEffect(() => {
@@ -38,6 +50,7 @@ const NotificationsIcon = () => {
         axios
           .post(`${SERVER_URL}/refreshSession`, { id: userID }, { withCredentials: true })
           .then((res) => {
+            console.log('XzzX res.data.user.requests', res.data.user.requests);
             setRequestCount(JSON.parse(res.data.user.requests).length);
           })
           .catch((error) => {

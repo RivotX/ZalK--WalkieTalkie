@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, Vibration } from 'react-native';
+import { View, Text, TouchableOpacity, Vibration, Alert, AppState } from 'react-native';
 import tw from "twrnc";
 import { Audio } from "expo-av";
 import { FontAwesome5 } from "@expo/vector-icons"; // Assuming usage of Expo vector icons for simplicity
 import { useSocket } from "../../context/SocketContext";
 import { useThemeColor } from "../../hooks/useThemeColor";
+import { useBusy } from "../../context/BusyContext";
+import IsBusyRequiredModal from "../modals/IsBusyRequiredModal";
+import { useLanguage } from "../../context/LanguageContext";
+import { useNavigation } from '@react-navigation/native';
 
-const AudioComponent = ({ currentRoom, isConectionClose, sizeInside, sizeOutside, iconSize, cancelButtonMT }) => {
+const AudioComponent = ({ currentRoom, isConectionClose, sizeInside, sizeOutside, iconSize, cancelButtonMT, userID }) => {
   const [recording, setRecording] = useState();
   const [permissionStatus, setPermissionStatus] = useState(null);
   const [recordedAudio, setRecordedAudio] = useState(null);
@@ -19,6 +23,10 @@ const AudioComponent = ({ currentRoom, isConectionClose, sizeInside, sizeOutside
   const ActiveButtonColor = useThemeColor({}, "AudioComponent_ActiveButtonColor");
   const ActiveBorderColor = useThemeColor({}, "AudioComponent_ActiveBorderColor");
   const textcolor = useThemeColor({}, "text");
+  const { isBusy } = useBusy();
+  const [isBusyModalVisible, setIsBusyModalVisible] = useState(false);
+  const { Texts } = useLanguage();
+  const navigation = useNavigation();
 
   // Cuando el componente se monta, pide permisos de audio
   useEffect(() => {
@@ -27,7 +35,6 @@ const AudioComponent = ({ currentRoom, isConectionClose, sizeInside, sizeOutside
       setPermissionStatus(status === "granted"); // Actualiza los permisos (true o false)
     })();
   }, [currentRoom]);
-
 
   useEffect(() => {
     console.log("Cerrando conexion y audio parado ANTES");
@@ -55,6 +62,32 @@ const AudioComponent = ({ currentRoom, isConectionClose, sizeInside, sizeOutside
     setButtonColorState(buttonColor);
     setBorderColorState(borderColor);
   }, [buttonColor, borderColor]);
+
+  // === Cancel recording when leaving the screen =====
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      if (recording) {
+        cancelRecording();
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation, recording]);
+
+  // === Cancel recording when app goes to background =====
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState) => {
+      if (nextAppState === 'background' && recording) {
+        cancelRecording();
+      }
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+      subscription.remove();
+    };
+  }, [recording]);
 
   // Funcion para iniciar la grabacion de audio
   const startRecording = async () => {
@@ -124,27 +157,23 @@ const AudioComponent = ({ currentRoom, isConectionClose, sizeInside, sizeOutside
     }
   };
 
-  //  Funcion para reproducir el audio grabado
-  const playSound = async () => {
-    const { sound } = await Audio.Sound.createAsync(
-      { uri: recordedAudio.uri }, // Carga el audio grabado
-      { shouldPlay: true }
-    );
-    await sound.playAsync();
-  };
-
   // Presionar grabar / detener audio
   const onPressHandler = () => {
-    if (recording) {
-      stopRecording();
-      setButtonColorState(buttonColor);
-      setBorderColorState(borderColor);
-      Vibration.vibrate(200);
+    if (isBusy == true) {
+      setIsBusyModalVisible(true);
+      return;
     } else {
-      startRecording();
-      setButtonColorState(ActiveButtonColor);
-      setBorderColorState(ActiveBorderColor);
-      Vibration.vibrate(400);
+      if (recording) {
+        stopRecording();
+        setButtonColorState(buttonColor);
+        setBorderColorState(borderColor);
+        Vibration.vibrate(200);
+      } else {
+        startRecording();
+        setButtonColorState(ActiveButtonColor);
+        setBorderColorState(ActiveBorderColor);
+        Vibration.vibrate(400);
+      }
     }
   };
 
@@ -181,10 +210,17 @@ const AudioComponent = ({ currentRoom, isConectionClose, sizeInside, sizeOutside
             style={tw`px-4 py-2 bg-[${ActiveButtonColor}] rounded-full`}
             onPress={cancelRecording}
           >
-            <Text style={tw`text-[#ECEDEE] text-lg`}>Cancelar</Text>
+            <Text style={tw`text-[#ECEDEE] text-lg`}>{Texts.Cancel}</Text>
           </TouchableOpacity>
         )}
       </View>
+
+      {/* Modal */}
+      <IsBusyRequiredModal
+        modalVisible={isBusyModalVisible}
+        setModalVisible={setIsBusyModalVisible}
+        userID={userID}
+      />
     </View>
   );
 };
