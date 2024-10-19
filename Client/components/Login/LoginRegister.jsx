@@ -10,7 +10,7 @@ import { showAlert } from "../shared/ShowAlert";
 // import {SERVER_URL, SOCKET_URL} from '@env';
 import getEnvVars from "../../config";
 const { SERVER_URL, SOCKET_URL } = getEnvVars();
-import RememberPasswordModal from "../modals/RememberPasswordModal";
+import ResetPasswordModal from "../modals/ResetPasswordModal";
 
 const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoading }) => {
   const [username, setUsername] = useState("");
@@ -405,7 +405,7 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
       </TouchableOpacity>
 
       {/* Remember Password Modal */}
-      {RememberModalVisible && <RememberPasswordModal modalVisible={RememberModalVisible} setModalVisible={setRememberModalVisible} />}
+      {RememberModalVisible && <ResetPasswordModal modalVisible={RememberModalVisible} setModalVisible={setRememberModalVisible} />}
 
     </View>
   );

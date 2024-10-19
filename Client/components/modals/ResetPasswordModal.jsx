@@ -8,7 +8,7 @@ import axios from 'axios';
 import getEnvVars from '../../config';
 const { SERVER_URL } = getEnvVars();
 
-const RememberPasswordModal = ({ setModalVisible, modalVisible }) => {
+const ResetPasswordModal = ({ setModalVisible, modalVisible }) => {
   const modal_bg_color = useThemeColor({}, 'modal_bg_color');
   const modal_text_color = useThemeColor({}, 'modal_text_color');
   const modal_title_color = useThemeColor({}, 'modal_title_color');
@@ -35,30 +35,30 @@ const RememberPasswordModal = ({ setModalVisible, modalVisible }) => {
     return '';
   };
 
-  const handleRememberPassword = () => {
+  const handleResetPassword = () => {
     if (email.trim().length === 0) {
-      showAlert(Texts.RegistrationFailed, Texts.EmptyEmail);
+      showAlert(Texts.ResetPasswordFailedTitle, Texts.EmptyEmail);
       return;
     }
 
     const error = validateEmail(email);
     if (error) {
       setFormError(error);
-      showAlert(Texts.RegistrationFailed, error);
+      showAlert(Texts.ResetPasswordFailedTitle, error);
       return;
     }
 
-    axios.post(`${SERVER_URL}/rememberPassword`, { email })
+    axios.post(`${SERVER_URL}/ResetPassword`, { email })
       .then((res) => {
         console.log('Password remember email sent', res.data);
-        showAlert(Texts.RememberPasswordSuccessTitle, Texts.RememberPasswordSuccess);
+        showAlert(Texts.ResetPasswordSuccessTitle, Texts.ResetPasswordSuccess);
         setModalVisible(false);
       })
       .catch((error) => {
         if (error.response && error.response.status === 404) {
-          showAlert(Texts.RememberPasswordFailedTitle, Texts.UserNotFound);
+          showAlert(Texts.ResetPasswordFailedTitle, Texts.UserNotFound);
         } else {
-          showAlert(Texts.RememberPasswordFailedTitle, Texts.RememberPasswordError);
+          showAlert(Texts.ResetPasswordFailedTitle, Texts.ResetPasswordError);
         }
         console.error('Error sending password reset email:', error);
       });
@@ -84,9 +84,8 @@ const RememberPasswordModal = ({ setModalVisible, modalVisible }) => {
           <TouchableOpacity style={tw`absolute top-2 right-2 p-2`} onPress={() => setModalVisible(false)}>
             <Ionicons name="close" size={24} color={textcolor} />
           </TouchableOpacity>
-          <Text style={[tw`text-xl font-bold mb-4 text-${modal_title_color} text-center`, styles.text]}>{Texts.RememberPassword}</Text>
-          <Text style={[tw`text-base mb-8 text-${modal_text_color} text-center`, styles.text]}>{Texts.RememberPasswordText}</Text>
-          <Text style={[tw`text-sm mb-4 text-${modal_text_color} text-center`, styles.text]}>{Texts.RememberPasswordText2}</Text>
+          <Text style={[tw`text-xl font-bold mb-4 text-${modal_title_color} text-center`, styles.text]}>{Texts.ResetPassword}</Text>
+          <Text style={[tw`text-base mb-4 text-${modal_text_color} text-center`, styles.text]}>{Texts.ResetPasswordText}</Text>
 
           <View style={tw`w-full `}>
             <TextInput
@@ -102,12 +101,12 @@ const RememberPasswordModal = ({ setModalVisible, modalVisible }) => {
               keyboardType="email-address"
               autoCapitalize="none"
             />
-            <View style={tw`min-h-[35px] justify-center mt-2`}>
+            <View style={tw`min-h-[35px] justify-center my-2`}>
               {formError ? <Text style={[tw`text-red-500 text-left`, styles.errorText]}>{formError}</Text> : null}
             </View>
           </View>
 
-          <View style={tw`w-full mt-4`}>
+          <View style={tw`w-full `}>
             <View style={tw`flex-row justify-between`}>
               <TouchableOpacity
                 style={tw`flex-1 bg-${decline_button_color} py-2 px-4 rounded-full mx-1`}
@@ -117,7 +116,7 @@ const RememberPasswordModal = ({ setModalVisible, modalVisible }) => {
               </TouchableOpacity>
               <TouchableOpacity
                 style={tw`flex-1 bg-${accept_button_color} py-2 px-4 rounded-full mx-1`}
-                onPress={handleRememberPassword}
+                onPress={handleResetPassword}
               >
                 <Text style={tw`text-white font-bold text-center`}>{Texts.Send}</Text>
               </TouchableOpacity>
@@ -143,4 +142,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RememberPasswordModal;
+export default ResetPasswordModal;

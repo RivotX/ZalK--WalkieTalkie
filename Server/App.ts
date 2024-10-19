@@ -512,19 +512,35 @@ app.post('/logout', (req, res) => {
   });
 });
 
-app.post('/rememberPassword', async (req, res) => {
+// =========== Reset Password ==================
+function generateTemporaryPassword(length: number): string {
+  const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+[]{}|;:,.<>?ñ';
+  let password = '';
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    password += charset[randomIndex];
+  }
+  return password;
+}
+
+app.post('/ResetPassword', async (req, res) => {
   const { email } = req.body;
-  console.log('UserEmail:', email);
-  console.log('ZalkEmail:', process.env.ZALK_EMAIL);
-  console.log('ZalkEmailPass:', process.env.ZALK_EMAIL_PASS);
+
   try {
     const user = await Users.findOne({ where: { email: email } });
     if (user) {
+      const newPassword = generateTemporaryPassword(16); // Genera una contraseña de 16 caracteres
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      // Actualizar la contraseña del usuario en la base de datos
+      user.password = hashedPassword;
+      await user.save();
+
       const mailOptions = {
         from: process.env.ZALK_EMAIL,
         to: email,
-        subject: 'Your Password',
-        text: `Hello ${user.username},\n\nYour password is: ${user.password}\n\nBest regards,\nZalk Team`,
+        subject: 'Your New Password',
+        text: `Hello ${user.username},\n\nWe have generated a new password for you: ${newPassword}\n\nFor your security, please change this password as soon as possible in your account settings.\n\nBest regards,\nThe Zalk Team`,
       };
 
       transporter.sendMail(mailOptions, (error, info) => {
