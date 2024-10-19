@@ -4,13 +4,13 @@ import tw from "twrnc";
 import { useThemeColor } from "../../hooks/useThemeColor";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Ionicons } from "@expo/vector-icons";
 import PasswordToggle from "../shared/PasswordToggle";
 import { useLanguage } from "../../context/LanguageContext";
 import { showAlert } from "../shared/ShowAlert";
 // import {SERVER_URL, SOCKET_URL} from '@env';
 import getEnvVars from "../../config";
 const { SERVER_URL, SOCKET_URL } = getEnvVars();
+import RememberPasswordModal from "../modals/RememberPasswordModal";
 
 const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoading }) => {
   const [username, setUsername] = useState("");
@@ -25,10 +25,9 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
   const [hidePassword, setHidePassword] = useState(true);
   const [hidePassword2, setHidePassword2] = useState(true);
   const { Texts } = useLanguage();
-
   const [formError, setFormError] = useState("default");
   const [LoginScreenState, setLoginScreenState] = useState(LoginScreen);
-
+  const [RememberModalVisible, setRememberModalVisible] = useState(true);
   console.log("SERVER_URL LOGIN", SERVER_URL);
   // === Animaciones para los placeholders ====
   const usernamePlaceholderAnim = useRef(new Animated.Value(0)).current;
@@ -390,23 +389,24 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
       </TouchableOpacity>
 
       {/* Forgot Password */}
-      <TouchableOpacity style={tw`mt-5`}>
+      <TouchableOpacity style={tw`mt-5`} onPress={() => setRememberModalVisible(true)}>
         <Text style={tw`text-gray-500`}>{Texts.ForgotPassword}</Text>
       </TouchableOpacity>
 
       {/* Sign in or Sign up */}
-      <TouchableOpacity style={tw`mt-2`}>
-        <Text
-          style={tw`text-blue-500`}
-          onPress={() => {
-            setLoginScreenState(!LoginScreenState);
-            setBadLogin(false);
-            setFormError("");
-          }}
-        >
+      <TouchableOpacity style={tw`mt-4`} onPress={() => {
+        setLoginScreenState(!LoginScreenState);
+        setBadLogin(false);
+        setFormError("");
+      }}>
+        <Text style={tw`text-blue-500`}>
           {LoginScreenState ? Texts.DontHaveAccount : Texts.AlreadyHaveAccount}
         </Text>
       </TouchableOpacity>
+
+      {/* Remember Password Modal */}
+      {RememberModalVisible && <RememberPasswordModal modalVisible={RememberModalVisible} setModalVisible={setRememberModalVisible} />}
+
     </View>
   );
 };
