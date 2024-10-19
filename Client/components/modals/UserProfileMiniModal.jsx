@@ -150,7 +150,7 @@ const UserProfileMiniModal = ({ user, modalIconVisible, setModalIconVisible, ico
           )}
           {/* User info */}
           {!hideInfo && user.info && (
-            <Animated.View style={[tw`bg-${UserProfileMiniModal_BG} bg-opacity-10 p-3`, { width: size }]}>
+            <Animated.View style={[tw`bg-${UserProfileMiniModal_BG} bg-opacity-50 p-3`, { width: size }]}>
               <Text style={tw`text-[#ECEDEE] text-center italic w-full`}>{user.info}</Text>
             </Animated.View>
           )}
