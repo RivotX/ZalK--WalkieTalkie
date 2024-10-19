@@ -40,6 +40,7 @@ export const Colors = {
     AudioComponent_ActiveBorderColor: 'red-200',
     ChatComponent_BorderColor : 'gray-300',
     UserProfileMiniModal_BG: 'black',
+    contrastGray: 'gray-500',
   },
 
   dark: {
@@ -76,5 +77,6 @@ export const Colors = {
     AudioComponent_ActiveBorderColor: 'red-600',
     ChatComponent_BorderColor : 'zinc-800',
     UserProfileMiniModal_BG: 'black',
+    contrastGray: 'gray-500',
   },
 };

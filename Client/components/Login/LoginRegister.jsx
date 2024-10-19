@@ -18,6 +18,7 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
   const [password, setPassword] = useState("");
   const [Confpassword, setConfPassword] = useState("");
   const backgroundColor = useThemeColor({}, "background");
+  const contrastGray = useThemeColor({}, "contrastGray");
   const textColor = useThemeColor({}, "text");
   const [badLogin, setBadLogin] = useState(false);
   const [badLoginMsg, setBadLoginMsg] = useState("");
@@ -390,7 +391,7 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
 
       {/* Forgot Password */}
       <TouchableOpacity style={tw`mt-5`} onPress={() => setRememberModalVisible(true)}>
-        <Text style={tw`text-gray-500`}>{Texts.ForgotPassword}</Text>
+        <Text style={tw`text-${contrastGray}`}>{Texts.ForgotPassword}</Text>
       </TouchableOpacity>
 
       {/* Sign in or Sign up */}
