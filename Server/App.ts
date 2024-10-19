@@ -514,6 +514,9 @@ app.post('/logout', (req, res) => {
 
 app.post('/rememberPassword', async (req, res) => {
   const { email } = req.body;
+  console.log('UserEmail:', email);
+  console.log('ZalkEmail:', process.env.ZALK_EMAIL);
+  console.log('ZalkEmailPass:', process.env.ZALK_EMAIL_PASS);
   try {
     const user = await Users.findOne({ where: { email: email } });
     if (user) {

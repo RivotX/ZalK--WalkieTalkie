@@ -27,7 +27,7 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
   const { Texts } = useLanguage();
   const [formError, setFormError] = useState("default");
   const [LoginScreenState, setLoginScreenState] = useState(LoginScreen);
-  const [RememberModalVisible, setRememberModalVisible] = useState(true);
+  const [RememberModalVisible, setRememberModalVisible] = useState(false);
   console.log("SERVER_URL LOGIN", SERVER_URL);
   // === Animaciones para los placeholders ====
   const usernamePlaceholderAnim = useRef(new Animated.Value(0)).current;
