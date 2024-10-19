@@ -8,7 +8,7 @@ import axios from 'axios';
 import getEnvVars from '../../config';
 const { SERVER_URL } = getEnvVars();
 
-const ResetPasswordModal = ({ setModalVisible, modalVisible }) => {
+const ResetPasswordModal = ({ setModalVisible, modalVisible, setLoadingLayout }) => {
   const modal_bg_color = useThemeColor({}, 'modal_bg_color');
   const modal_text_color = useThemeColor({}, 'modal_text_color');
   const modal_title_color = useThemeColor({}, 'modal_title_color');
@@ -47,12 +47,13 @@ const ResetPasswordModal = ({ setModalVisible, modalVisible }) => {
       showAlert(Texts.ResetPasswordFailedTitle, error);
       return;
     }
-
+    setLoadingLayout(true);
     axios.post(`${SERVER_URL}/ResetPassword`, { email })
       .then((res) => {
         console.log('Password remember email sent', res.data);
         showAlert(Texts.ResetPasswordSuccessTitle, Texts.ResetPasswordSuccess);
         setModalVisible(false);
+        setLoadingLayout(false);
       })
       .catch((error) => {
         if (error.response && error.response.status === 404) {
@@ -60,6 +61,7 @@ const ResetPasswordModal = ({ setModalVisible, modalVisible }) => {
         } else {
           showAlert(Texts.ResetPasswordFailedTitle, Texts.ResetPasswordError);
         }
+        setLoadingLayout(false);
         console.error('Error sending password reset email:', error);
       });
   };

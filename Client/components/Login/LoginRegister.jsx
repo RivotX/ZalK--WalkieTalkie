@@ -406,7 +406,7 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
       </TouchableOpacity>
 
       {/* Remember Password Modal */}
-      {RememberModalVisible && <ResetPasswordModal modalVisible={RememberModalVisible} setModalVisible={setRememberModalVisible} />}
+      {RememberModalVisible && <ResetPasswordModal modalVisible={RememberModalVisible} setModalVisible={setRememberModalVisible} setLoadingLayout={setLoading} />}
 
     </View>
   );
