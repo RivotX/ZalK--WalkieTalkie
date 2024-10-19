@@ -13,7 +13,7 @@ import { AppState, AppStateStatus } from 'react-native';
 
 export default function RandomZalkScreen() {
   const route = useRoute();
-  const navigator = useNavigation();
+  const navigation = useNavigation();
   const socket = useSocket();
   const [isStarted, setIsStarted] = useState(false);
   const [RandomUser, setRandomUser] = useState(route.params.randomUser);
@@ -81,7 +81,7 @@ export default function RandomZalkScreen() {
     if (isConectionClose) {
       setIsStarted(false);
       setRandomUser({});
-      navigator.navigate('RandomZalk');
+      navigation.navigate('RandomZalk');
       showAlert('Connection closed', 'The other person closed the connection', 'OK');
     }
   }, [isConectionClose]);
@@ -90,31 +90,37 @@ export default function RandomZalkScreen() {
     setIsConectionClose(true);
     setTimeLeft(3 * 60);
     socket.emit('leave_room', RandomUser.room, RandomUser.userID);
-    navigator.navigate("RandomZalk");
+    navigation.navigate("RandomZalk");
   };
 
-    // ===== AppState =====
-    useEffect(() => {
-      if (socket != null) {
-        const handleAppStateChange = (nextAppState) => {
-          if (nextAppState === 'background') {
-            onBackground();
-          }
-        };
-        const subscription = AppState.addEventListener('change', handleAppStateChange);
-  
-        return () => {
-          subscription.remove();
-        };
-      }
-    }, [appState, socket]);
-  
-    const onBackground = () => {
-      console.log('La app ha vuelto al primer plano.');
+  // ===== AppState =====
+  useEffect(() => {
+    if (socket != null) {
+      const handleAppStateChange = (nextAppState) => {
+        if (nextAppState === 'background') {
+          onBackground();
+        }
+      };
+      const subscription = AppState.addEventListener('change', handleAppStateChange);
+
+      return () => {
+        subscription.remove();
+      };
+    }
+  }, [appState, socket]);
+
+  const onBackground = () => {
+    console.log('La app ha vuelto al primer plano.');
+    closeConnection();
+
+  };
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
       closeConnection();
-      
-    };
-  
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
 
 
