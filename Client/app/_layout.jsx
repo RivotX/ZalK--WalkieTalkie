@@ -31,6 +31,7 @@ import { LanguageProvider } from '../context/LanguageContext';
 import { useLanguage } from '../context/LanguageContext';
 import { setBackgroundColorAsync } from 'expo-system-ui';
 import { BusyProvider, useBusy } from '../context/BusyContext'; // Importa el BusyProvider y el hook useBusy
+import { useNavigation } from '@react-navigation/native';
 
 function RootLayout() {
   const [modalIconVisible, setModalIconVisible] = useState(false);
@@ -50,6 +51,7 @@ function RootLayout() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const { Texts } = useLanguage();
   const { isBusy, setIsBusy } = useBusy();
+  const navigation = useNavigation();
 
   console.log('SERVER_URL:', SERVER_URL);
   console.log('SOCKET_URL:', SOCKET_URL);
@@ -127,7 +129,7 @@ function RootLayout() {
   };
 
   useEffect(() => {
-    console.log('isBusy en RootLayout /getssesion', isBusy);
+    console.log('isBusy en RootLayout ', isBusy);
   }, [isBusy]);
 
   // ===== Gets the user data when the user is logged in =======
@@ -189,29 +191,30 @@ function RootLayout() {
       });
 
       socket.on('receive-audio', async (base64Audio, room) => {
-        
-        if (isBusy) return;
-        console.log('Received audio data from room', room);
+        console.log('Recieve audio, isbusy: ', isBusy);
+        if (isBusy === false) {
+          console.log('Received audio data from room', room);
 
-        // Asegúrate de que el base64Audio no esté corrupto
-        if (!base64Audio || base64Audio.length === 0) {
-          console.error('Audio data is empty or corrupted');
-          return;
-        }
+          // Asegúrate de que el base64Audio no esté corrupto
+          if (!base64Audio || base64Audio.length === 0) {
+            console.error('Audio data is empty or corrupted');
+            return;
+          }
 
-        const uri = `data:audio/mp3;base64,${base64Audio}`;
-        console.log('audio enviado', uri);
+          const uri = `data:audio/mp3;base64,${base64Audio}`;
+          console.log('audio enviado', uri);
 
-        try {
-          const { sound } = await Audio.Sound.createAsync({ uri }, { shouldPlay: true });
-          await sound.setVolumeAsync(1.0);
-          await sound.playAsync();
-          console.log('Playing sound');
-          // Alert.alert('playing sound');
-          // Schedule a notification
-        } catch (error) {
-          Alert.alert('Error playing sound', error);
-          console.error('Error playing sound:', error);
+          try {
+            const { sound } = await Audio.Sound.createAsync({ uri }, { shouldPlay: true });
+            await sound.setVolumeAsync(1.0);
+            await sound.playAsync();
+            console.log('Playing sound');
+            // Alert.alert('playing sound');
+            // Schedule a notification
+          } catch (error) {
+            Alert.alert('Error playing sound', error);
+            console.error('Error playing sound:', error);
+          }
         }
       });
 
@@ -273,7 +276,12 @@ function RootLayout() {
                   headerTitle: () => (
                     <View style={tw`flex-row justify-between items-center w-full`}>
                       <TouchableOpacity style={tw`flex-row items-center w-[68%]`} onPress={() => setModalIconVisible(true)}>
-                        <Image source={profilePicture ? { uri: profilePicture } : ProfileIcon} style={tw`size-9 mr-2 rounded-full`} />
+                        <TouchableOpacity onPress={() => {
+                          const user = { name: username, profile: profilePicture ?? null };
+                          navigation.navigate("ProfilePictureScreen", { user: user, isContact: true });
+                        }}>
+                          <Image source={profilePicture ? { uri: profilePicture } : ProfileIcon} style={tw`size-9 mr-2 rounded-full`} />
+                        </TouchableOpacity>
                         <UserProfileModal
                           user={{ name: username, info: info, profile: profilePicture ?? null }}
                           modalIconVisible={modalIconVisible}
@@ -339,8 +347,12 @@ function RootLayout() {
                           isContact={isContact}
                         />
                         <TouchableOpacity onPress={() => setUserProfileModalSC(true)} style={tw`ml-10 w-3/5 flex-row justify-start items-center`}>
-                          <Image source={user.profile ? { uri: user.profile } : isContact ? ProfileIcon : groupicon} style={tw`size-11 rounded-full `} />
-                          <Text style={tw`text-[${textColor}] font-bold text-lg ml-2  `}>{user.name ?? 'Chat Room'}</Text>
+                          <TouchableOpacity onPress={() => navigation.navigate("ProfilePictureScreen", { user: user, isContact: true })} >
+                            <Image source={user.profile ? { uri: user.profile } : isContact ? ProfileIcon : groupicon} style={tw`size-11 rounded-full `} />
+                          </TouchableOpacity>
+                          <Text style={tw`text-[${textColor}] font-bold text-lg mx-2  `}>{user.name ?? 'Chat Room'}</Text>
+                          {user.isBusy == true && <Ionicons name="notifications-off" size={18} color="red" />}
+
                         </TouchableOpacity>
                       </View>
                     ),
