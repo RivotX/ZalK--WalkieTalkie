@@ -116,7 +116,7 @@ function RootLayout() {
         .then((res) => {
           setUsername(res.data.user.username);
           setIsBusy(res.data.user.isBusy);
-          console.log('res isbusy en layout', res.data.user.isBusy);
+          console.log('res isBusy en RootLayout', res.data.user.isBusy);
           setUserID(res.data.user.id);
           setInfo(res.data.user.info);
           setProfilePicture(res.data.user.profilePicture);
