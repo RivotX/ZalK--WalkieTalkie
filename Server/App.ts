@@ -525,17 +525,22 @@ app.post('/logout', (req, res) => {
 
 
 // =========== Reset Password =====================
-
 app.post('/requestPasswordReset', async (req, res) => {
   const { email } = req.body;
+  console.log('Request received for password reset:', email);
 
   try {
     const user = await Users.findOne({ where: { email: email } });
     if (user) {
+      console.log('User found:', user.username);
+
       const token = crypto.randomBytes(32).toString('hex');
+      console.log('Generated token:', token);
+
       user.resetToken = token;
       user.resetTokenExpiration = new Date(Date.now() + 3600000); // 1 hour
       await user.save();
+      console.log('Token and expiration saved to user:', user.username);
 
       const mailOptions = {
         from: process.env.ZALK_EMAIL,
@@ -549,11 +554,12 @@ app.post('/requestPasswordReset', async (req, res) => {
           console.error('Error sending email:', error);
           return res.status(500).send('Error sending email');
         } else {
-          console.log('Email sent: ' + info.response);
+          console.log('Email sent:', info.response);
           return res.status(200).send('Password reset token sent successfully');
         }
       });
     } else {
+      console.log('User not found for email:', email);
       res.status(404).send('User not found');
     }
   } catch (error) {
@@ -564,18 +570,25 @@ app.post('/requestPasswordReset', async (req, res) => {
 
 app.post('/resetPassword', async (req, res) => {
   const { email, token, newPassword } = req.body;
+  console.log('Request received to reset password:', email, token);
 
   try {
     const user = await Users.findOne({ where: { email: email, resetToken: token, resetTokenExpiration: { [Op.gt]: Date.now() } } });
     if (user) {
+      console.log('User found and token is valid:', user.username);
+
       const hashedPassword = await bcrypt.hash(newPassword, 10);
+      console.log('New password hashed');
+
       user.password = hashedPassword;
       user.resetToken = null;
       user.resetTokenExpiration = null;
       await user.save();
+      console.log('Password updated and token cleared for user:', user.username);
 
       res.status(200).send('Password reset successfully');
     } else {
+      console.log('Invalid or expired token for email:', email);
       res.status(400).send('Invalid or expired token');
     }
   } catch (error) {
