@@ -15,6 +15,7 @@ import fs from 'fs';
 import { requestNotification } from './PushNotifications/RequestNotification';
 import { AudioNotification } from './PushNotifications/AudioNotification';
 import nodemailer from 'nodemailer';
+import crypto from 'crypto';
 
 const app = express();
 const connectedUsers: { [key: string]: string } = {};
@@ -98,6 +99,8 @@ class Users extends Model {
   declare requests: string;
   declare isBusy: boolean;
   declare token: string;
+  declare resetToken: string | null;
+  declare resetTokenExpiration: Date | null;
 
   // Method to set the password, hashes password and sets the password
   setPassword(password: string): void {
@@ -193,6 +196,14 @@ Users.init(
     },
     token: {
       type: DataTypes.STRING(256),
+      allowNull: true,
+    },
+    resetToken: {
+      type: DataTypes.STRING(256),
+      allowNull: true,
+    },
+    resetTokenExpiration: {
+      type: DataTypes.DATE,
       allowNull: true,
     },
   },
@@ -523,24 +534,25 @@ function generateTemporaryPassword(length: number): string {
   return password;
 }
 
-app.post('/ResetPassword', async (req, res) => {
+// =========== Reset Password =====================
+
+app.post('/requestPasswordReset', async (req, res) => {
   const { email } = req.body;
 
   try {
     const user = await Users.findOne({ where: { email: email } });
     if (user) {
-      const newPassword = generateTemporaryPassword(16); // Genera una contraseña de 16 caracteres
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-      // Actualizar la contraseña del usuario en la base de datos
-      user.password = hashedPassword;
+      const token = crypto.randomBytes(32).toString('hex');
+      user.resetToken = token;
+      user.resetTokenExpiration = Date.now() + 3600000; // 1 hour
       await user.save();
 
+      const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}&email=${email}`;
       const mailOptions = {
         from: process.env.ZALK_EMAIL,
         to: email,
-        subject: 'Your New Password',
-        text: `Hello ${user.username},\n\nWe have generated a new password for you: ${newPassword}\n\nFor your security, please change this password as soon as possible in your account settings.\n\nBest regards,\nThe Zalk Team`,
+        subject: 'Password Reset Request',
+        text: `Hello ${user.username},\n\nPlease click the following link to reset your password:\n\n${resetLink}\n\nIf you did not request this, please ignore this email.\n\nBest regards,\nThe Zalk Team`,
       };
 
       transporter.sendMail(mailOptions, (error, info) => {
@@ -549,14 +561,36 @@ app.post('/ResetPassword', async (req, res) => {
           return res.status(500).send('Error sending email');
         } else {
           console.log('Email sent: ' + info.response);
-          return res.status(200).send('Email sent successfully');
+          return res.status(200).send('Password reset email sent successfully');
         }
       });
     } else {
       res.status(404).send('User not found');
     }
   } catch (error) {
-    console.error('Error remembering password:', error);
+    console.error('Error requesting password reset:', error);
+    res.status(500).send('Internal server error');
+  }
+});
+
+app.post('/resetPassword', async (req, res) => {
+  const { email, token, newPassword } = req.body;
+
+  try {
+    const user = await Users.findOne({ where: { email: email, resetToken: token, resetTokenExpiration: { [Op.gt]: Date.now() } } });
+    if (user) {
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      user.password = hashedPassword;
+      user.resetToken = null;
+      user.resetTokenExpiration = null;
+      await user.save();
+
+      res.status(200).send('Password reset successfully');
+    } else {
+      res.status(400).send('Invalid or expired token');
+    }
+  } catch (error) {
+    console.error('Error resetting password:', error);
     res.status(500).send('Internal server error');
   }
 });
@@ -1575,14 +1609,14 @@ const initialRooms = [
   { name: 'Cocina Vegana', info: 'Comparte recetas veganas.' },
 ];
 
-sequelize.sync({ alter: true }).then(() => {
+sequelize.sync({ force: true }).then(() => {
   server.listen(3000, async () => {
     console.log('Server running...');
 
     // create groups
-    // // for (const room of initialRooms) {
-    // //   await Rooms.upsert(room);
-    // //   console.log("Room created:", room);
-    // // }
+    for (const room of initialRooms) {
+      await Rooms.upsert(room);
+      console.log("Room created:", room);
+    }
   });
 });
