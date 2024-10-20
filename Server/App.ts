@@ -1427,6 +1427,8 @@ io.on('connection', (socket: Socket) => {
     }
   });
 });
+// ================= * Profile picture upload* ===================================
+
 const s3 = new S3Client({
   region: process.env.AWS_REGION,
   credentials: {
@@ -1473,7 +1475,7 @@ app.post('/upload', (req, res) => {
 
       // Ejecutar la subida del archivo
       await s3.send(uploadCommand);
-
+      
       // Construir la URL del archivo
       const fileUrl = `https://${bucketName}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
 
@@ -1534,8 +1536,6 @@ app.get('/get-image-url/:userId', async (req, res) => {
   }
 });
 
-// Servir archivos estáticos desde la carpeta 'uploads'
-// app.use('/uploads', express.static(uploadDir));
 
 // ================= * END Profile picture upload* ===================================
 

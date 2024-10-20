@@ -181,11 +181,12 @@ function RootLayout() {
             setUsername(res.data.user.username);
             setInfo(res.data.user.info);
             setProfilePicture(res.data.user.profilePicture);
+            console.log('setProfilePicture en layout ', res.data.user.profilePicture);
           })
           .catch((error) => {
             console.log(error);
           })
-          .finally(() => {
+          .finally(() => { 
             setLoading(false);
           });
       });
@@ -227,6 +228,7 @@ function RootLayout() {
   // ===== Fetches the user profile picture =======
   useEffect(() => {
     fetchProfilePicture();
+    console.log('fetchProfilePicture layout');
   }, [userID]);
 
   const fetchProfilePicture = async () => {

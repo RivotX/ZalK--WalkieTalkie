@@ -187,12 +187,15 @@ const ProfileSettingsScreen = () => {
         profile: response.data.profilePicture,
       }));
       console.log("response.data.profilePicture", response.data.profilePicture);
-      console.log("user.profile", user.profile);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching profile picture:", error);
     }
   };
+  useEffect(() => {
+  console.log("user.profile", user.profile);
+  }, [user.profile]);
+
 
   // ===== Animation onPress or OnPressOut info =====
   const handlePress = (id) => {
