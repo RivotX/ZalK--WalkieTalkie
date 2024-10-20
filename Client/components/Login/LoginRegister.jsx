@@ -11,6 +11,7 @@ import { showAlert } from "../shared/ShowAlert";
 import getEnvVars from "../../config";
 const { SERVER_URL, SOCKET_URL } = getEnvVars();
 import ResetPasswordModal from "../modals/ResetPasswordModal";
+import ResetPasswordTokenModal from "../modals/ResetPasswordTokenModal";
 
 const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoading }) => {
   const [username, setUsername] = useState("");
@@ -35,6 +36,7 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
   const emailPlaceholderAnim = useRef(new Animated.Value(0)).current;
   const passwordPlaceholderAnim = useRef(new Animated.Value(0)).current;
   const confPasswordPlaceholderAnim = useRef(new Animated.Value(0)).current;
+  const [ResetTokenModalVisible, setResetTokenModalVisible] = useState(false);
 
   const handleFocus = (anim) => {
     Animated.timing(anim, {
@@ -352,6 +354,7 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
 
         </View>
       </View>
+      { /* Form Error */}
       {badLogin && <Text style={tw`text-red-500`}>{badLoginMsg}</Text>}
 
       {/* Confirm Password */}
@@ -406,8 +409,8 @@ const LoginRegister = ({ LoginScreen, SetLayoutLogged, setFirstScreen, setLoadin
       </TouchableOpacity>
 
       {/* Remember Password Modal */}
-      {RememberModalVisible && <ResetPasswordModal modalVisible={RememberModalVisible} setModalVisible={setRememberModalVisible} setLoadingLayout={setLoading} />}
-
+      {RememberModalVisible && <ResetPasswordModal modalVisible={RememberModalVisible} setModalVisible={setRememberModalVisible} setTokenModalVisible={setResetTokenModalVisible} setLoadingLayout={setLoading} />}
+      {ResetTokenModalVisible && <ResetPasswordTokenModal modalVisible={ResetTokenModalVisible} setModalVisible={setResetTokenModalVisible} setLoadingLayout={setLoading} />}
     </View>
   );
 };

@@ -9,7 +9,7 @@ import getEnvVars from '../../config';
 const { SERVER_URL } = getEnvVars();
 import { showAlert } from '../shared/ShowAlert';
 
-const ResetPasswordModal = ({ setModalVisible, modalVisible, setLoadingLayout, setTokenModalVisible }) => {
+const ResetPasswordTokenModal = ({ setModalVisible, modalVisible, setLoadingLayout }) => {
   const modal_bg_color = useThemeColor({}, 'modal_bg_color');
   const modal_text_color = useThemeColor({}, 'modal_text_color');
   const modal_title_color = useThemeColor({}, 'modal_title_color');
@@ -19,9 +19,9 @@ const ResetPasswordModal = ({ setModalVisible, modalVisible, setLoadingLayout, s
   const textcolor = useThemeColor({}, 'text');
   const { Texts } = useLanguage();
   const [email, setEmail] = useState('');
+  const [token, setToken] = useState('');
+  const [newPassword, setNewPassword] = useState('');
   const [formError, setFormError] = useState('');
-
-
 
   const validateEmail = (email) => {
     if (email.length > 100) {
@@ -34,34 +34,52 @@ const ResetPasswordModal = ({ setModalVisible, modalVisible, setLoadingLayout, s
     return '';
   };
 
-  const handleResetPassword = () => {
-    if (email.trim().length === 0) {
-      showAlert(Texts.ResetPasswordFailedTitle, Texts.EmptyEmail);
+  const validatePassword = (password) => {
+    if (password.length > 0 && password.length < 8) {
+      return Texts.Passwords8Characters;
+    }
+    if (password.length > 30) {
+      return Texts.PasswordTooLong;
+    }
+    return '';
+  };
+
+  const handleNewPassword = () => {
+    if (email.trim().length === 0 || token.trim().length === 0 || newPassword.trim().length === 0) {
+      showAlert(Texts.ResetPassTokenFailedTitle, Texts.EmptyFields);
       return;
     }
 
-    const error = validateEmail(email);
-    if (error) {
-      setFormError(error);
-      showAlert(Texts.ResetPasswordFailedTitle, error);
+    const emailError = validateEmail(email);
+    if (emailError) {
+      setFormError(emailError);
+      showAlert(Texts.ResetPassTokenFailedTitle, emailError);
       return;
     }
+
+    const passwordError = validatePassword(newPassword);
+    if (passwordError) {
+      setFormError(passwordError);
+      showAlert(Texts.ResetPassTokenFailedTitle, passwordError);
+      return;
+    }
+
     setLoadingLayout(true);
-    axios.post(`${SERVER_URL}/requestPasswordReset`, { email })
+    axios.post(`${SERVER_URL}/resetPassword`, { email, token, newPassword })
       .then((res) => {
-        console.log('Password reset email sent', res.data);
+        console.log('Password reset successfully', res.data);
+        showAlert(Texts.ResetPasswordSuccessTitle, Texts.PasswordResetSuccess);
         setModalVisible(false);
         setLoadingLayout(false);
-        setTokenModalVisible(true)
       })
       .catch((error) => {
-        if (error.response && error.response.status === 404) {
-          showAlert(Texts.ResetPasswordFailedTitle, Texts.UserNotFound);
+        if (error.response && error.response.status === 400) {
+          showAlert(Texts.ResetPassTokenFailedTitle, Texts.InvalidToken);
         } else {
-          showAlert(Texts.ResetPasswordFailedTitle, Texts.ResetPasswordError);
+          showAlert(Texts.ResetPassTokenFailedTitle, Texts.ResetPasswordError);
         }
         setLoadingLayout(false);
-        console.error('Error sending password reset email:', error);
+        console.error('Error resetting password:', error);
       });
   };
 
@@ -102,6 +120,25 @@ const ResetPasswordModal = ({ setModalVisible, modalVisible, setLoadingLayout, s
               keyboardType="email-address"
               autoCapitalize="none"
             />
+            <TextInput
+              style={[tw`border-b border-${modal_text_color} text-${modal_text_color} w-full py-2 px-3 rounded-lg text-left`, styles.textInput]}
+              placeholder={Texts.TokenPlaceholder}
+              placeholderTextColor={disabledText}
+              value={token}
+              onChangeText={(text) => setToken(text)}
+            />
+            <TextInput
+              style={[tw`border-b border-${modal_text_color} text-${modal_text_color} w-full py-2 px-3 rounded-lg text-left`, styles.textInput]}
+              placeholder={Texts.NewPasswordPlaceholder}
+              placeholderTextColor={disabledText}
+              value={newPassword}
+              onChangeText={(text) => {
+                setNewPassword(text);
+                const error = validatePassword(text);
+                setFormError(text.length > 0 ? error : '');
+              }}
+              secureTextEntry
+            />
             <View style={tw`min-h-[35px] justify-center my-2`}>
               {formError ? <Text style={[tw`text-red-500 text-left`, styles.errorText]}>{formError}</Text> : null}
             </View>
@@ -117,7 +154,7 @@ const ResetPasswordModal = ({ setModalVisible, modalVisible, setLoadingLayout, s
               </TouchableOpacity>
               <TouchableOpacity
                 style={tw`flex-1 bg-${accept_button_color} py-2 px-4 rounded-full mx-1`}
-                onPress={handleResetPassword}
+                onPress={handleNewPassword}
               >
                 <Text style={tw`text-white font-bold text-center`}>{Texts.Send}</Text>
               </TouchableOpacity>
@@ -143,4 +180,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ResetPasswordModal;
+export default ResetPasswordTokenModal;
