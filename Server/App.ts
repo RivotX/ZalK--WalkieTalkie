@@ -537,12 +537,11 @@ app.post('/requestPasswordReset', async (req, res) => {
       user.resetTokenExpiration = new Date(Date.now() + 3600000); // 1 hour
       await user.save();
 
-      const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}&email=${email}`;
       const mailOptions = {
         from: process.env.ZALK_EMAIL,
         to: email,
         subject: 'Password Reset Request',
-        text: `Hello ${user.username},\n\nPlease click the following link to reset your password:\n\n${resetLink}\n\nIf you did not request this, please ignore this email.\n\nBest regards,\nThe Zalk Team`,
+        text: `Hello ${user.username},\n\nYour password reset token is: ${token}\n\nPlease use this token to reset your password in the app.\n\nIf you did not request this, please ignore this email.\n\nBest regards,\nThe Zalk Team`,
       };
 
       transporter.sendMail(mailOptions, (error, info) => {
@@ -551,7 +550,7 @@ app.post('/requestPasswordReset', async (req, res) => {
           return res.status(500).send('Error sending email');
         } else {
           console.log('Email sent: ' + info.response);
-          return res.status(200).send('Password reset email sent successfully');
+          return res.status(200).send('Password reset token sent successfully');
         }
       });
     } else {
