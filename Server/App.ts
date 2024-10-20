@@ -523,16 +523,6 @@ app.post('/logout', (req, res) => {
   });
 });
 
-// =========== Reset Password ==================
-function generateTemporaryPassword(length: number): string {
-  const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+[]{}|;:,.<>?ñ';
-  let password = '';
-  for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * charset.length);
-    password += charset[randomIndex];
-  }
-  return password;
-}
 
 // =========== Reset Password =====================
 
@@ -544,7 +534,7 @@ app.post('/requestPasswordReset', async (req, res) => {
     if (user) {
       const token = crypto.randomBytes(32).toString('hex');
       user.resetToken = token;
-      user.resetTokenExpiration = Date.now() + 3600000; // 1 hour
+      user.resetTokenExpiration = new Date(Date.now() + 3600000); // 1 hour
       await user.save();
 
       const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}&email=${email}`;
