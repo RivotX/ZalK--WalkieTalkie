@@ -546,7 +546,7 @@ app.post('/requestPasswordReset', async (req, res) => {
         from: process.env.ZALK_EMAIL,
         to: email,
         subject: 'Password Reset Request',
-        text: `Hello ${user.username},\n\nYour password reset token is: ${token}\n\nPlease use this token to reset your password in the app.\n\nIf you did not request this, please ignore this email.\n\nBest regards,\nThe Zalk Team`,
+        text: `Hello ${user.username},\n\nYour password reset token is: \n\n${token}\n\nPlease use this token to reset your password in the app.\n\nIf you did not request this, please ignore this email.\n\nBest regards,\nThe Zalk Team`,
       };
 
       transporter.sendMail(mailOptions, (error, info) => {
