@@ -112,7 +112,7 @@ class Users extends Model {
   // Method to check the password against the hashed password
   checkPassword(password: string): boolean {
     const result = bcrypt.compareSync(password, this.password);
-    console.log(`Checking password for ${this.username}: ${result} - ${this.password} - ${password}`); // Debug print
+    // console.log(`Checking password for ${this.username}: ${result}`); // Debug print
     return result;
   }
 
@@ -469,12 +469,12 @@ app.post('/login', async (req, res) => {
     });
 
     if (user && user.checkPassword(password)) {
-      console.log('User found in database');
+      // console.log('User found in database');
       user.dataValues.password = undefined; // Remove password from user info
       user.dataValues.groups = JSON.parse(user.dataValues.groups); // parsea los grupos de usuario
       user.dataValues.contacts = JSON.parse(user.dataValues.contacts); // Remove contacts from user info
       user.dataValues.requests = JSON.parse(user.dataValues.requests); // Remove contacts from user info
-      console.log('UserValuesLISTOS:', user.dataValues);
+      console.log('ID User Logged: ', user.dataValues.id);
       req.session.user = user.dataValues; // Store user info in session
 
       req.session.save();
