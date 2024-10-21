@@ -928,7 +928,7 @@ interface WaitingUser {
 }
 let waitingUser: WaitingUser | null = null; // Para manejar usuarios en espera
 io.on('connection', (socket: Socket) => {
-  console.log('sockets activo:', io.sockets.sockets.size);
+  console.log('------------------------------------------------sockets activo:', io.sockets.sockets.size);
   const groups = socket.handshake.query.groups as string | undefined;
   const userID = socket.handshake.query.userID as number | undefined;
   const contacts = socket.handshake.query.contacts as string | undefined;
@@ -964,7 +964,7 @@ io.on('connection', (socket: Socket) => {
   console.log('User connected:', socket.id);
   if (userID) {
     connectedUsers[userID] = socket.id;
-    console.log(`------------------------------------------------Usuario registrado: ${userID} con socket ID: ${socket.id}`);
+    console.log(`Usuario registrado: ${userID} con socket ID: ${socket.id}`);
     console.log('Usuarios conectados:', connectedUsers);
   }
 
