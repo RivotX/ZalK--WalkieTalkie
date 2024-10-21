@@ -8,7 +8,7 @@ import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 dotenv.config();
 import multer from 'multer';
-import { S3Client, PutObjectCommand, ListBucketsCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, ListBucketsCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import multerS3 from 'multer-s3';
 import path from 'path';
 import fs from 'fs';
@@ -83,6 +83,28 @@ const transporter = nodemailer.createTransport({
     pass: process.env.ZALK_EMAIL_PASS,
   },
 });
+
+// =================================================================
+// * AWS3 CONFIG *
+// =================================================================
+
+const s3 = new S3Client({
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+  },
+});
+const upload = multer().single('file');
+
+async function checkS3Connection() {
+  try {
+    const result = await s3.send(new ListBucketsCommand({}));
+    console.log('Successfully connected to S3. Buckets:', result.Buckets);
+  } catch (error) {
+    console.error('Failed to connect to S3:', error);
+  }
+}
 
 // =================================================================
 // * Users *
@@ -1384,9 +1406,30 @@ io.on('connection', (socket: Socket) => {
   socket.on('send-audio', async (audioData: any, room: string) => {
     try {
       // Emitir el audio recibido a todos los demás clientes conectados
-      socket.to(room).emit('receive-audio', audioData, room);
-      console.log('Audio data sent to all clients in room:', room);
+      // socket.to(room).emit('receive-audio', audioData, room);
 
+
+
+      console.log('Audio data sent to room:', room);
+
+      //Guardar el audio en S3
+      const bucketName = process.env.S3_BUCKET_NAME;
+      const fileName = `${Date.now().toString()}-${audioData.name}`;
+
+      const uploadCommand = new PutObjectCommand({
+        Bucket: bucketName,
+        Key: fileName,
+        Body: audioData.data,
+        ContentType: audioData.type,
+      });
+
+      await s3.send(uploadCommand);
+
+      const fileUrl = `https://${bucketName}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
+
+      console.log('AUDIO UPLOADED to:', fileUrl);
+
+      // Emitir el audio a todos los demás clientes conectados
       const roomSockets = io.sockets.adapter.rooms.get(room);
       if (roomSockets) {
         const roomSocketsArray = Array.from(roomSockets);
@@ -1404,13 +1447,25 @@ io.on('connection', (socket: Socket) => {
             });
             if (user && user.token) {
               console.log('user:', user.username);
-              await AudioNotification(user.username, user.token, audioData);
+              await AudioNotification(user.username, user.token, fileUrl);
             }
           }
         }
       } else {
         console.log(`No hay sockets conectados en la sala: ${room}`);
       }
+
+      //Eliminar el archivo del S3
+          // const deleteCommand = new DeleteObjectCommand({
+          //   Bucket: bucketName,
+          //   Key: fileName,
+          // });
+          // await s3.send(deleteCommand);
+
+          // console.log('File deleted from S3:', fileName);
+
+
+
     } catch (error) {
       console.error('Error en send-audio:', error);
     }
@@ -1427,24 +1482,9 @@ io.on('connection', (socket: Socket) => {
     }
   });
 });
-const s3 = new S3Client({
-  region: process.env.AWS_REGION,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-  },
-});
 
-async function checkS3Connection() {
-  try {
-    const result = await s3.send(new ListBucketsCommand({}));
-    console.log('Successfully connected to S3. Buckets:', result.Buckets);
-  } catch (error) {
-    console.error('Failed to connect to S3:', error);
-  }
-}
 
-const upload = multer().single('file');
+
 
 // Endpoint para manejar la carga de archivos
 app.post('/upload', (req, res) => {
