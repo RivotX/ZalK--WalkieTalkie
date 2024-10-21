@@ -478,7 +478,7 @@ app.post('/login', async (req, res) => {
       req.session.user = user.dataValues; // Store user info in session
 
       req.session.save();
-      console.log('sesion guardada:', req.session);
+      // console.log('sesion guardada:', req.session);
       res.status(200).send(req.session);
     } else {
       res.status(401).send('Invalid login');
@@ -755,8 +755,9 @@ app.post('/getContacts', async (req, res) => {
         contactId: userId, // Añade la condición de que contactId debe ser igual a userId
       },
     });
+    console.log('contacts conseguidos');
 
-    console.log('contacts:', contacts);
+    // console.log('contacts:', contacts);
 
     if (contacts.length > 0) {
       res.status(200).send(contacts);
@@ -810,7 +811,8 @@ app.post('/getGroups', async (req, res) => {
           groupsList.push(group.dataValues);
         }
       }
-      console.log('grupos del usuario', groupsList);
+      console.log('grupos del usuario conseguidos');
+      // console.log('grupos del usuario', groupsList);
       res.status(200).send(groupsList);
     } else {
       res.status(200).send([]);
@@ -841,7 +843,7 @@ app.post('/getGroupMembers', async (req, res) => {
           membersList.push(member);
         }
       }
-      console.log('Miembros del grupo:', membersList);
+      console.log('Miembros del grupo conseguidos');
       res.status(200).send(membersList);
     } else {
       res.status(200).send([]);
@@ -878,7 +880,7 @@ app.post('/getRequest', async (req, res) => {
           userRequest.dataValues.contacts = undefined; // Remove contacts from user info
           userRequest.dataValues.requests = undefined; // Remove requests from user info
           userRequest.dataValues.token = undefined; // Remove token from user info
-          console.log('userRequest: DATOSSSSSSSSSSSSSSSSSS', userRequest);
+          console.log('userRequest: DATOS conseguidos');
           requestsList.push(userRequest.dataValues);
         }
       }
@@ -936,7 +938,7 @@ io.on('connection', (socket: Socket) => {
     try {
       JSON.parse(groups).forEach((group: any) => {
         socket.join(group.name);
-        console.log('User joined group:', group);
+        console.log('User joined group:', group.name);
       });
     } catch (error) {
       console.error('Error parsing groups:', error);
@@ -962,15 +964,13 @@ io.on('connection', (socket: Socket) => {
   console.log('User connected:', socket.id);
   if (userID) {
     connectedUsers[userID] = socket.id;
-    console.log(`Usuario registrado: ${userID} con socket ID: ${socket.id}`);
+    console.log(`------------------------------------------------Usuario registrado: ${userID} con socket ID: ${socket.id}`);
     console.log('Usuarios conectados:', connectedUsers);
   }
 
   // Socket Join room
   socket.on('join', async (data) => {
     const room = data.room; // Nombre de la sala a la que se une
-    console.log('Username:', data.userId);
-
     try {
       const user = await Users.findOne({
         where: {
@@ -1427,8 +1427,6 @@ io.on('connection', (socket: Socket) => {
     }
   });
 });
-// ================= * Profile picture upload* ===================================
-
 const s3 = new S3Client({
   region: process.env.AWS_REGION,
   credentials: {
@@ -1475,7 +1473,7 @@ app.post('/upload', (req, res) => {
 
       // Ejecutar la subida del archivo
       await s3.send(uploadCommand);
-      
+
       // Construir la URL del archivo
       const fileUrl = `https://${bucketName}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
 
@@ -1528,7 +1526,7 @@ app.get('/get-image-url/:userId', async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    console.log('user:', user);
+    console.log('user:', user.id);
     res.status(200).json({ profilePicture: user.profilePicture });
   } catch (error: any) {
     console.log('Error getting image URL:', error);
@@ -1536,6 +1534,8 @@ app.get('/get-image-url/:userId', async (req, res) => {
   }
 });
 
+// Servir archivos estáticos desde la carpeta 'uploads'
+// app.use('/uploads', express.static(uploadDir));
 
 // ================= * END Profile picture upload* ===================================
 
