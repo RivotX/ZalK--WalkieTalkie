@@ -1394,7 +1394,7 @@ io.on('connection', (socket: Socket) => {
 
         // Si es un array de sockets se recorre y se envía la notificación a cada uno
         for (const socketId of roomSockets) {
-          console.log('socketId:', socketId);
+          // console.log('socketId:', socketId);
           const userId = Object.keys(connectedUsers).find((key) => connectedUsers[key] === socketId);
           if (userId) {
             const user = await Users.findOne({
