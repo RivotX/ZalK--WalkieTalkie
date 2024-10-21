@@ -17,6 +17,7 @@ import { AudioNotification } from './PushNotifications/AudioNotification';
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 import { v4 as uuidv4 } from 'uuid'; // Importing UUID library for generating unique IDs
+import mime from 'mime-types'; // Importing mime-types library to handle MIME types
 
 const app = express();
 const connectedUsers: { [key: string]: string } = {};
@@ -1418,9 +1419,11 @@ io.on('connection', (socket: Socket) => {
 
       //Guardar el audio en S3
 
+      const extension = mime.extension("audio/mpeg") || 'bin'; // 'bin' as default if type is unknown
+
       const bucketName = process.env.S3_BUCKET_NAME;
       const uniqueId = uuidv4();
-      const fileName = `${Date.now().toString()}-${uniqueId}-${audioData.name}`;
+      const fileName = `${Date.now().toString()}-${uniqueId}.${extension}`;
 
       const uploadCommand = new PutObjectCommand({
         Bucket: bucketName,
