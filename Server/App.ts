@@ -1408,7 +1408,7 @@ io.on('connection', (socket: Socket) => {
   socket.on('send-audio', async (audioData: any, room: string) => {
     try {
       // Emitir el audio recibido a todos los demás clientes conectados
-      // socket.to(room).emit('receive-audio', audioData, room);
+      socket.to(room).emit('receive-audio', audioData, room);
 
 
 
@@ -1423,13 +1423,13 @@ io.on('connection', (socket: Socket) => {
 
       const bucketName = process.env.S3_BUCKET_NAME;
       const uniqueId = uuidv4();
-      const fileName = `${Date.now().toString()}-${uniqueId}.${"mpeg"}`;
+      const fileName = `${Date.now().toString()}-${uniqueId}.${"mp3"}`;
 
       const uploadCommand = new PutObjectCommand({
         Bucket: bucketName,
         Key: fileName,
         Body: audioBuffer,
-        ContentType: "audio/mpeg",
+        ContentType: "audio/mp3",
     });
 
       await s3.send(uploadCommand);
