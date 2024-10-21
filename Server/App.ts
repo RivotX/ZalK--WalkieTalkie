@@ -1423,13 +1423,13 @@ io.on('connection', (socket: Socket) => {
 
       const bucketName = process.env.S3_BUCKET_NAME;
       const uniqueId = uuidv4();
-      const fileName = `${Date.now().toString()}-${uniqueId}.${"mp3"}`;
+      const fileName = `${Date.now().toString()}-${uniqueId}.${"mpeg"}`;
 
       const uploadCommand = new PutObjectCommand({
         Bucket: bucketName,
         Key: fileName,
         Body: audioBuffer,
-        ContentType: "audio/mp3",
+        ContentType: "audio/mpeg",
     });
 
       await s3.send(uploadCommand);
