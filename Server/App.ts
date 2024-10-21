@@ -1419,17 +1419,17 @@ io.on('connection', (socket: Socket) => {
 
       //Guardar el audio en S3
 
-      const extension = mime.extension("audio/mpeg") || 'bin'; // 'bin' as default if type is unknown
+      
 
       const bucketName = process.env.S3_BUCKET_NAME;
       const uniqueId = uuidv4();
-      const fileName = `${Date.now().toString()}-${uniqueId}.${extension}`;
+      const fileName = `${Date.now().toString()}-${uniqueId}.${"mp3"}`;
 
       const uploadCommand = new PutObjectCommand({
         Bucket: bucketName,
         Key: fileName,
         Body: audioBuffer,
-        ContentType: "audio/mpeg",
+        ContentType: "audio/mp3",
     });
 
       await s3.send(uploadCommand);
