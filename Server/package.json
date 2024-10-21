@@ -16,7 +16,8 @@
     "mysql2": "^3.10.3",
     "nodemailer": "^6.9.15",
     "sequelize": "^6.37.3",
-    "socket.io": "^4.7.5"
+    "socket.io": "^4.7.5",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
@@ -28,7 +29,8 @@
     "@types/node": "^20.14.11",
     "@types/nodemailer": "^6.4.16",
     "@types/sequelize": "^4.28.20",
-    "@types/socket.io": "^3.0.1"
+    "@types/socket.io": "^3.0.1",
+    "@types/uuid": "^10.0.0"
   },
   "scripts": {
     "build": "tsc",

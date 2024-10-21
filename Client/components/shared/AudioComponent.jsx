@@ -127,8 +127,9 @@ const AudioComponent = ({ currentRoom, isConectionClose, sizeInside, sizeOutside
 
       reader.onloadend = () => {
         const base64Audio = reader.result.split(",")[1];
+        const audioData = { data: base64Audio, name: `${userID}-${currentRoom}` };
         // Envía el audio base64 al socket
-        socket.emit("send-audio", base64Audio, currentRoom);
+        socket.emit("send-audio", audioData, currentRoom);
         setRecordedAudio({ uri });
         console.log("Audio sent successfully");
       };

@@ -16,6 +16,7 @@ import { requestNotification } from './PushNotifications/RequestNotification';
 import { AudioNotification } from './PushNotifications/AudioNotification';
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
+import { v4 as uuidv4 } from 'uuid'; // Importing UUID library for generating unique IDs
 
 const app = express();
 const connectedUsers: { [key: string]: string } = {};
@@ -1412,16 +1413,21 @@ io.on('connection', (socket: Socket) => {
 
       console.log('Audio data sent to room:', room);
 
+      // Decodificar el audio base64 a un buffer
+      const audioBuffer = Buffer.from(audioData.data, 'base64');
+
       //Guardar el audio en S3
+
       const bucketName = process.env.S3_BUCKET_NAME;
-      const fileName = `${Date.now().toString()}-${audioData.name}`;
+      const uniqueId = uuidv4();
+      const fileName = `${Date.now().toString()}-${uniqueId}-${audioData.name}`;
 
       const uploadCommand = new PutObjectCommand({
         Bucket: bucketName,
         Key: fileName,
-        Body: audioData.data,
-        ContentType: audioData.type,
-      });
+        Body: audioBuffer,
+        ContentType: "audio/mpeg",
+    });
 
       await s3.send(uploadCommand);
 
