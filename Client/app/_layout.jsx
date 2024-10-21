@@ -210,7 +210,7 @@ function RootLayout() {
             await sound.setVolumeAsync(1.0);
             await sound.playAsync();
             console.log('Playing sound');
-            // Alert.alert('playing sound');
+            Alert.alert('playing sound');
             // Schedule a notification
           } catch (error) {
             Alert.alert('Error playing sound', error);
