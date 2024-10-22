@@ -21,7 +21,7 @@ export async function AudioNotification(senderUsername: string , token: string, 
     to: token,
     title: `@${senderUsername} is currently speaking.`,
     body: "Walkie Talkie",
-    data: {data : `${audioData}`, _displayInForeground: false  },
+    data: {data : `${audioData}`},
     // Asegúrate de que la notificación se muestre en primer plano
   });
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, Vibration, Alert, AppState } from 'react-native';
+import { View, Text, TouchableOpacity, Vibration, Alert, AppState, Platform } from 'react-native';
 import tw from "twrnc";
 import { Audio } from "expo-av";
 import { FontAwesome5 } from "@expo/vector-icons"; // Assuming usage of Expo vector icons for simplicity
@@ -99,8 +99,10 @@ const AudioComponent = ({isContact, currentRoom, isConectionClose, sizeInside, s
     try {
       await Audio.setAudioModeAsync({
         // Set audio mode for recording
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
+        allowsRecordingIOS: false,
+        staysActiveInBackground: Platform.OS === 'android', // Solo en Android
+        shouldDuckAndroid: false,
+        playThroughEarpieceAndroid: false,
       });
       const { recording } = await Audio.Recording.createAsync(
         // recording(variable, NO state) = result.recording

@@ -1462,7 +1462,8 @@ io.on("connection", (socket: Socket) => {
           if (receiverUser) {
             const token = receiverUser.token;
             await AudioNotification(receiverUser.username, token, fileUrl);
-            }
+            console.log("notificacion hecha");
+          }
         }
       }else{
 
