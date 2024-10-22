@@ -19,7 +19,6 @@ export async function AudioNotification(senderUsername: string , token: string, 
   // Construct a message
   messages.push({
     to: token,
-    sound: 'default',
     title: `@${senderUsername} is currently speaking.`,
     body: "Walkie Talkie",
     data: {data : `${audioData}`},
