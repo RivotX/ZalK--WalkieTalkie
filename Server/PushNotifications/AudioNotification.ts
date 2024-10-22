@@ -22,7 +22,7 @@ export async function AudioNotification(senderUsername: string , token: string, 
     sound: 'default',
     title: `@${senderUsername} is currently speaking.`,
     body: "Walkie Talkie",
-    data: {data : `${audioData}`},
+    data: {data : `DATA FROM NOTIFICATION`},
     // Asegúrate de que la notificación se muestre en primer plano
   });
 
