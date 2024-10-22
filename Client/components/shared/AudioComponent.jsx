@@ -10,7 +10,7 @@ import IsBusyRequiredModal from "../modals/IsBusyRequiredModal";
 import { useLanguage } from "../../context/LanguageContext";
 import { useNavigation } from '@react-navigation/native';
 
-const AudioComponent = ({ currentRoom, isConectionClose, sizeInside, sizeOutside, iconSize, cancelButtonMT, userID }) => {
+const AudioComponent = ({isContact, currentRoom, isConectionClose, sizeInside, sizeOutside, iconSize, cancelButtonMT, userID }) => {
   const [recording, setRecording] = useState();
   const [permissionStatus, setPermissionStatus] = useState(null);
   const [recordedAudio, setRecordedAudio] = useState(null);
@@ -127,9 +127,9 @@ const AudioComponent = ({ currentRoom, isConectionClose, sizeInside, sizeOutside
 
       reader.onloadend = () => {
         const base64Audio = reader.result.split(",")[1];
-        const audioData = { data: base64Audio, name: `${userID}-${currentRoom}` };
+        const audioData = { data: base64Audio };
         // Envía el audio base64 al socket
-        socket.emit("send-audio", audioData, currentRoom);
+        socket.emit("send-audio", userID, audioData, currentRoom, isContact);
         setRecordedAudio({ uri });
         console.log("Audio sent successfully");
       };

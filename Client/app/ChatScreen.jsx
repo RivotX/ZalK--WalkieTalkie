@@ -14,6 +14,7 @@ export default function ChatScreen() {
   const backgroundColor = useThemeColor({}, "background");
   const route = useRoute();
   const { user } = route.params;
+  const {isContact} = route.params;
   console.log("CS params" , route.params);
   const [currentRoom, setCurrentRoom] = useState(user.room);
   const [userID, setUserID] = useState();
@@ -25,6 +26,7 @@ export default function ChatScreen() {
       .then((res) => {
         setUserID(res.data.user.id);
         console.log("SESSIONES EN CHATROOM", res.data);
+        console.log("es contacto?" ,isContact);
       })
       .catch((error) => {
         console.log(error);
@@ -33,7 +35,7 @@ export default function ChatScreen() {
 
   return (
     <View style={tw`flex-1 bg-[${backgroundColor}] items-center justify-center`}>
-      {userID != undefined && <AudioComponent userID={userID} currentRoom={currentRoom} sizeInside={74} sizeOutside={84} iconSize={128} cancelButtonMT={"6"}/>}
+      {userID != undefined && <AudioComponent userID={userID} currentRoom={currentRoom} isContact={isContact} sizeInside={74} sizeOutside={84} iconSize={128} cancelButtonMT={"6"}/>}
     </View>
     );
 }

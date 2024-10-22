@@ -12,7 +12,8 @@ export async function AudioNotification(senderUsername: string , token: string, 
     console.error(`Push token ${token} is not a valid`);
     return;
   }else{
-    console.log(`the token is a valid`);
+    console.log(`the token is valid`);
+    console.log("Audio a enviar: ",audioData)
     }
 
   // Construct a message
@@ -21,7 +22,7 @@ export async function AudioNotification(senderUsername: string , token: string, 
     sound: 'default',
     title: `@${senderUsername} is currently speaking.`,
     body: "Walkie Talkie",
-    data: {data : `goes here`}
+    data: {data : `${audioData}`},
     // Asegúrate de que la notificación se muestre en primer plano
   });
 
