@@ -33,6 +33,8 @@
       "package": "com.rewalkietalkie.app",
       "useNextNotificationsApi": true,
       "permissions": [
+        "FOREGROUND_SERVICE",
+       "RECEIVE_BOOT_COMPLETED",
         "RECORD_AUDIO",
         "CAMERA",
         "NOTIFICATIONS",

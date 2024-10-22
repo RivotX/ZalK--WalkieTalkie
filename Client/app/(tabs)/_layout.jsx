@@ -130,19 +130,22 @@ export default function TabLayout({}) {
   // ===== Notifications =====
  
   Notifications.setNotificationHandler({
-    //CONFIGURACION DE NOTIFICACIONES AL RECIBIR UNA NOTIFICACION CON AUDIO
-    // handleNotification: async (notification) => {
-    //   const audioData = notification.request.content.data.audioData;
-    //   if (audioData) {
-    //     const { sound } = await Audio.Sound.createAsync({ uri: audioData });
-    //     await sound.playAsync();
-    //   }
-    //   return {
-        shouldShowAlert: true,
-        shouldPlaySound: false,
-        shouldSetBadge: false,
-    //   };
-    // },
+    handleNotification: async () => ({
+      shouldShowAlert: false, // Si no deseas mostrar un alerta
+      shouldPlaySound: true,  // Si deseas reproducir sonido
+      shouldSetBadge: false,
+    }),
+  });
+  
+  // Escucha las notificaciones recibidas
+  Notifications.addNotificationReceivedListener(async (notification) => {
+    const {data} = notification.request.content.data;
+  
+    if (data) {
+      // Reproduce el audio en segundo plano
+      const { sound } = await Audio.Sound.createAsync({ uri: audioUrl });
+      await sound.playAsync(); // Reproduce el audio
+    }
   });
   
 

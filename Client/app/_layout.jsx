@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Stack } from 'expo-router';
 import tw from 'twrnc';
-import { Image, View, Text, SafeAreaView, TouchableOpacity, Modal, Alert } from 'react-native';
+import { Image, View, Text,AppState , SafeAreaView, TouchableOpacity, Modal, Alert } from 'react-native';
 import ProfileIcon from '../assets/images/images.png';
 import LoginScreen from './LoginScreen';
 import ConfigIcon from '../components/shared/ConfigIcon';
@@ -14,12 +14,13 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SocketProvider } from '../context/SocketContext';
 import groupicon from '../assets/images/groupicon.png';
-import { Audio } from 'expo-av';
 import NotificationsIcon from '../components/shared/NotificationsIcon';
 import { Ionicons } from '@expo/vector-icons';
 import io from 'socket.io-client';
 import Loading from '../components/shared/Loading';
 import getEnvVars from '../config';
+import * as Notifications from 'expo-notifications';
+import { Audio } from 'expo-av'; // Para reproducir audio
 const { SERVER_URL, SOCKET_URL } = getEnvVars();
 import * as Font from 'expo-font';
 const loadFonts = async () => {
@@ -52,6 +53,45 @@ function RootLayout() {
   const { Texts } = useLanguage();
   const { isBusy, setIsBusy } = useBusy();
   const navigation = useNavigation();
+  const [appState, setAppState] = useState(AppState.currentState);
+
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+
+  //=================================================
+// Configuración del manejador de notificaciones
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: false, // Si no deseas mostrar un alerta
+    shouldPlaySound: true,  // Si deseas reproducir sonido
+    shouldSetBadge: false,
+  }),
+});
+
+// Escucha las notificaciones recibidas
+Notifications.addNotificationReceivedListener(async (notification) => {
+  const {data} = notification.request.content.data;
+
+  if (data) {
+    // Reproduce el audio en segundo plano
+    const { sound } = await Audio.Sound.createAsync({ uri: audioUrl });
+    await sound.playAsync(); // Reproduce el audio
+  }
+});
+  //=================================================
+
+
+  const handleAppStateChange = (nextAppState) => {
+    setAppState(nextAppState);
+    console.log('AppState:', nextAppState);
+  };
 
   console.log('SERVER_URL:', SERVER_URL);
   console.log('SOCKET_URL:', SOCKET_URL);
@@ -165,6 +205,7 @@ function RootLayout() {
   }, [username]);
 
   // ===== Refreshes the user session when the socket is connected =======
+  
   useEffect(() => {
     if (socket != null) {
       console.log('Socket creado en RootLayout', socket);
@@ -190,7 +231,6 @@ function RootLayout() {
             setLoading(false);
           });
       });
-
       socket.on('receive-audio', async (base64Audio, room) => {
         console.log('Recieve audio, isbusy: ', isBusy);
         if (isBusy === false) {
@@ -205,6 +245,7 @@ function RootLayout() {
           const uri = `data:audio/mp3;base64,${base64Audio}`;
           console.log('audio enviado', uri);
 
+          if (appState === 'active') {
           try {
             const { sound } = await Audio.Sound.createAsync({ uri }, { shouldPlay: true });
             await sound.setVolumeAsync(1.0);
@@ -215,6 +256,7 @@ function RootLayout() {
           } catch (error) {
             Alert.alert('Error playing sound', error);
             console.error('Error playing sound:', error);
+          }
           }
         }
       });
