@@ -1415,7 +1415,7 @@ io.on('connection', (socket: Socket) => {
       console.log('Audio data sent to room:', room);
 
       // Decodificar el audio base64 a un buffer
-      const audioBuffer = Buffer.from(audioData.data, 'base64');
+      const audioBuffer = Buffer.from(audioData.data, 'base64url');
 
       //Guardar el audio en S3
 
@@ -1423,13 +1423,13 @@ io.on('connection', (socket: Socket) => {
 
       const bucketName = process.env.S3_BUCKET_NAME;
       const uniqueId = uuidv4();
-      const fileName = `${Date.now().toString()}-${uniqueId}.${"mp3"}`;
+      const fileName = `${Date.now().toString()}-${uniqueId}.${"wav"}`;
 
       const uploadCommand = new PutObjectCommand({
         Bucket: bucketName,
         Key: fileName,
         Body: audioBuffer,
-        ContentType: "audio/mp3",
+        ContentType: "audio/wav",
     });
     
       await s3.send(uploadCommand);
