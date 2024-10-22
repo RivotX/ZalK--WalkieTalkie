@@ -127,6 +127,8 @@ export default function TabLayout({}) {
     }
   };
 
+  // ===== Notifications =====
+ 
   Notifications.setNotificationHandler({
     //CONFIGURACION DE NOTIFICACIONES AL RECIBIR UNA NOTIFICACION CON AUDIO
     // handleNotification: async (notification) => {
@@ -137,11 +139,14 @@ export default function TabLayout({}) {
     //   }
     //   return {
         shouldShowAlert: true,
-        shouldPlaySound: true,
+        shouldPlaySound: false,
         shouldSetBadge: false,
     //   };
     // },
   });
+  
+
+  // ===== Notifications =====
 
   useEffect(() => {
     if (userID != null) {

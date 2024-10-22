@@ -33,10 +33,12 @@
       "package": "com.rewalkietalkie.app",
       "useNextNotificationsApi": true,
       "permissions": [
+        "RECORD_AUDIO",
         "CAMERA",
         "NOTIFICATIONS",
         "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE"
+        "WRITE_EXTERNAL_STORAGE",
+        "WAKE_LOCK"
       ],
       "googleServicesFile": "google-services.json"
     },

@@ -1409,7 +1409,7 @@ io.on("connection", (socket: Socket) => {
   socket.on("send-audio", async (userID: any, audioData: any, room: string, isContact: boolean) => {
     try {
       // Emitir el audio recibido a todos los demás clientes conectados
-      // socket.to(room).emit("receive-audio", audioData.data, room);
+      socket.to(room).emit("receive-audio", audioData.data, room);
 
       console.log("Audio data sent to room:", room);
 
