@@ -1660,14 +1660,14 @@ const initialRooms = [
   { name: 'Cocina Vegana', info: 'Comparte recetas veganas.' },
 ];
 
-sequelize.sync({ alter: true }).then(() => {
+sequelize.sync({ force: true }).then(() => {
   server.listen(3000, async () => {
     console.log('Server running...');
 
-    // // create groups
-    // for (const room of initialRooms) {
-    //   await Rooms.upsert(room);
-    //   console.log("Room created:", room);
-    // }
+    // create groups
+    for (const room of initialRooms) {
+      await Rooms.upsert(room);
+      console.log("Room created:", room);
+    }
   });
 });
