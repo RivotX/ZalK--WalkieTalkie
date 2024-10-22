@@ -1408,8 +1408,8 @@ io.on('connection', (socket: Socket) => {
   socket.on('send-audio', async (audioData: any, room: string) => {
     try {
       // Emitir el audio recibido a todos los demás clientes conectados
-      socket.to(room).emit('receive-audio', audioData, room);
-
+      socket.to(room).emit('receive-audio', audioData.data, room);
+ 
 
 
       console.log('Audio data sent to room:', room);
@@ -1431,7 +1431,7 @@ io.on('connection', (socket: Socket) => {
         Body: audioBuffer,
         ContentType: "audio/mp3",
     });
-
+    
       await s3.send(uploadCommand);
 
       const fileUrl = `https://${bucketName}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
