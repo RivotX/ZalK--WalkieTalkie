@@ -878,6 +878,24 @@ app.post("/getGroupMembers", async (req, res) => {
     res.status(500).send("Internal server error");
   }
 });
+// ================================================================= Get User =================================================================
+
+app.post("/getIsBusy", async (req, res) => {
+  const { userId } = req.body;
+  try {
+    const user = await Users.findOne({
+      where: { id: userId },
+    });
+    if (user) {
+      res.status(200).send(user.isBusy);
+    } else {
+      res.status(404).send("User not found");
+    }
+  } catch (error) {
+    console.error("Error getting isBusy:", error);
+    res.status(500).send("Internal server error");
+  }
+});
 
 // ================================================================= Get Request =================================================================
 app.post("/getRequest", async (req, res) => {

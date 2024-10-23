@@ -155,7 +155,6 @@ Notifications.addNotificationReceivedListener(async (notification) => {
         .get(`${SERVER_URL}/getsession`, { withCredentials: true })
         .then((res) => {
           setUsername(res.data.user.username);
-          setIsBusy(res.data.user.isBusy);
           console.log('res isBusy en RootLayout', res.data.user.isBusy);
           setUserID(res.data.user.id);
           setInfo(res.data.user.info);
@@ -267,10 +266,26 @@ Notifications.addNotificationReceivedListener(async (notification) => {
     }
   }, [socket]);
 
-  // ===== Fetches the user profile picture =======
+  const fetchIsBusy = async () => {
+    if (!userID) return;
+    try {
+      axios.post(`${SERVER_URL}/getIsBusy`, { id: userID })
+      .then((res) => { 
+        console.log('isBusy en fetchIsBusy', res.data.isBusy);
+        setIsBusy(res.data.isBusy);
+      });
+    } catch (error) {
+      console.error('Error fetching isBusy:', error);
+    }
+  };
+  
+  
+  
+  // ===== Fetches the user profile picture and isBusy =======
   useEffect(() => {
     fetchProfilePicture();
     console.log('fetchProfilePicture layout');
+    fetchIsBusy();
   }, [userID]);
 
   const fetchProfilePicture = async () => {
