@@ -1459,11 +1459,13 @@ io.on("connection", (socket: Socket) => {
             },
           });
 
-          if (receiverUser) {
+          const senderUser = await Users.findOne({ where: { id: userID } });
+
+          if (receiverUser && senderUser) {
             const token = receiverUser.token;
             console.log("antes de notificar"); 
 
-            await AudioNotification(receiverUser.username, token, fileUrl);
+            await AudioNotification(senderUser.username, token, fileUrl);
             console.log("notificacion hecha");
           }
         }
@@ -1482,6 +1484,8 @@ io.on("connection", (socket: Socket) => {
             members = JSON.parse(members);
           }
 
+          const senderUser = await Users.findOne({ where: { id: userID } });
+
           for (let i = 0; i < members.length; i++) {
             if (members[i] !== userID) {
               const receiverUser = await Users.findOne({
@@ -1490,10 +1494,10 @@ io.on("connection", (socket: Socket) => {
                 },
               });
 
-              if (receiverUser) {
+              if (receiverUser && senderUser) {
                 console.log("Contact a enviar es ", receiverUser.id);
                 const token = receiverUser.token;
-                await AudioNotification(receiverUser.username, token, fileUrl);
+                await AudioNotification(senderUser.username, token, fileUrl);
               }
             }
           }
