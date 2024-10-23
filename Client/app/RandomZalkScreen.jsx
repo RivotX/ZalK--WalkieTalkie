@@ -114,13 +114,13 @@ export default function RandomZalkScreen() {
     closeConnection();
 
   };
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
-      closeConnection();
-    });
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+  //     closeConnection();
+  //   });
 
-    return unsubscribe;
-  }, [navigation]);
+  //   return unsubscribe;
+  // }, [navigation]);
 
 
 
