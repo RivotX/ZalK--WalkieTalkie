@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Vibration, Alert, AppState, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, Vibration, Alert, AppState, Platform, Image } from 'react-native';
 import tw from 'twrnc';
 import { Audio } from 'expo-av';
 import { FontAwesome5 } from '@expo/vector-icons'; // Assuming usage of Expo vector icons for simplicity
@@ -9,6 +9,7 @@ import { useBusy } from '../../context/BusyContext';
 import IsBusyRequiredModal from '../modals/IsBusyRequiredModal';
 import { useLanguage } from '../../context/LanguageContext';
 import { useNavigation } from '@react-navigation/native';
+import cadenas from '../../assets/images/cadenas.png';
 
 const AudioComponent = ({ isContact, currentRoom, isConectionClose, sizeInside, sizeOutside, iconSize, cancelButtonMT, userID }) => {
   const [recording, setRecording] = useState();
@@ -27,6 +28,7 @@ const AudioComponent = ({ isContact, currentRoom, isConectionClose, sizeInside, 
   const [isBusyModalVisible, setIsBusyModalVisible] = useState(false);
   const { Texts } = useLanguage();
   const navigation = useNavigation();
+  const [isPressable, setIsPressable] = useState(true);
 
   // Cuando el componente se monta, pide permisos de audio
   useEffect(() => {
@@ -134,6 +136,10 @@ const AudioComponent = ({ isContact, currentRoom, isConectionClose, sizeInside, 
         socket.emit('send-audio', userID, audioData, currentRoom, isContact);
         setRecordedAudio({ uri });
         console.log('Audio sent successfully');
+        setIsPressable(false);
+        setTimeout(() => {
+          setIsPressable(true);
+        }, 3000);
       };
 
       reader.onerror = (error) => {
@@ -166,6 +172,8 @@ const AudioComponent = ({ isContact, currentRoom, isConectionClose, sizeInside, 
       // Checkea si los permisos fueron otorgados
       Alert.alert(Texts.AudioPermissionRequiredTitle, Texts.AudioPermissionRequiredMessage);
       return;
+    } else if (!isPressable) {
+      return;
     }
     if (isBusy == true) {
       setIsBusyModalVisible(true);
@@ -173,9 +181,11 @@ const AudioComponent = ({ isContact, currentRoom, isConectionClose, sizeInside, 
     } else {
       if (recording) {
         stopRecording();
+        Vibration.vibrate(200);
         setButtonColorState(buttonColor);
         setBorderColorState(borderColor);
-        Vibration.vibrate(200);
+        setButtonOpacity(20);
+        setCadenasVisible(true);
       } else {
         startRecording();
         setButtonColorState(ActiveButtonColor);
@@ -184,12 +194,32 @@ const AudioComponent = ({ isContact, currentRoom, isConectionClose, sizeInside, 
       }
     }
   };
+  const [cadenasVisible, setCadenasVisible] = useState(false);
+  const [buttonOpacity, setButtonOpacity] = useState(1);
+  useEffect(() => {
+    if (!isPressable) {
+      setButtonOpacity(20);
+      setCadenasVisible(true);
+    } else {
+      setButtonOpacity(100);
+      setButtonColorState(buttonColor);
+      setBorderColorState(borderColor);
+      setCadenasVisible(false);
+    }
+  }, [isPressable]);
 
   return (
     <View style={tw`flex items-center justify-center`}>
       {/* Record button */}
       <TouchableOpacity style={tw`size-[${sizeOutside}] bg-[${buttonColorState}] rounded-full flex items-center justify-center`} onPress={onPressHandler}>
-        <View style={tw`size-[${sizeInside}] bg-[${buttonColorState}] rounded-full border-4 border-${borderColorState} flex items-center justify-center`}>
+        {cadenasVisible && (
+          <View style={tw`absolute size-[${sizeOutside/1.4}] z-10`}>
+            <Image source={cadenas} style={tw`w-full h-full opacity-100`} />
+          </View>
+        )}
+        <View
+          style={tw`size-[${sizeInside}] bg-[${buttonColorState}] opacity-${buttonOpacity} rounded-full border-4 border-${borderColorState} flex items-center justify-center`}
+        >
           <FontAwesome5 name="microphone" size={iconSize} color="#ECEDEE" />
         </View>
       </TouchableOpacity>

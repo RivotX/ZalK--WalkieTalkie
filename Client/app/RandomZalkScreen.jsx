@@ -96,7 +96,8 @@ export default function RandomZalkScreen() {
   // ===== AppState =====
   useEffect(() => {
     if (socket != null) {
-      const handleAppStateChange = (nextAppState) => {
+      const handleAppStateChange = (nextAppState) => {ç
+        console.log('AppState', nextAppState);
         if (nextAppState === 'background') {
           onBackground();
         }
