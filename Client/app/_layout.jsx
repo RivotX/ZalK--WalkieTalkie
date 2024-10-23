@@ -352,7 +352,7 @@ Notifications.addNotificationReceivedListener(async (notification) => {
                 name="AddContactsScreen"
                 options={{
                   headerStyle: {
-                    backgroundColor: SoftbackgroundColor, // Dark background color for the header
+                    backgroundColor: SoftbackgroundColor,
                   },
                   headerTintColor: textColor,
                   headerTitle: Texts.AddContacts,
@@ -363,7 +363,7 @@ Notifications.addNotificationReceivedListener(async (notification) => {
                 name="AddGroupsScreen"
                 options={{
                   headerStyle: {
-                    backgroundColor: SoftbackgroundColor, // Dark background color for the header
+                    backgroundColor: SoftbackgroundColor, 
                   },
                   headerTintColor: textColor,
                   headerTitle: Texts.AddGroups,

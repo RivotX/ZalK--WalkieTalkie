@@ -75,7 +75,7 @@ export default function TabLayout({}) {
         // Alert.alert('Status', `Permission status: ${status}`);
       }
       if (finalStatus !== 'granted') {
-        // Alert.alert('Error', 'Failed to get push token for push notification!');
+        Alert.alert(Texts.NotificationPermissionRequiredTitle, Texts.NotificationPermissionRequiredMessage);
         return;
       }
 

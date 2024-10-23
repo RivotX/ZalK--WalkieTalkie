@@ -1,28 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Vibration, Alert, AppState, Platform } from 'react-native';
-import tw from "twrnc";
-import { Audio } from "expo-av";
-import { FontAwesome5 } from "@expo/vector-icons"; // Assuming usage of Expo vector icons for simplicity
-import { useSocket } from "../../context/SocketContext";
-import { useThemeColor } from "../../hooks/useThemeColor";
-import { useBusy } from "../../context/BusyContext";
-import IsBusyRequiredModal from "../modals/IsBusyRequiredModal";
-import { useLanguage } from "../../context/LanguageContext";
+import tw from 'twrnc';
+import { Audio } from 'expo-av';
+import { FontAwesome5 } from '@expo/vector-icons'; // Assuming usage of Expo vector icons for simplicity
+import { useSocket } from '../../context/SocketContext';
+import { useThemeColor } from '../../hooks/useThemeColor';
+import { useBusy } from '../../context/BusyContext';
+import IsBusyRequiredModal from '../modals/IsBusyRequiredModal';
+import { useLanguage } from '../../context/LanguageContext';
 import { useNavigation } from '@react-navigation/native';
 
-const AudioComponent = ({isContact, currentRoom, isConectionClose, sizeInside, sizeOutside, iconSize, cancelButtonMT, userID }) => {
+const AudioComponent = ({ isContact, currentRoom, isConectionClose, sizeInside, sizeOutside, iconSize, cancelButtonMT, userID }) => {
   const [recording, setRecording] = useState();
   const [permissionStatus, setPermissionStatus] = useState(null);
   const [recordedAudio, setRecordedAudio] = useState(null);
   const [socket, setSocket] = useState(useSocket()); // Estado para manejar la instancia del socket
   const [recordingTime, setRecordingTime] = useState(0); // Estado para manejar el tiempo de grabación
-  const [buttonColorState, setButtonColorState] = useState(useThemeColor({}, "AudioComponent_ButtonColor"));
-  const [borderColorState, setBorderColorState] = useState(useThemeColor({}, "AudioComponent_BorderColor"));
-  const buttonColor = useThemeColor({}, "AudioComponent_ButtonColor");
-  const borderColor = useThemeColor({}, "AudioComponent_BorderColor");
-  const ActiveButtonColor = useThemeColor({}, "AudioComponent_ActiveButtonColor");
-  const ActiveBorderColor = useThemeColor({}, "AudioComponent_ActiveBorderColor");
-  const textcolor = useThemeColor({}, "text");
+  const [buttonColorState, setButtonColorState] = useState(useThemeColor({}, 'AudioComponent_ButtonColor'));
+  const [borderColorState, setBorderColorState] = useState(useThemeColor({}, 'AudioComponent_BorderColor'));
+  const buttonColor = useThemeColor({}, 'AudioComponent_ButtonColor');
+  const borderColor = useThemeColor({}, 'AudioComponent_BorderColor');
+  const ActiveButtonColor = useThemeColor({}, 'AudioComponent_ActiveButtonColor');
+  const ActiveBorderColor = useThemeColor({}, 'AudioComponent_ActiveBorderColor');
+  const textcolor = useThemeColor({}, 'text');
   const { isBusy } = useBusy();
   const [isBusyModalVisible, setIsBusyModalVisible] = useState(false);
   const { Texts } = useLanguage();
@@ -32,15 +32,15 @@ const AudioComponent = ({isContact, currentRoom, isConectionClose, sizeInside, s
   useEffect(() => {
     (async () => {
       const { status } = await Audio.requestPermissionsAsync();
-      setPermissionStatus(status === "granted"); // Actualiza los permisos (true o false)
+      setPermissionStatus(status === 'granted'); // Actualiza los permisos (true o false)
     })();
   }, [currentRoom]);
 
   useEffect(() => {
-    console.log("Cerrando conexion y audio parado ANTES");
+    console.log('Cerrando conexion y audio parado ANTES');
     if (isConectionClose && recording != undefined) {
       stopRecording();
-      console.log("Cerrando conexion y audio parado");
+      console.log('Cerrando conexion y audio parado');
     }
   }, [isConectionClose]);
 
@@ -49,7 +49,7 @@ const AudioComponent = ({isContact, currentRoom, isConectionClose, sizeInside, s
     let interval;
     if (recording) {
       interval = setInterval(() => {
-        setRecordingTime(prevTime => prevTime + 1);
+        setRecordingTime((prevTime) => prevTime + 1);
       }, 1000);
     } else {
       clearInterval(interval);
@@ -93,7 +93,7 @@ const AudioComponent = ({isContact, currentRoom, isConectionClose, sizeInside, s
   const startRecording = async () => {
     if (!permissionStatus) {
       // Checkea si los permisos fueron otorgados
-      console.log("Permissions not granted");
+      console.log('Permissions not granted');
       return;
     }
     try {
@@ -111,7 +111,7 @@ const AudioComponent = ({isContact, currentRoom, isConectionClose, sizeInside, s
       setRecording(recording); // Actualiza el estado de grabacion con el objeto recording de antes
       setRecordingTime(0); // Reinicia el tiempo de grabación
     } catch (err) {
-      console.error("Failed to start recording", err);
+      console.error('Failed to start recording', err);
     }
   };
 
@@ -128,21 +128,21 @@ const AudioComponent = ({isContact, currentRoom, isConectionClose, sizeInside, s
       reader.readAsDataURL(audioBlob);
 
       reader.onloadend = () => {
-        const base64Audio = reader.result.split(",")[1];
+        const base64Audio = reader.result.split(',')[1];
         const audioData = { data: base64Audio };
         // Envía el audio base64 al socket
-        socket.emit("send-audio", userID, audioData, currentRoom, isContact);
+        socket.emit('send-audio', userID, audioData, currentRoom, isContact);
         setRecordedAudio({ uri });
-        console.log("Audio sent successfully");
+        console.log('Audio sent successfully');
       };
 
       reader.onerror = (error) => {
-        console.error("Error reading audio blob:", error);
+        console.error('Error reading audio blob:', error);
       };
 
-      console.log("Stopped recording");
+      console.log('Stopped recording');
     } catch (error) {
-      console.error("Failed to stop recording", error);
+      console.error('Failed to stop recording', error);
     }
   };
 
@@ -154,14 +154,19 @@ const AudioComponent = ({isContact, currentRoom, isConectionClose, sizeInside, s
       setBorderColorState(borderColor);
       Vibration.vibrate(200);
       await recording.stopAndUnloadAsync();
-      console.log("Recording cancelled");
+      console.log('Recording cancelled');
     } catch (error) {
-      console.error("Failed to cancel recording", error);
+      console.error('Failed to cancel recording', error);
     }
   };
 
   // Presionar grabar / detener audio
   const onPressHandler = () => {
+    if (!permissionStatus) {
+      // Checkea si los permisos fueron otorgados
+      Alert.alert(Texts.AudioPermissionRequiredTitle, Texts.AudioPermissionRequiredMessage);
+      return;
+    }
     if (isBusy == true) {
       setIsBusyModalVisible(true);
       return;
@@ -183,16 +188,9 @@ const AudioComponent = ({isContact, currentRoom, isConectionClose, sizeInside, s
   return (
     <View style={tw`flex items-center justify-center`}>
       {/* Record button */}
-      <TouchableOpacity
-        style={tw`size-[${sizeOutside}] bg-[${buttonColorState}] rounded-full flex items-center justify-center`}
-        onPress={onPressHandler}
-      >
+      <TouchableOpacity style={tw`size-[${sizeOutside}] bg-[${buttonColorState}] rounded-full flex items-center justify-center`} onPress={onPressHandler}>
         <View style={tw`size-[${sizeInside}] bg-[${buttonColorState}] rounded-full border-4 border-${borderColorState} flex items-center justify-center`}>
-          <FontAwesome5
-            name="microphone"
-            size={iconSize}
-            color='#ECEDEE'
-          />
+          <FontAwesome5 name="microphone" size={iconSize} color="#ECEDEE" />
         </View>
       </TouchableOpacity>
 
@@ -200,30 +198,22 @@ const AudioComponent = ({isContact, currentRoom, isConectionClose, sizeInside, s
       <View style={tw`h-10 mt-2`}>
         {recording && (
           <Text style={tw`text-[${textcolor}] text-2xl`}>
-            {Math.floor(recordingTime / 60)}:{("0" + (recordingTime % 60)).slice(-2)}
+            {Math.floor(recordingTime / 60)}:{('0' + (recordingTime % 60)).slice(-2)}
           </Text>
         )}
       </View>
 
       {/* Cancel button */}
       <View style={tw`h-16 mt-${cancelButtonMT}`}>
-
         {recording && (
-          <TouchableOpacity
-            style={tw`px-4 py-2 bg-[${ActiveButtonColor}] rounded-full`}
-            onPress={cancelRecording}
-          >
+          <TouchableOpacity style={tw`px-4 py-2 bg-[${ActiveButtonColor}] rounded-full`} onPress={cancelRecording}>
             <Text style={tw`text-[#ECEDEE] text-lg`}>{Texts.Cancel}</Text>
           </TouchableOpacity>
         )}
       </View>
 
       {/* Modal */}
-      <IsBusyRequiredModal
-        modalVisible={isBusyModalVisible}
-        setModalVisible={setIsBusyModalVisible}
-        userID={userID}
-      />
+      <IsBusyRequiredModal modalVisible={isBusyModalVisible} setModalVisible={setIsBusyModalVisible} userID={userID} />
     </View>
   );
 };

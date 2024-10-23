@@ -110,7 +110,12 @@ export const Texts = {
     ResetPassTokenFailedTitle: 'Error resetting password',
     EmptyFields: 'Please fill in all fields',
     ResetWithTokenMSG: 'Enter your email, the code received and your new password.',
-  },
+    AudioPermissionRequiredTitle: 'Audio permissions required',
+    AudioPermissionRequiredMessage: 'The app needs audio permissions to record voice messages.\n\nYou can grant them in your device settings.',
+    NotificationPermissionRequiredTitle: 'Notification permissions required',
+    NotificationPermissionRequiredMessage: 'The app needs notification permissions work properly.\n\nYou can grant them in your device settings.', 
+  }
+  ,
   es: {
     Members: 'Miembros',
     Language: 'Idioma',
@@ -220,5 +225,9 @@ export const Texts = {
     ResetPassTokenFailedTitle: 'Error al restablecer la contraseña',
     EmptyFields: 'Por favor, rellena todos los campos',
     ResetWithTokenMSG: 'Introduce tu correo electrónico, el código recibido y tu nueva contraseña.',
+    AudioPermissionRequiredTitle: 'Sin permisos de audio',
+    AudioPermissionRequiredMessage: 'La app necesita permisos de audio a la aplicación para poder grabar mensajes de voz.\n\nPuedes otorgarlos en la configuración de tu dispositivo.',
+    NotificationPermissionRequiredTitle: 'Sin permisos de notificación',
+    NotificationPermissionRequiredMessage: 'La app necesita permisos de notificación para funcionar correctamente.\n\nPuedes otorgarlos en la configuración de tu dispositivo.',
   },
 };
