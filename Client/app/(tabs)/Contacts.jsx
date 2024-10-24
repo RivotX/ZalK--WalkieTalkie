@@ -105,7 +105,7 @@ const ContactsScreen = ({ setLoadingLayout }) => {
           navigation.navigate('AddContactsScreen');
         }}
         icon={'add-outline'}
-        iconColor={textColor}
+        iconColor='white'
       />
     </View>
   );

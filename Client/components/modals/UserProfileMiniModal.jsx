@@ -31,7 +31,7 @@ const UserProfileMiniModal = ({ user, modalIconVisible, setModalIconVisible, ico
   const screenHeight = Dimensions.get('window').height;
   const pictureWidth = 250;
   const centerX = screenWidth / 2 - pictureWidth / 2;
-  const centerY = ((screenHeight - pictureWidth) / 6) ;
+  const centerY = (screenHeight - pictureWidth) / 6;
   console.log('Screen width: ', screenWidth);
   console.log('Center X: ', centerX);
 
@@ -130,7 +130,7 @@ const UserProfileMiniModal = ({ user, modalIconVisible, setModalIconVisible, ico
     setHideText(false);
     setHideInfo(false);
   };
- 
+
   return (
     <Modal animationType="fade" transparent={true} visible={modalIconVisible} onRequestClose={handleCloseModal}>
       <TouchableOpacity style={tw`flex-1 justify-start items-center bg-black bg-opacity-${modalOpacity}`} activeOpacity={1} onPress={handleCloseModal}>
@@ -150,21 +150,21 @@ const UserProfileMiniModal = ({ user, modalIconVisible, setModalIconVisible, ico
           )}
           {/* User info */}
           {!hideInfo && user.info && (
-            <Animated.View style={[tw`bg-${UserProfileMiniModal_BG} bg-opacity-50 p-3`, { width: size }]}>
-              <Text style={tw`text-[#ECEDEE] text-center italic w-full`}>{user.info}</Text>
+            <Animated.View style={[tw`bg-${UserProfileMiniModal_BG} ${!isContact ? 'bg-opacity-50' : 'bg-opacity-100'}`, { width: size }]}>
+              <Text style={tw`text-white text-center italic w-full`}>{user.info}</Text>
             </Animated.View>
           )}
         </Animated.View>
       </TouchableOpacity>
       {/* Group members */}
       {!hideText && members.length != 0 && (
-        <View style={[tw`absolute top-[${centerY + 10}] bg-black bg-opacity-50 p-3`, { width: pictureWidth, alignSelf: 'center', maxHeight: '40%' }]}>
-          <Text style={tw`text-[${textColor}] text-center my-4`}>
-            <Text style={tw`text-[${textColor}] text-center font-bold`}>{qty != null && `${Texts.Members} : ${qty}`}</Text>
+        <View style={[tw`absolute top-[${centerY + 10}] bg-black p-3 ${isContact ? 'bg-opacity-50' : 'bg-opacity-100'}`, { width: pictureWidth, alignSelf: 'center', maxHeight: '40%' }]}>
+          <Text style={tw`text-white text-center my-4`}>
+            <Text style={tw`text-white text-center font-bold`}>{qty != null && `${Texts.Members} : ${qty}`}</Text>
           </Text>
           <ScrollView>
             {members.map((member, index) => (
-              <Text key={index} style={tw`text-[${textColor}] text-center`}>
+              <Text key={index} style={tw`text-white text-center`}>
                 - {member.username}
               </Text>
             ))}
