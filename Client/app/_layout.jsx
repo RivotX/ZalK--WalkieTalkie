@@ -169,7 +169,7 @@ Notifications.addNotificationReceivedListener(async (notification) => {
 
   useEffect(() => {
     console.log('Recieve audio, isbusy: ', isBusy);
-        if (isBusy === false) {
+        if (isBusy === false && socket) {
       socket.on('receive-audio', async (base64Audio, room) => {
         
           console.log('Received audio data from room', room);
@@ -204,7 +204,7 @@ Notifications.addNotificationReceivedListener(async (notification) => {
         socket.off('receive-audio');
       }
       }
-  }, [isBusy]);
+  }, [isBusy, socket]);
 
   // ===== Gets the user data when the user is logged in =======
   useEffect(() => {
