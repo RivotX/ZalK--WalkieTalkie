@@ -30,6 +30,7 @@ const ConfigIcon = ({ handleLogout, chatroom, setModalIconVisible, user, isConta
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const { Texts } = useLanguage();
+  const [busyButtonPressable , setBusyButtonPressable] = useState(true);
 
 
   // Navigate to ProfileSettingsScreen
@@ -62,18 +63,18 @@ const ConfigIcon = ({ handleLogout, chatroom, setModalIconVisible, user, isConta
 
   // Toggle busy mode
   const toggleBusyMode = () => {
+    if (busyButtonPressable === false) return;
     setDropdownVisible(false);
-    setLoading(true);
+    setBusyButtonPressable(false);
     // Implement toggleBusy
     axios.post(`${SERVER_URL}/toggleBusy`, { userId: userID }, { withCredentials: true }).then((res) => {
       console.log('Busy mode toggled', res.data.isBusy);
       setIsBusy(res.data.isBusy);
       console.log('res isbusy en configicon', res.data.isBusy);
-
-      setLoading(false);
+      setBusyButtonPressable(true);
     }).catch((error) => {
       console.error('Error toggling busy mode:', error);
-      setLoading(false);
+      setBusyButtonPressable(true);
     });
   };
 
