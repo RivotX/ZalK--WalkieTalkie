@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TouchableOpacity, Modal, Image, Text, View, ScrollView } from 'react-native';
+import { TouchableOpacity, Modal, Image, Text, View, ScrollView, Dimensions } from 'react-native';
 import tw from 'twrnc';
 import ProfileIcon from '../../assets/images/images.png';
 import groupicon from '../../assets/images/groupicon.png';
@@ -20,6 +20,9 @@ const UserProfileModal = ({ user, modalIconVisible, setModalIconVisible, iconSiz
   const { SERVER_URL } = getEnvVars();
   const [selectedUser, setSelectedUser] = useState(null);
   const [isSelectedUserModalVisible, setIsSelectedUserModalVisible] = useState(false);
+
+  const windowHeight = Dimensions.get('window').height;
+  const pictureHeightPercentage = windowHeight < 700 ? 40 : 45;
 
   useEffect(() => {
     console.log('UserProfileModal: ', user);
@@ -61,7 +64,7 @@ const UserProfileModal = ({ user, modalIconVisible, setModalIconVisible, iconSiz
         <Ionicons name="arrow-back" size={24} color={textColor} />
       </TouchableOpacity>
       <Text style={tw`text-[${textColor}] text-2xl font-bold text-center mb-4 border-gray-400 w-full`}>{user.name}</Text>
-      <View style={tw`h-100 w-full px-8`}>
+      <View style={tw`h-[${pictureHeightPercentage}%] w-full px-8`}>
         <Image
           style={[tw`size-full rounded-md`, { resizeMode: 'cover' }]}
           source={user.profile ? { uri: user.profile } : isContact ? ProfileIcon : groupicon}
@@ -70,7 +73,7 @@ const UserProfileModal = ({ user, modalIconVisible, setModalIconVisible, iconSiz
       <Text style={tw`text-[${textColor}] text-center mt-10 w-2/3 italic`}>{user.info}</Text>
       {members && (
         <View style={tw`w-full mt-4 flex-1`}>
-          <Text style={tw`text-[${textColor}] text-center mt-4`}>
+          <Text style={tw`text-[${textColor}] text-center mt-2`}>
             <Text style={tw`text-[${textColor}] text-center font-bold`}>{qty != null && `${Texts.Members} : ${qty}`} </Text>
           </Text>
           <ScrollView contentContainerStyle={tw`flex-grow`} style={tw`flex-1 w-full z-30`}>
