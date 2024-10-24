@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet, Pressable, TextInput, Alert } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, StyleSheet, Pressable, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import tw from 'twrnc';
 import { useThemeColor } from '../../hooks/useThemeColor';
@@ -8,6 +8,7 @@ import axios from 'axios';
 import getEnvVars from '../../config';
 const { SERVER_URL } = getEnvVars();
 import { showAlert } from '../shared/ShowAlert';
+import PasswordToggle from '../shared/PasswordToggle';
 
 const ResetPasswordTokenModal = ({ setModalVisible, modalVisible, setLoadingLayout }) => {
   const modal_bg_color = useThemeColor({}, 'modal_bg_color');
@@ -22,6 +23,7 @@ const ResetPasswordTokenModal = ({ setModalVisible, modalVisible, setLoadingLayo
   const [token, setToken] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [formError, setFormError] = useState('');
+  const [hidePassword, setHidePassword] = useState(true);
 
   const validateEmail = (email) => {
     if (email.length > 100) {
@@ -65,7 +67,8 @@ const ResetPasswordTokenModal = ({ setModalVisible, modalVisible, setLoadingLayo
     }
 
     setLoadingLayout(true);
-    axios.post(`${SERVER_URL}/resetPassword`, { email, token, newPassword })
+    axios
+      .post(`${SERVER_URL}/resetPassword`, { email, token, newPassword })
       .then((res) => {
         console.log('Password reset successfully', res.data);
         showAlert(Texts.ResetPasswordSuccessTitle, Texts.PasswordResetSuccess);
@@ -92,14 +95,8 @@ const ResetPasswordTokenModal = ({ setModalVisible, modalVisible, setLoadingLayo
         setModalVisible(false);
       }}
     >
-      <Pressable
-        style={tw`flex-1 justify-center items-center bg-black bg-opacity-50`}
-        onPress={() => setModalVisible(false)}
-      >
-        <View
-          style={tw`w-4/5 bg-${modal_bg_color} rounded-lg p-6 items-center shadow-lg`}
-          onStartShouldSetResponder={() => true}
-        >
+      <Pressable style={tw`flex-1 justify-center items-center bg-black bg-opacity-50`} onPress={() => setModalVisible(false)}>
+        <View style={tw`w-4/5 bg-${modal_bg_color} rounded-lg p-6 items-center shadow-lg`} onStartShouldSetResponder={() => true}>
           <TouchableOpacity style={tw`absolute top-2 right-2 p-2`} onPress={() => setModalVisible(false)}>
             <Ionicons name="close" size={24} color={textcolor} />
           </TouchableOpacity>
@@ -127,18 +124,21 @@ const ResetPasswordTokenModal = ({ setModalVisible, modalVisible, setLoadingLayo
               value={token}
               onChangeText={(text) => setToken(text)}
             />
-            <TextInput
-              style={[tw`border-b border-${modal_text_color} text-${modal_text_color} w-full py-2 px-3 rounded-lg text-left`, styles.textInput]}
-              placeholder={Texts.NewPasswordPlaceholder}
-              placeholderTextColor={disabledText}
-              value={newPassword}
-              onChangeText={(text) => {
-                setNewPassword(text);
-                const error = validatePassword(text);
-                setFormError(text.length > 0 ? error : '');
-              }}
-              secureTextEntry
-            />
+            <View style={tw`flex-row items-center border-b border-${modal_text_color} `}>
+              <TextInput
+                style={[tw`text-${modal_text_color} flex-1 py-2 px-3 rounded-lg text-left`, styles.textInput]}
+                placeholder={Texts.NewPasswordPlaceholder}
+                placeholderTextColor={disabledText}
+                value={newPassword}
+                onChangeText={(text) => {
+                  setNewPassword(text);
+                  const error = validatePassword(text);
+                  setFormError(text.length > 0 ? error : '');
+                }}
+                secureTextEntry={hidePassword}
+              />
+              <PasswordToggle hidePassword={hidePassword} setHidePassword={setHidePassword} />
+            </View>
             <View style={tw`min-h-[35px] justify-center my-2`}>
               {formError ? <Text style={[tw`text-red-500 text-left`, styles.errorText]}>{formError}</Text> : null}
             </View>
@@ -146,16 +146,10 @@ const ResetPasswordTokenModal = ({ setModalVisible, modalVisible, setLoadingLayo
 
           <View style={tw`w-full `}>
             <View style={tw`flex-row justify-between`}>
-              <TouchableOpacity
-                style={tw`flex-1 bg-${decline_button_color} py-2 px-4 rounded-full mx-1`}
-                onPress={() => setModalVisible(false)}
-              >
+              <TouchableOpacity style={tw`flex-1 bg-${decline_button_color} py-2 px-4 rounded-full mx-1`} onPress={() => setModalVisible(false)}>
                 <Text style={tw`text-white font-bold text-center`}>{Texts.Cancel}</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={tw`flex-1 bg-${accept_button_color} py-2 px-4 rounded-full mx-1`}
-                onPress={handleNewPassword}
-              >
+              <TouchableOpacity style={tw`flex-1 bg-${accept_button_color} py-2 px-4 rounded-full mx-1`} onPress={handleNewPassword}>
                 <Text style={tw`text-white font-bold text-center`}>{Texts.Send}</Text>
               </TouchableOpacity>
             </View>

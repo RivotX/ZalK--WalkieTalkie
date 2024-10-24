@@ -105,7 +105,7 @@ export const Texts = {
     UserNotFound: 'No user found with that email',
     TokenPlaceholder: 'Enter the received code',
     NewPasswordPlaceholder: 'Set your new password',
-    InvalidToken: 'Invalid token',
+    InvalidToken: 'Invalid code',
     ResetPassTokenFailedTitle: 'Error resetting password',
     EmptyFields: 'Please fill in all fields',
     ResetWithTokenMSG: 'Enter your email, the code received and your new password.',
@@ -113,6 +113,8 @@ export const Texts = {
     AudioPermissionRequiredMessage: 'The app needs audio permissions to record voice messages.\n\nYou can grant them in your device settings.',
     NotificationPermissionRequiredTitle: 'Notification permissions required',
     NotificationPermissionRequiredMessage: 'The app needs notification permissions work properly.\n\nYou can grant them in your device settings.', 
+    ResetPasswordSuccessTitle: 'Password updated',
+    PasswordResetSuccess: 'Your password has been successfully updated',
   }
   ,
   es: {
@@ -219,7 +221,7 @@ export const Texts = {
     UserNotFound: 'No se ha encontrado ningún usuario con ese correo electrónico',
     TokenPlaceholder: 'Introduce el código recibido',
     NewPasswordPlaceholder: 'Introduce tu nueva contraseña',
-    InvalidToken: 'Token inválido',
+    InvalidToken: 'Código inválido',
     ResetPassTokenFailedTitle: 'Error al restablecer la contraseña',
     EmptyFields: 'Por favor, rellena todos los campos',
     ResetWithTokenMSG: 'Introduce tu correo electrónico, el código recibido y tu nueva contraseña.',
@@ -227,5 +229,7 @@ export const Texts = {
     AudioPermissionRequiredMessage: 'La app necesita permisos de audio a la aplicación para poder grabar mensajes de voz.\n\nPuedes otorgarlos en la configuración de tu dispositivo.',
     NotificationPermissionRequiredTitle: 'Sin permisos de notificación',
     NotificationPermissionRequiredMessage: 'La app necesita permisos de notificación para funcionar correctamente.\n\nPuedes otorgarlos en la configuración de tu dispositivo.',
+    ResetPasswordSuccessTitle: 'Contraseña actualizada',
+    PasswordResetSuccess: 'Tu contraseña se ha actualizado correctamente',
   },
 };
