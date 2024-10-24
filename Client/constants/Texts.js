@@ -5,7 +5,6 @@ export const Texts = {
   en: {
     Members: 'Members',
     Language: 'Language',
-    ChangeLanguage: 'Change language',
     BusyMode: 'Busy Mode',
     EndBusyMode: 'End Busy Mode',
     ProfileSettings: 'Profile Settings',
@@ -119,7 +118,6 @@ export const Texts = {
   es: {
     Members: 'Miembros',
     Language: 'Idioma',
-    ChangeLanguage: 'Cambiar idioma',
     BusyMode: 'Modo ocupado',
     EndBusyMode: 'Quitar modo ocupado',
     ProfileSettings: 'Ajustes de perfil',
