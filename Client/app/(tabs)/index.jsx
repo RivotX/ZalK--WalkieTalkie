@@ -9,6 +9,8 @@ import { useSocket } from '../../context/SocketContext';
 import FriendRequestModal from '../../components/modals/FriendRequestModal';
 import RandomZalkModal from '../../components/modals/RandomZalkModal';
 import { useLanguage } from '../../context/LanguageContext';
+import IsBusyRequiredModal from '../../components/modals/IsBusyRequiredModal';
+import { useBusy } from '../../context/BusyContext';
 
 const RandomZalkScreen = () => {
   const backgroundColor = useThemeColor({}, 'background');
@@ -22,6 +24,8 @@ const RandomZalkScreen = () => {
   const { Texts } = useLanguage();
   const [userID, setUserID] = useState(null);
   const [request, setRequest] = useState([{ senderId: null, receiverId: null, message: null }]);
+  const { isBusy } = useBusy();
+  const [isBusyModalVisible, setIsBusyModalVisible] = useState(false);
 
   useEffect(() => {
     if (socket != null) {
@@ -62,18 +66,22 @@ const RandomZalkScreen = () => {
 
   // ==== Random Zalk =======
   const RandomZalk = () => {
+    if (isBusy == true) {
+      setIsBusyModalVisible(true);
+      return;
+    }
     console.log('Random Zalk');
     setModalVisibleRandomZalk(true);
   };
 
   return (
     <View style={tw`flex-1 items-center justify-center bg-[${backgroundColor}]`}>
+      {/* Random Zalk Button */}
       <TouchableOpacity style={tw`size-84 bg-${PrimaryPurple} rounded-full flex items-center justify-center shadow-xl`} onPress={RandomZalk}>
         <View style={tw`size-78 bg-${PrimaryPurple} rounded-full border-4 border-white flex items-center justify-center`}>
           <Text style={tw`text-3xl text-white font-medium`}>{Texts.TapRandomZalk}</Text>
         </View>
       </TouchableOpacity>
-
       {/* Friend Request Modal */}
       {modalVisible && (
         <FriendRequestModal
@@ -84,7 +92,6 @@ const RandomZalkScreen = () => {
           declineRequest={declineRequest}
         />
       )}
-
       {/* Random Zalk Modal */}
       {modalVisibleRandomZalk && (
         <RandomZalkModal
@@ -94,6 +101,8 @@ const RandomZalkScreen = () => {
           }}
         />
       )}
+      {/* Busy Modal */}
+      {isBusyModalVisible && <IsBusyRequiredModal modalVisible={isBusyModalVisible} setModalVisible={setIsBusyModalVisible} userID={userID} />}
     </View>
   );
 };

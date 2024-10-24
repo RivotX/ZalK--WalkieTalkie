@@ -242,7 +242,7 @@ const AudioComponent = ({ isContact, currentRoom, isConectionClose, sizeInside, 
         )}
       </View>
 
-      {/* Modal */}
+      {/* Busy Modal */}
       <IsBusyRequiredModal modalVisible={isBusyModalVisible} setModalVisible={setIsBusyModalVisible} userID={userID} />
     </View>
   );
