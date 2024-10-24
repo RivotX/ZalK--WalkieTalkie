@@ -52,6 +52,7 @@ function RootLayout() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const { Texts } = useLanguage();
   const { isBusy, setIsBusy } = useBusy();
+  
   const navigation = useNavigation();
   const [appState, setAppState] = useState(AppState.currentState);
 
@@ -155,7 +156,6 @@ Notifications.addNotificationReceivedListener(async (notification) => {
         .get(`${SERVER_URL}/getsession`, { withCredentials: true })
         .then((res) => {
           setUsername(res.data.user.username);
-          console.log('res isBusy en RootLayout', res.data.user.isBusy);
           setUserID(res.data.user.id);
           setInfo(res.data.user.info);
           setProfilePicture(res.data.user.profilePicture);
@@ -168,7 +168,42 @@ Notifications.addNotificationReceivedListener(async (notification) => {
   };
 
   useEffect(() => {
-    console.log('isBusy en RootLayout ', isBusy);
+    console.log('Recieve audio, isbusy: ', isBusy);
+        if (isBusy === false) {
+      socket.on('receive-audio', async (base64Audio, room) => {
+        
+          console.log('Received audio data from room', room);
+
+          // Asegúrate de que el base64Audio no esté corrupto
+          if (!base64Audio || base64Audio.length === 0) {
+            console.error('Audio data is empty or corrupted');
+            return;
+          }
+
+          const uri = `data:audio/mp3;base64,${base64Audio}`;
+          console.log('audio enviado', uri);
+
+          if (appState === 'active') {
+          try {
+            const { sound } = await Audio.Sound.createAsync({ uri }, { shouldPlay: true });
+            await sound.setVolumeAsync(1.0);
+            await sound.playAsync();
+            console.log('Playing sound');
+            Alert.alert('playing sound');
+            // Schedule a notification
+          } catch (error) {
+            Alert.alert('Error playing sound', error);
+            console.error('Error playing sound:', error);
+          }
+          }
+        
+      });
+      }else{
+        console.log('No se puede recibir audio porque esta ocupado');
+        if (socket){
+        socket.off('receive-audio');
+      }
+      }
   }, [isBusy]);
 
   // ===== Gets the user data when the user is logged in =======
@@ -205,6 +240,10 @@ Notifications.addNotificationReceivedListener(async (notification) => {
 
   // ===== Refreshes the user session when the socket is connected =======
   
+  const receiveAudio = async () => {
+    
+      }
+
   useEffect(() => {
     if (socket != null) {
       console.log('Socket creado en RootLayout', socket);
@@ -230,49 +269,18 @@ Notifications.addNotificationReceivedListener(async (notification) => {
             setLoading(false);
           });
       });
-      socket.on('receive-audio', async (base64Audio, room) => {
-        console.log('Recieve audio, isbusy: ', isBusy);
-        if (isBusy === false) {
-          console.log('Received audio data from room', room);
 
-          // Asegúrate de que el base64Audio no esté corrupto
-          if (!base64Audio || base64Audio.length === 0) {
-            console.error('Audio data is empty or corrupted');
-            return;
-          }
-
-          const uri = `data:audio/mp3;base64,${base64Audio}`;
-          console.log('audio enviado', uri);
-
-          if (appState === 'active') {
-          try {
-            const { sound } = await Audio.Sound.createAsync({ uri }, { shouldPlay: true });
-            await sound.setVolumeAsync(1.0);
-            await sound.playAsync();
-            console.log('Playing sound');
-            Alert.alert('playing sound');
-            // Schedule a notification
-          } catch (error) {
-            Alert.alert('Error playing sound', error);
-            console.error('Error playing sound:', error);
-          }
-          }
-        }
-      });
-
-      return () => {
-        socket.off('receive-audio');
-      };
+      
     }
   }, [socket]);
 
   const fetchIsBusy = async () => {
     if (!userID) return;
     try {
-      axios.post(`${SERVER_URL}/getIsBusy`, { id: userID })
+      axios.post(`${SERVER_URL}/getIsBusy`, { userId: userID })
       .then((res) => { 
-        console.log('isBusy en fetchIsBusy', res.data.isBusy);
-        setIsBusy(res.data.isBusy);
+        console.log('isBusy en fetchIsBusy', res.data);
+        setIsBusy(res.data);
       });
     } catch (error) {
       console.error('Error fetching isBusy:', error);
