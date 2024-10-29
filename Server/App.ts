@@ -1523,13 +1523,13 @@ io.on("connection", (socket: Socket) => {
 
       }
       //Eliminar el archivo del S3
-        // const deleteCommand = new DeleteObjectCommand({
-        //   Bucket: bucketName,
-        //   Key: fileName,
-        // });
-        // await s3.send(deleteCommand);
+        const deleteCommand = new DeleteObjectCommand({
+          Bucket: bucketName,
+          Key: fileName,
+        });
+        await s3.send(deleteCommand);
 
-        // console.log('File deleted from S3:', fileName);
+        console.log('File deleted from S3:', fileName);
     } catch (error) {
       console.error("Error en send-audio:", error);
     }
@@ -1712,14 +1712,14 @@ const initialRooms = [
   { name: "Cocina Vegana", info: "Comparte recetas veganas." },
 ];
 
-sequelize.sync({ alter: true }).then(() => {
+sequelize.sync({ force: true }).then(() => {
   server.listen(3000, async () => {
     console.log("Server running...");
 
     // create groups
-    // for (const room of initialRooms) {
-    //   await Rooms.upsert(room);
-    //   console.log("Room created:", room);
-    // }
+    for (const room of initialRooms) {
+      await Rooms.upsert(room);
+      console.log("Room created:", room);
+    }
   });
 });
