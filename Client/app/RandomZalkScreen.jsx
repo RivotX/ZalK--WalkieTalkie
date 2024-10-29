@@ -96,7 +96,7 @@ export default function RandomZalkScreen() {
   // ===== AppState =====
   useEffect(() => {
     if (socket != null) {
-      const handleAppStateChange = (nextAppState) => {ç
+      const handleAppStateChange = (nextAppState) => {
         console.log('AppState', nextAppState);
         if (nextAppState === 'background') {
           onBackground();
@@ -115,13 +115,12 @@ export default function RandomZalkScreen() {
     closeConnection();
 
   };
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener('beforeRemove', (e) => {
-  //     closeConnection();
-  //   });
-
-  //   return unsubscribe;
-  // }, [navigation]);
+  useEffect(() => {
+    return () => {
+      console.log('Desmontando RandomZalkScreen');
+      closeConnection();
+    };
+  }, []);
 
 
 
