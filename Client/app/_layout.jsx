@@ -209,6 +209,7 @@ Notifications.addNotificationReceivedListener(async (notification) => {
   // ===== Gets the user data when the user is logged in =======
   useEffect(() => {
     getsession();
+    console.log('isLoggedIn en RootLayout', isLoggedIn);
   }, [isLoggedIn]);
 
   // ===== Logout the user =======
