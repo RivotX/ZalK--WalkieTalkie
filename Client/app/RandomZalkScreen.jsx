@@ -118,7 +118,7 @@ export default function RandomZalkScreen() {
   useEffect(() => {
     return () => {
       console.log('Desmontando RandomZalkScreen');
-      closeConnection();
+      // closeConnection();
     };
   }, []);
 
