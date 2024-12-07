@@ -94,28 +94,28 @@ export default function RandomZalkScreen() {
   };
 
   // // ===== AppState =====
-  useEffect(() => {
-    if (socket != null) {
-      const handleAppStateChange = (nextAppState) => {
-        console.log('AppState', nextAppState);
-        if (nextAppState === 'background') {
-          onBackground();
-        }
-      };
+  // useEffect(() => {
+  //   if (socket != null) {
+  //     const handleAppStateChange = (nextAppState) => {
+  //       console.log('AppState', nextAppState);
+  //       if (nextAppState === 'background') {
+  //         onBackground();
+  //       }
+  //     };
 
-      const subscription = AppState.addEventListener('change', handleAppStateChange);
+  //     const subscription = AppState.addEventListener('change', handleAppStateChange);
 
-      return () => {
-        subscription.remove();
-      };
-    }
-  }, [socket]);
+  //     return () => {
+  //       subscription.remove();
+  //     };
+  //   }
+  // }, [socket]);
 
-  const onBackground = () => {
-    console.log('La app ha ido al segundo plano.');
-    closeConnection();
-  };
-  
+  // const onBackground = () => {
+  //   console.log('La app ha ido al segundo plano.');
+  //   closeConnection();
+  // };
+
   useEffect(() => {
     return () => {
       console.log('Desmontando RandomZalkScreen');
