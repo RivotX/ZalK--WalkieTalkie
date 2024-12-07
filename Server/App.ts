@@ -1523,13 +1523,13 @@ io.on("connection", (socket: Socket) => {
 
       }
       // Eliminar el archivo del S3
-        const deleteCommand = new DeleteObjectCommand({
-          Bucket: bucketName,
-          Key: fileName,
-        });
-        await s3.send(deleteCommand);
+        // const deleteCommand = new DeleteObjectCommand({
+        //   Bucket: bucketName,
+        //   Key: fileName,
+        // });
+        // await s3.send(deleteCommand);
 
-        console.log('File deleted from S3:', fileName);
+        // console.log('File deleted from S3:', fileName);
     } catch (error) {
       console.error("Error en send-audio:", error);
     }
