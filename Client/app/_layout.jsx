@@ -120,12 +120,6 @@ Notifications.addNotificationReceivedListener(async (notification) => {
           console.log(error);
         });
 
-      return () => {
-        if (socket) {
-          console.log('Desconectando socket desde createSocket');
-          socket.disconnect();
-        }
-      };
     }
   };
 

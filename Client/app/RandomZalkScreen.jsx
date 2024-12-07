@@ -93,7 +93,7 @@ export default function RandomZalkScreen() {
     navigation.navigate("RandomZalk");
   };
 
-  // ===== AppState =====
+  // // ===== AppState =====
   useEffect(() => {
     if (socket != null) {
       const handleAppStateChange = (nextAppState) => {
@@ -102,23 +102,24 @@ export default function RandomZalkScreen() {
           onBackground();
         }
       };
+
       const subscription = AppState.addEventListener('change', handleAppStateChange);
 
       return () => {
         subscription.remove();
       };
     }
-  }, [appState, socket]);
+  }, [socket]);
 
   const onBackground = () => {
-    console.log('La app ha vuelto al primer plano.');
+    console.log('La app ha ido al segundo plano.');
     closeConnection();
-
   };
+  
   useEffect(() => {
     return () => {
       console.log('Desmontando RandomZalkScreen');
-      // closeConnection();
+      closeConnection();
     };
   }, []);
 
