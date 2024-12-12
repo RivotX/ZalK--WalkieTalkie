@@ -1717,9 +1717,9 @@ sequelize.sync({alter: true }).then(() => {
     console.log("Server running...");
 
     // create groups
-    // for (const room of initialRooms) {
-    //   await Rooms.upsert(room);
-    //   console.log("Room created:", room);
-    // }
+    for (const room of initialRooms) {
+      await Rooms.upsert(room);
+      console.log("Room created:", room);
+    }
   });
 });
