@@ -25,7 +25,7 @@ const connectedUsers: { [key: string]: string } = {};
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:8081",
+    origin: "https://uptimerobot.com",
   },
 });
 
