@@ -436,6 +436,11 @@ app.post("/toggleBusy", async (req, res) => {
   }
 });
 
+app.get("/", (req, res) => {
+  res.redirect("https://github.com/RivotX/ZalK--WalkieTalkie.git");
+});
+
+
 app.post("/update-user", async (req, res) => {
   const { PropToChange, userID, newProp } = req.body;
   try {
